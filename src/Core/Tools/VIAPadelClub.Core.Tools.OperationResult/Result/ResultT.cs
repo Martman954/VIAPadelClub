@@ -1,8 +1,11 @@
-
 using VIAPadelClub.Core.Tools.OperationResult.OperationResult.Errors;
 
-namespace VIAPadelClub.Core.Tools.OperationResult.OperationResult;
+namespace VIAPadelClub.Core.Tools.OperationResult.Result;
 
+/// <summary>
+/// Represents the result of an operation that returns a value of type T.
+/// </summary>
+/// <typeparam name="T">The type of the value contained within the result.</typeparam>
 public class Result<T> : Result
 {
     private readonly T? _value;

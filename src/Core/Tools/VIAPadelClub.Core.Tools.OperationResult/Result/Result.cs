@@ -1,11 +1,14 @@
 using VIAPadelClub.Core.Tools.OperationResult.OperationResult.Errors;
 
-namespace VIAPadelClub.Core.Tools.OperationResult.OperationResult;
+namespace VIAPadelClub.Core.Tools.OperationResult.Result;
 
+/// <summary>
+/// Represents the outcome of an operation.
+/// </summary>
 public class Result
 {
     public bool IsSuccess { get; set; }
-    public bool isFailure => !IsSuccess;
+    public bool IsFailure => !IsSuccess;
     public List<Error> Errors { get; set; }
 
     protected Result(bool isSuccess, IEnumerable<Error>? errors = null)
@@ -20,7 +23,7 @@ public class Result
 
     public static Result Combine(params Result[] results)
     {
-        var failures = results.Where(r => r.isFailure).SelectMany(r => r.Errors).ToList();
+        var failures = results.Where(r => r.IsFailure).SelectMany(r => r.Errors).ToList();
         return failures.Any() ? Failure(failures) : Success();
     }
     

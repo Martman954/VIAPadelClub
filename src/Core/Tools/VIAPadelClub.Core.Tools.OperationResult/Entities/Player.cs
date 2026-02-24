@@ -13,9 +13,7 @@ public sealed class Player
     public string Lastname { get; }
     public string Email { get; }
     public string ProfilePictureUri { get; }
-
-    private static readonly Regex EmailRegex = new(@"^([a-zA-Z]{3,4}|[0-9]{6})$");
-    private static readonly Regex NameRegex = new(@"^[a-zA-Z]{2,}$");
+    
 
     private Player(Guid id, string firstname, string lastname, string email, string profilePictureUri)
     {
@@ -42,12 +40,12 @@ public sealed class Player
     
     //  Can add more validation
     private static Result<None> NameMustBeCorrectFormat(string name) =>
-        (string.IsNullOrWhiteSpace(name) || !NameRegex.IsMatch(name))
+        (string.IsNullOrWhiteSpace(name))
             ? Result.Failure("Name not in correct format", ErrorType.Validation)
             : Result.Success();
 
     private static Result<None> EmailMustBeCorrectFormat(string email) =>
-        (string.IsNullOrWhiteSpace(email) || !NameRegex.IsMatch(email))
+        (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
     ? Result.Failure("Email not in correct format", ErrorType.Validation)
     : Result.Success();
 

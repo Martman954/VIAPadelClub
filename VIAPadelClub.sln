@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3889782F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VIAPadelClub.Core.Tools.OperationResult", "src\Core\Tools\VIAPadelClub.Core.Tools.OperationResult\VIAPadelClub.Core.Tools.OperationResult.csproj", "{B12136D5-412B-426F-A3D3-E54B1ED516DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulation", "Simulation\Simulation.csproj", "{685C8429-9118-46FA-A091-313E8FBCACD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,11 +21,16 @@ Global
 		{D0E82F78-F461-4801-84C4-F9A5FB06A04D} = {C693D6D9-13AB-49CC-9375-73E77DACACE4}
 		{3889782F-8A88-403E-A22F-CEEBE6221DBA} = {D0E82F78-F461-4801-84C4-F9A5FB06A04D}
 		{B12136D5-412B-426F-A3D3-E54B1ED516DC} = {3889782F-8A88-403E-A22F-CEEBE6221DBA}
+		{685C8429-9118-46FA-A091-313E8FBCACD5} = {C3A0E6FC-FFB7-4D50-A350-41AF2F214AFF}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B12136D5-412B-426F-A3D3-E54B1ED516DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B12136D5-412B-426F-A3D3-E54B1ED516DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B12136D5-412B-426F-A3D3-E54B1ED516DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B12136D5-412B-426F-A3D3-E54B1ED516DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{685C8429-9118-46FA-A091-313E8FBCACD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{685C8429-9118-46FA-A091-313E8FBCACD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{685C8429-9118-46FA-A091-313E8FBCACD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{685C8429-9118-46FA-A091-313E8FBCACD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

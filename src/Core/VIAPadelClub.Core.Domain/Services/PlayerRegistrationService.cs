@@ -1,9 +1,10 @@
 using System.Text.RegularExpressions;
+using VIAPadelClub.Core.Domain.Common.Player;
 using VIAPadelClub.Core.Tools.OperationResult.OperationResult.Errors;
 using VIAPadelClub.Core.Tools.OperationResult.OperationResult.Errors.Registration;
 using VIAPadelClub.Core.Tools.OperationResult.Result;
 
-namespace VIAPadelClub.Core.Tools.OperationResult.Services;
+namespace VIAPadelClub.Core.Domain.Services;
 
 /// <summary>
 /// Implements the business logic for registering new players.
@@ -13,7 +14,7 @@ public class PlayerRegistrationService
     private static readonly Regex EmailRegex = new (@"^([a-zA-Z]{3,4}|[0-9]{6})$");
     private static readonly Regex NameRegex = new (@"^[a-zA-Z]{2,}$");
 
-    public Result<Player.Player> Register(string? email, string? firstName, string? lastName, string? uri)
+    public Result<Player> Register(string? email, string? firstName, string? lastName, string? uri)
     {
         var errors = new List<Error>();
         email = email?.Trim().ToLower();
@@ -61,10 +62,10 @@ public class PlayerRegistrationService
         
         if (errors.Any())
         {
-            return Result<Player.Player>.Failure(errors);
+            return Result<Player>.Failure(errors);
         }
         
-        var newPlayer = new Player.Player(
+        var newPlayer = new Player(
             Id: new Random().Next(1000, 9999),
             Email: email!.ToLower(),
             FirstName: FormatName(firstName!),

@@ -1,6 +1,7 @@
-using VIAPadelClub.Core.Tools.OperationResult;
+using VIAPadelClub.Core.Domain.Services;
 using VIAPadelClub.Core.Tools.OperationResult.Result;
-using VIAPadelClub.Core.Tools.OperationResult.Services;
+
+namespace VIAPadelClub.Core.Domain;
 
 /// <summary>
 /// Program for Testing and Simulation.

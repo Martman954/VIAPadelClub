@@ -1,4 +1,4 @@
-namespace VIAPadelClub.Core.Tools.OperationResult.Player;
+namespace VIAPadelClub.Core.Domain.Common.Player;
 
 /// <summary>
 /// Represents a registered Player in the system.

@@ -1,4 +1,5 @@
 using VIAPadelClub.Core.Domain.Common.Bases;
+using VIAPadelClub.Core.Domain.Common.Values.Player;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 

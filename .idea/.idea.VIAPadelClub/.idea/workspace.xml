@@ -10,15 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="651c8f3e-672c-4a75-93f8-02e21ce0d579" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ImageUrl.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Name.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Quarantine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/VIPStatus.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ViaEmail.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Bases/TimeInterval.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTests/Common/Bases/TimeIntervalTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ImageUriTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/NameTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/QuarantineTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/VIPStatusTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ViaEmailTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/UnitTests/ResultTestExtension.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VIAPadelClub.sln" beforeDir="false" afterPath="$PROJECT_DIR$/VIAPadelClub.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VIAPadelClub.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/VIAPadelClub.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ResultError.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ResultError.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ImageUrl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ImageUrl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Name.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Name.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/VIAPadelClub.Core.Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/VIAPadelClub.Core.Domain.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Quarantine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Quarantine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/VIPStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/VIPStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ViaEmail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ViaEmail.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,16 +58,18 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b05fc3ef644b7632d4481b3defa11634da02637d896cb5eca3eca7cf2f3ee3/String.Manipulation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UnitTests/Common/Bases/TimeIntervalTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ImageUriTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/NameTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/QuarantineTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/VIPStatusTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ViaEmailTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/UnitTests/ResultTestExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ErrorType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ResultError.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Result.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/obj/project.assets.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ImageUrl.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Name.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Quarantine.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/VIPStatus.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ViaEmail.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Bases/TimeInterval.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
@@ -93,6 +103,7 @@
     ]
   }
 }]]></component>
+  <component name="RunManager" selected=".NET Project.VIAPadelClub.Core.Tools.OperationResult" />
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -113,7 +124,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772526360975</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Refactored Player.cs and added Value objects to the aggregate">
+      <option name="closed" value="true" />
+      <created>1772551081535</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1772551081535</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,6 +165,7 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="updated commit" />
     <MESSAGE value="refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor" />
+    <MESSAGE value="Refactored Player.cs and added Value objects to the aggregate" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactored Player.cs and added Value objects to the aggregate" />
   </component>
 </project>

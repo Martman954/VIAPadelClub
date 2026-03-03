@@ -1,7 +1,7 @@
 using VIAPadelClub.Core.Domain.Common.Bases;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Player;
+namespace VIAPadelClub.Core.Domain.Common.Values.Player;
 
 public class Quarantine
 {

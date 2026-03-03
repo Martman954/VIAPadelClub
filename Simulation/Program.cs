@@ -2,6 +2,7 @@
 
 
 using VIAPadelClub.Core.Tools.OperationResult.Entities;
+using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 Console.WriteLine("=== SCENARIO 1: TOTAL FAILURE (Multiple Errors) ===");

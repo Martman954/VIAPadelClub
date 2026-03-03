@@ -10,4 +10,8 @@
       <Folder Include="Common\Bases\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Tools\VIAPadelClub.Core.Tools.OperationResult\VIAPadelClub.Core.Tools.OperationResult.csproj" />
+    </ItemGroup>
+
 </Project>

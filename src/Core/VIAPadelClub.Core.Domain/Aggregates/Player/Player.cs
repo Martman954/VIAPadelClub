@@ -1,8 +1,7 @@
-using System.Text.RegularExpressions;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Tools.OperationResult.Entities;
+namespace VIAPadelClub.Core.Domain.Aggregates.Player;
 
 
 // Class just to test functionality of Result pattern

@@ -9,11 +9,21 @@
     <projectFile>src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/VIAPadelClub.Core.Tools.OperationResult.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="651c8f3e-672c-4a75-93f8-02e21ce0d579" name="Changes" comment="" />
+    <list default="true" id="651c8f3e-672c-4a75-93f8-02e21ce0d579" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simulation/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simulation/Simulation.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/VIAPadelClub.sln" beforeDir="false" afterPath="$PROJECT_DIR$/VIAPadelClub.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Entities/Player.cs" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -37,13 +47,11 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b05fc3ef644b7632d4481b3defa11634da02637d896cb5eca3eca7cf2f3ee3/String.Manipulation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Entities/Player.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ErrorType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ResultError.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Result.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/ResultExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/obj/project.assets.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -96,8 +104,18 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="0e5037ce-dd82-41ea-8a28-1aabd807c6e0" value="TOOL_WINDOW" />
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
+        <entry key="0e5037ce-dd82-41ea-8a28-1aabd807c6e0">
+          <value>
+            <State />
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State />

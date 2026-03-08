@@ -1,7 +1,6 @@
 namespace VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-public sealed record ResultError(string Message, ErrorType errorType)
+public sealed record ResultError(string Message, ErrorType ErrorType = ErrorType.Failure)
 {
-    public static readonly ResultError None = new( string.Empty, ErrorType.None);
-    public ErrorType ErrorType { get; set; }
+    public static readonly ResultError None = new(string.Empty, ErrorType.None);
 }

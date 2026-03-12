@@ -1,3 +1,4 @@
+using VIAPadelClub.Core.Domain.Common.Values.Court;
 using VIAPadelClub.Core.Domain.Common.Values.Schedule;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
@@ -15,9 +16,9 @@ public sealed class Schedule
     
     private List<ScheduleTimeInterval> _activeTime;
     public IReadOnlyList<ScheduleTimeInterval> ActiveTime => _activeTime.AsReadOnly();
-    
-    // private List<CourtId> courts = new();
-    // public IReadOnlyList<CourtId> Courts => courts.AsReadOnly();
+
+    private List<CourtId> courts = new();
+    public IReadOnlyList<CourtId> Courts => courts.AsReadOnly();
 
     private Schedule(Guid id, DateTime date, List<ScheduleTimeInterval> activeTime)
     {

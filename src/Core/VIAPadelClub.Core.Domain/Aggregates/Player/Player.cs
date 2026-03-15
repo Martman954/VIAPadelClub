@@ -1,8 +1,8 @@
 using VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
-namespace VIAPadelClub.Core.Domain.Aggregates.Player;
 
+namespace VIAPadelClub.Core.Domain.Aggregates.Player;
 
 // Class just to test functionality of Result pattern
 public sealed class Player
@@ -22,7 +22,7 @@ public sealed class Player
         Name = name;
         ProfilePictureUri = profilePictureUri;
         VipStatus = null;
-        isBlackListed = false;        
+        isBlackListed = false;
     }
 
     public static Result<Player> Register(
@@ -41,7 +41,7 @@ public sealed class Player
         isBlackListed = true;
         return Result.Success();
     }
-        
+
     public Result<None> LiftBlacklist()
     {
         isBlackListed = false;

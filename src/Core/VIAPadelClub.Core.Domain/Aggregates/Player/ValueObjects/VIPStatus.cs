@@ -16,6 +16,4 @@ public class VipStatus
     {
         return new VipStatus(timeInterval);
     }
-
-
 }

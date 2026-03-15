@@ -6,7 +6,7 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
 public class Quarantine
 {
     public TimeInterval TimeInterval { get; }
-    
+
     // Foreign key ???? 
     public ViaEmail ViaEmail { get; }
 
@@ -20,6 +20,4 @@ public class Quarantine
     {
         return new Quarantine(timeInterval, email);
     }
-
-
 }

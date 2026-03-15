@@ -1,7 +1,7 @@
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Domain.Common.Values.Player;
+namespace VIAPadelClub.Core.Domain.Common.Values;
 
 public class ViaEmail
 {

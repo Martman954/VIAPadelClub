@@ -1,4 +1,4 @@
-namespace VIAPadelClub.Core.Domain.Common.Values.Booking;
+namespace VIAPadelClub.Core.Domain.Common.Values;
 
 public class BookingId
 {

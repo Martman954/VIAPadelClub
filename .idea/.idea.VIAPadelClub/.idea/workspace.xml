@@ -10,28 +10,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="651c8f3e-672c-4a75-93f8-02e21ce0d579" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/UnitTests/Common/Bases/TimeIntervalTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ImageUriTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/NameTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/QuarantineTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/VIPStatusTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ViaEmailTests.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UnitTests/ResultTestExtension.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VIAPadelClub.sln" beforeDir="false" afterPath="$PROJECT_DIR$/VIAPadelClub.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Common/Bases/TimeIntervalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/ValueObjects/TimeIntervalTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ImageUriTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ImageUriTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/NameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/NameTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/QuarantineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/QuarantineTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/VIPStatusTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/VIPStatusTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ViaEmailTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ViaEmailTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Features/PlayerTests/Register/PlayerRegisterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Features/PlayerTests/Register/PlayerRegisterTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/Features/ScheduleTests/ScheduleCreateTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Features/ScheduleTests/ScheduleCreateTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VIAPadelClub.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/VIAPadelClub.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ResultError.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/Results/Errors/ResultError.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ImageUrl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ImageUrl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Name.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Name.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Quarantine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Quarantine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/VIPStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/VIPStatus.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ViaEmail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ViaEmail.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Schedule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Schedule.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Status.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Enums/Status.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Bases/TimeInterval.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/TimeInterval.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Booking/BookingId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/BookingId.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Court/CourtId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/CourtId.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ImageUrl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/ImageUrl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Name.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/Name.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Quarantine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/Quarantine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/VIPStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/VIPStatus.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ViaEmail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/ViaEmail.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Schedule/ScheduleTimeInterval.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/ValueObjects/ScheduleTimeInterval.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Schedule/TimeInterval.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/dkmarmos/Documents/GIT/VIAPadelClub" value="39OZ9X7izQZ8JFbMMFJvZltvbBh" />
+    </persistenceIdMap>
   </component>
   <component name="DpaMonitoringSettings">
     <option name="firstShow" value="false" />
@@ -78,31 +89,32 @@
 }</component>
   <component name="ProjectId" id="39OZ9X7izQZ8JFbMMFJvZltvbBh" />
   <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.VIAPadelClub.Core.Tools.OperationResult.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;player__aggregate&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.VIAPadelClub.Core.Tools.OperationResult.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "schedule__aggregate",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;TEXT&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "TEXT"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -166,5 +178,13 @@
     <MESSAGE value="refactor" />
     <MESSAGE value="Refactored Player.cs and added Value objects to the aggregate" />
     <option name="LAST_COMMIT_MESSAGE" value="Refactored Player.cs and added Value objects to the aggregate" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

@@ -1,6 +1,8 @@
+using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
+using VIAPadelClub.Core.Domain.Common.Values;
+
 namespace UnitTests.Features.ScheduleTests;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule;
-using VIAPadelClub.Core.Domain.Common.Values.Schedule;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 /// <summary>
@@ -33,7 +35,7 @@ public class ScheduleCreateTests
         
         var validIntervals = new List<ScheduleTimeInterval>
         {
-            new(new TimeInterval(start, end), true) 
+            new ScheduleTimeInterval(TimeInterval.Create(start, end), true) 
         };
 
         // Act

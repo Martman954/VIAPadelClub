@@ -10,7 +10,7 @@ public sealed class Player
     public ViaEmail Email { get; }
     public Name Name { get; }
     public ImageUrl ProfilePictureUri { get; }
-    public VipStatus VipStatus { get; set; }
+    public VipStatus? VipStatus { get; set; }
 
 //    public Quarantine Quarantine { get; }
     public bool isBlackListed { get; set; }

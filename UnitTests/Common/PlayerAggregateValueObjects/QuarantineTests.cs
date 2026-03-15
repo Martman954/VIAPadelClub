@@ -1,5 +1,5 @@
-using VIAPadelClub.Core.Domain.Common.Bases;
-using VIAPadelClub.Core.Domain.Common.Values.Player;
+using VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
+using VIAPadelClub.Core.Domain.Common.Values;
 
 namespace UnitTests.Common.PlayerAggregateValueObjects;
 

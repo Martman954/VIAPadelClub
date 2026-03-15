@@ -1,7 +1,7 @@
-using VIAPadelClub.Core.Domain.Common.Bases;
+using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace VIAPadelClub.Core.Domain.Common.Values.Player;
+namespace VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
 
 public class VipStatus
 {
@@ -16,6 +16,4 @@ public class VipStatus
     {
         return new VipStatus(timeInterval);
     }
-
-
 }

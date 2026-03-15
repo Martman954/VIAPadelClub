@@ -1,8 +1,69 @@
+# Build output
 bin/
 obj/
 /packages/
+
+# NuGet
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# JetBrains Rider / ReSharper
 riderModule.iml
 /_ReSharper.Caches/
-
-*.xml
 .idea/
+*.sln.iml
+*.DotSettings.user
+_ReSharper*/
+*.user
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.VC.db
+*.VC.VC.opendb
+*.pidb
+*.sdf
+*.opensdf
+*.vsp
+*.vspx
+*.psess
+*.csproj.user
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+desktop.ini
+ehthumbs.db
+
+# Logs & temp
+*.log
+*.tmp
+*.temp
+*.cache
+
+# Test results
+TestResults/
+coverage*/
+*.trx
+*.coveragexml
+
+# XML (keep last to avoid overriding above exceptions)
+*.xml

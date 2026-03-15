@@ -10,29 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="651c8f3e-672c-4a75-93f8-02e21ce0d579" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.VIAPadelClub/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnitTests/Common/Bases/TimeIntervalTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/ValueObjects/TimeIntervalTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ImageUriTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ImageUriTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/NameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/NameTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/QuarantineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/QuarantineTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/VIPStatusTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/VIPStatusTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ViaEmailTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Common/PlayerAggregateValueObjects/ViaEmailTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UnitTests/Features/PlayerTests/Register/PlayerRegisterTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Features/PlayerTests/Register/PlayerRegisterTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/UnitTests/Features/ScheduleTests/ScheduleCreateTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/Features/ScheduleTests/ScheduleCreateTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VIAPadelClub.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/VIAPadelClub.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Schedule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Schedule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Status.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/Enums/Status.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Bases/TimeInterval.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/TimeInterval.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Booking/BookingId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/BookingId.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Court/CourtId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/CourtId.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ImageUrl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/ImageUrl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Name.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/Name.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/Quarantine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/Quarantine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/VIPStatus.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Player/ValueObjects/VIPStatus.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Player/ViaEmail.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/ViaEmail.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Schedule/ScheduleTimeInterval.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Aggregates/Schedule/ValueObjects/ScheduleTimeInterval.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/Common/Values/Schedule/TimeInterval.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnitTests/UnitTests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/UnitTests/UnitTests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/VIAPadelClub.Core.Tools.OperationResult.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/Tools/VIAPadelClub.Core.Tools.OperationResult/VIAPadelClub.Core.Tools.OperationResult.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/VIAPadelClub.Core.Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/VIAPadelClub.Core.Domain/VIAPadelClub.Core.Domain.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

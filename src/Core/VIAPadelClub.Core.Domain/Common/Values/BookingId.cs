@@ -1,6 +1,15 @@
 namespace VIAPadelClub.Core.Domain.Common.Values;
 
-public class BookingId
+public sealed record BookingId
 {
-    public Guid Value { get; set; }
+    private Guid Value { get; }
+
+    private BookingId(Guid value)
+    {
+        Value = value;
+    }
+
+    public static BookingId New() => new(Guid.NewGuid());
+
+    public override string ToString() => Value.ToString();
 }

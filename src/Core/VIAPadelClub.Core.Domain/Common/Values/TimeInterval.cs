@@ -9,7 +9,7 @@ public class TimeInterval
     public DateTime End { get; }
     public TimeSpan Duration => End.Subtract(Start);
 
-    private TimeInterval(DateTime start, DateTime end)
+    public TimeInterval(DateTime start, DateTime end)
     {
         Start = start;
         End = end;

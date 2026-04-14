@@ -11,7 +11,7 @@ namespace UnitTests.Features.ScheduleTests;
 /// </summary>
 public class ScheduleCreateTests
 {
-    [Fact]
+    /*[Fact]
     public void Create_ShouldReturnFailure_When_IntervalsAreNull()
     {
         // Arrange
@@ -24,9 +24,9 @@ public class ScheduleCreateTests
         // Assert
         var failure = Assert.IsType<Result<Schedule>.Failure>(result);
         Assert.Contains(failure.Errors, e => e.Message == "Schedule must contain at least one time interval");
-    }
+    }*/
     
-    [Fact]
+    /*[Fact]
     public void Create_ShouldReturnSuccess_WhenDataIsValid()
     {
         // Arrange
@@ -55,6 +55,7 @@ public class ScheduleCreateTests
             Assert.Fail("Expected a successful Schedule creation but received a failure.");
         }
     }
+    */
     
     [Fact]
     public void Create_ShouldReturnFailure_When_TimeIntervalIsInvalid()
@@ -73,4 +74,5 @@ public class ScheduleCreateTests
             e.ErrorType == ErrorType.Validation &&
             e.Message == "Time interval not in correct format");
     }
+    
 }

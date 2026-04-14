@@ -65,11 +65,20 @@ public sealed class Schedule
         return None.Value;
     }
 
-    // public Result<None> AddCourt(CourtId courtId)
-    // {
-    //     courts.Add(courtId);
-    //     return None.Value;
-    // }
+    public Result<None> AddCourt(CourtId courtId)
+    {
+        if (Status is not (Status.Draft or Status.Active))
+            return new ResultError("Courts can only be added to draft or active schedules.", ErrorType.Validation);
+        
+        if (Times.TimeInterval.Start.Date <= DateTime.Today)
+            return new ResultError("Courts can only be added to future schedules.", ErrorType.Validation);
+
+        if (_courts.Contains(courtId))
+            return new ResultError("This court is already added to the schedule.", ErrorType.Validation);
+        
+        _courts.Add(courtId);
+        return None.Value;
+    }
 
     // public Result<None> RemoveCourt(CourtId courtId)
     // {

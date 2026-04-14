@@ -12,15 +12,36 @@ public sealed record CourtId
         Value = value;
     }
 
-    public static Result<CourtId> Create(string value)
+    public static Result<CourtId> Create(string courtId)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return Result.Failure<CourtId>(
-                new ResultError("Court id cannot be null, empty, or whitespace.", ErrorType.Validation));
-        }
+        if (string.IsNullOrWhiteSpace(courtId))
+            return Result.Failure<CourtId>(new ResultError(
+                "Court name cannot be empty.",
+                ErrorType.Validation));
 
-        return new CourtId(value);
+        var normalized = courtId.ToUpper();
+
+        if (normalized.Length < 2 || normalized.Length > 3)
+            return Result.Failure<CourtId>(new ResultError(
+                "Court name must be 2 or 3 characters long.",
+                ErrorType.Validation));
+
+        if (normalized[0] != 'S' && normalized[0] != 'D')
+            return Result.Failure<CourtId>(new ResultError(
+                "Court name must start with 'S' or 'D'.",
+                ErrorType.Validation));
+
+        if (!int.TryParse(normalized[1..], out int number))
+            return Result.Failure<CourtId>(new ResultError(
+                "Court name must end with a number.",
+                ErrorType.Validation));
+
+        if (number < 1 || number > 10)
+            return Result.Failure<CourtId>(new ResultError(
+                "Court number must be between 1 and 10.",
+                ErrorType.Validation));
+
+        return Result.Success(new CourtId(normalized));
     }
 
     public override string ToString() => Value;

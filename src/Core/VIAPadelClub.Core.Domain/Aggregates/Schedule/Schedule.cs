@@ -18,18 +18,18 @@ public sealed class Schedule
     private List<ScheduleTimeInterval> _activeTime;
     public IReadOnlyList<ScheduleTimeInterval> ActiveTime => _activeTime.AsReadOnly();
 
-    private List<CourtId> courts = new();
-    public IReadOnlyList<CourtId> Courts => courts.AsReadOnly();
+    public IReadOnlyList<CourtId> Courts;
 
-    private Schedule(Guid id, DateTime date, List<ScheduleTimeInterval> activeTime)
+    private Schedule(Guid id,  List<ScheduleTimeInterval> activeTime)
     {
         Id = id;
-        Date = date;
+        Date = DateTime.Now;
         _activeTime = new List<ScheduleTimeInterval>(activeTime);
-        Status = Status.Inactive;
+        Status = Status.Draft;
+        Courts = [];
     }
     
-    public static Result<Schedule> Create(DateTime date, List<ScheduleTimeInterval> intervals)
+    public static Result<Schedule> Create(List<ScheduleTimeInterval>? intervals)
     {
         if (intervals == null || intervals.Count == 0)
         {
@@ -38,21 +38,28 @@ public sealed class Schedule
                 ErrorType.Validation));
         }
 
-        return new Schedule(Guid.NewGuid(), date, intervals);
+        return Result.Success(new Schedule(Guid.NewGuid(), intervals));
     }
     
     public Result<None> UpdateDate(DateTime newDate)
     {
+        if (!Status.Equals(Status.Draft))
+            return new ResultError("Schedule date can only be updated while in Draft status.", ErrorType.Validation);
+
+        if (newDate.Date < DateTime.Today)
+            return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
+
         Date = newDate;
         return None.Value;
     }
 
     public Result<None> UpdateActiveTime(List<ScheduleTimeInterval> timeIntervals)
     {
+        if (!Status.Equals(Status.Draft))
+            return new ResultError("Schedule time intervals can only be updated while in Draft status.", ErrorType.Validation);
+
         if (timeIntervals == null || timeIntervals.Count == 0)
-        {
-            return new ResultError("ActiveTime cannot be empty", ErrorType.Validation);
-        }
+            return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
 
         _activeTime = new List<ScheduleTimeInterval>(timeIntervals);
         return None.Value;

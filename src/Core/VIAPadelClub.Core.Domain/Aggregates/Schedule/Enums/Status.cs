@@ -2,7 +2,7 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
 
 public enum Status
 {
-    Inactive,
+    Draft,
     Active,
     Deleted
 }

@@ -12,33 +12,34 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
 public sealed class Schedule
 {
     public Guid Id { get; }
-    public DateTime Date { get; private set; }
+    public ScheduleTimeInterval Times { get; private set; }
     public Status Status { get; private set; }
     
-    private List<ScheduleTimeInterval> _activeTime;
-    public IReadOnlyList<ScheduleTimeInterval> ActiveTime => _activeTime.AsReadOnly();
+    private List<ScheduleTimeInterval> _activeTimeSlots;
+    public IReadOnlyList<ScheduleTimeInterval> ActiveTime => _activeTimeSlots.AsReadOnly();
 
-    public IReadOnlyList<CourtId> Courts;
+    private List<CourtId> _courts;
+    public IReadOnlyList<CourtId> Courts => _courts.AsReadOnly();
 
-    private Schedule(Guid id,  List<ScheduleTimeInterval> activeTime)
+    private Schedule(Guid id, ScheduleTimeInterval times, List<ScheduleTimeInterval> activeTimeSlots)
     {
         Id = id;
-        Date = DateTime.Now;
-        _activeTime = new List<ScheduleTimeInterval>(activeTime);
         Status = Status.Draft;
-        Courts = [];
+        Times = times;
+        _courts = [];
+        _activeTimeSlots = new List<ScheduleTimeInterval>(activeTimeSlots);
     }
     
-    public static Result<Schedule> Create(List<ScheduleTimeInterval>? intervals)
+    public static Result<Schedule> Create(ScheduleTimeInterval times, List<ScheduleTimeInterval> activeSlots)
     {
-        if (intervals == null || intervals.Count == 0)
+        if (activeSlots == null || activeSlots.Count == 0)
         {
             return Result.Failure<Schedule>(new ResultError(
                 "Schedule must contain at least one time interval", 
                 ErrorType.Validation));
         }
 
-        return Result.Success(new Schedule(Guid.NewGuid(), intervals));
+        return new Schedule(Guid.NewGuid(), times, activeSlots);
     }
     
     public Result<None> UpdateDate(DateTime newDate)
@@ -48,8 +49,7 @@ public sealed class Schedule
 
         if (newDate.Date < DateTime.Today)
             return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
-
-        Date = newDate;
+        
         return None.Value;
     }
 
@@ -61,7 +61,7 @@ public sealed class Schedule
         if (timeIntervals == null || timeIntervals.Count == 0)
             return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
 
-        _activeTime = new List<ScheduleTimeInterval>(timeIntervals);
+        _activeTimeSlots = new List<ScheduleTimeInterval>(timeIntervals);
         return None.Value;
     }
 

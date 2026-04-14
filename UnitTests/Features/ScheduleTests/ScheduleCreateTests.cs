@@ -47,7 +47,7 @@ public class ScheduleCreateTests
         // Assert
         if (result is Result<Schedule>.Success success)
         {
-            Assert.Equal(tomorrow, success.Value.Date);
+            Assert.Equal(tomorrow, success.Value.Times);
             Assert.Equal(validIntervals.Count, success.Value.ActiveTime.Count);
         }
         else

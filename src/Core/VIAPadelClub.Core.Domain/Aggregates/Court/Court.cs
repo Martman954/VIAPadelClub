@@ -76,7 +76,26 @@ public sealed class Court
                 new ResultError("Booking is already cancelled.", ErrorType.Validation));
         }
 
+        var now = DateTime.Now;
+        var start = booking.TimeInterval.Start;
+        
+        if (start <= now)
+        {
+            return Result.Failure<None>(
+                new ResultError("Past bookings cannot be cancelled.", ErrorType.Validation));
+        }
+
+        var sameDay = now.Date == start.Date;
+        var lessThanOneHour = (start - now) < TimeSpan.FromHours(1);
+        
+        if (sameDay && lessThanOneHour)
+        {
+            return Result.Failure<None>(
+                new ResultError("Booking cannot be cancelled less than one hour before start time.", ErrorType.Validation));
+        }
+        
         booking.Cancel();
+
         return Result.Success();
     }
 }

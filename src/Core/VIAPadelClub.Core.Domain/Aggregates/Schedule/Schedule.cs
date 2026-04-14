@@ -50,7 +50,7 @@ public sealed class Schedule
         if (newDate.Date < DateTime.Today)
             return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
         
-        return None.Value;
+        return Result.Success();
     }
 
     public Result<None> UpdateActiveTime(List<ScheduleTimeInterval> timeIntervals)
@@ -62,7 +62,7 @@ public sealed class Schedule
             return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
 
         _activeTimeSlots = new List<ScheduleTimeInterval>(timeIntervals);
-        return None.Value;
+        return Result.Success();
     }
 
     public Result<None> AddCourt(CourtId courtId)
@@ -77,7 +77,7 @@ public sealed class Schedule
             return new ResultError("This court is already added to the schedule.", ErrorType.Validation);
         
         _courts.Add(courtId);
-        return None.Value;
+        return Result.Success();
     }
 
     // public Result<None> RemoveCourt(CourtId courtId)

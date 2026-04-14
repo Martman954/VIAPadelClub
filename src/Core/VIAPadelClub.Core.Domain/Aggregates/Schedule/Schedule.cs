@@ -14,8 +14,14 @@ public sealed class Schedule
     public Guid Id { get; }
     public Status Status { get; private set; }
     
-    private List<ScheduleTimeInterval> _activeTimeSlots;
-    public IReadOnlyList<ScheduleTimeInterval> ActiveTime => _activeTimeSlots.AsReadOnly();
+    private List<ScheduleTimeInterval> _times;
+    public IReadOnlyList<ScheduleTimeInterval> Times => _times.AsReadOnly();
+    
+    public IReadOnlyList<ScheduleTimeInterval> VipTimes
+        => _times.Where(s => s.IsVip).ToList().AsReadOnly();
+
+    public IReadOnlyList<ScheduleTimeInterval> RegularSlots
+        => _times.Where(s => !s.IsVip).ToList().AsReadOnly();
 
     private List<CourtId> _courts;
     public IReadOnlyList<CourtId> Courts => _courts.AsReadOnly();
@@ -25,18 +31,11 @@ public sealed class Schedule
         Id = id;
         Status = Status.Draft;
         _courts = [];
-        _activeTimeSlots = new List<ScheduleTimeInterval>(activeTimeSlots);
+        _times = [times];
     }
     
-    public static Result<Schedule> Create(ScheduleTimeInterval times, List<ScheduleTimeInterval> activeSlots)
+    public static Result<Schedule> Create(ScheduleTimeInterval times)
     {
-        if (activeSlots == null || activeSlots.Count == 0)
-        {
-            return Result.Failure<Schedule>(new ResultError(
-                "Schedule must contain at least one time interval", 
-                ErrorType.Validation));
-        }
-
         return new Schedule(Guid.NewGuid(), times);
     }
     
@@ -59,7 +58,7 @@ public sealed class Schedule
         if (timeIntervals == null || timeIntervals.Count == 0)
             return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
 
-        _activeTimeSlots = new List<ScheduleTimeInterval>(timeIntervals);
+        _times = new List<ScheduleTimeInterval>(timeIntervals);
         return None.Value;
     }
 

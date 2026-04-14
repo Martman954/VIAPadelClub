@@ -12,7 +12,6 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
 public sealed class Schedule
 {
     public Guid Id { get; }
-    public ScheduleTimeInterval Times { get; private set; }
     public Status Status { get; private set; }
     
     private List<ScheduleTimeInterval> _activeTimeSlots;
@@ -21,11 +20,10 @@ public sealed class Schedule
     private List<CourtId> _courts;
     public IReadOnlyList<CourtId> Courts => _courts.AsReadOnly();
 
-    private Schedule(Guid id, ScheduleTimeInterval times, List<ScheduleTimeInterval> activeTimeSlots)
+    private Schedule(Guid id, ScheduleTimeInterval times)
     {
         Id = id;
         Status = Status.Draft;
-        Times = times;
         _courts = [];
         _activeTimeSlots = new List<ScheduleTimeInterval>(activeTimeSlots);
     }
@@ -39,7 +37,7 @@ public sealed class Schedule
                 ErrorType.Validation));
         }
 
-        return new Schedule(Guid.NewGuid(), times, activeSlots);
+        return new Schedule(Guid.NewGuid(), times);
     }
     
     public Result<None> UpdateDate(DateTime newDate)

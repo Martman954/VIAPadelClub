@@ -12,49 +12,53 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
 public sealed class Schedule
 {
     public Guid Id { get; }
-    public DateTime Date { get; private set; }
     public Status Status { get; private set; }
     
-    private List<ScheduleTimeInterval> _activeTime;
-    public IReadOnlyList<ScheduleTimeInterval> ActiveTime => _activeTime.AsReadOnly();
+    private List<ScheduleTimeInterval> _times;
+    public IReadOnlyList<ScheduleTimeInterval> Times => _times.AsReadOnly();
+    
+    public IReadOnlyList<ScheduleTimeInterval> VipTimes
+        => _times.Where(s => s.IsVip).ToList().AsReadOnly();
 
-    private List<CourtId> courts = new();
-    public IReadOnlyList<CourtId> Courts => courts.AsReadOnly();
+    public IReadOnlyList<ScheduleTimeInterval> RegularSlots
+        => _times.Where(s => !s.IsVip).ToList().AsReadOnly();
 
-    private Schedule(Guid id, DateTime date, List<ScheduleTimeInterval> activeTime)
+    private List<CourtId> _courts;
+    public IReadOnlyList<CourtId> Courts => _courts.AsReadOnly();
+
+    private Schedule(Guid id, ScheduleTimeInterval times)
     {
         Id = id;
-        Date = date;
-        _activeTime = new List<ScheduleTimeInterval>(activeTime);
-        Status = Status.Inactive;
+        Status = Status.Draft;
+        _courts = [];
+        _times = [times];
     }
     
-    public static Result<Schedule> Create(DateTime date, List<ScheduleTimeInterval> intervals)
+    public static Result<Schedule> Create(ScheduleTimeInterval times)
     {
-        if (intervals == null || intervals.Count == 0)
-        {
-            return Result.Failure<Schedule>(new ResultError(
-                "Schedule must contain at least one time interval", 
-                ErrorType.Validation));
-        }
-
-        return new Schedule(Guid.NewGuid(), date, intervals);
+        return new Schedule(Guid.NewGuid(), times);
     }
     
     public Result<None> UpdateDate(DateTime newDate)
     {
-        Date = newDate;
+        if (!Status.Equals(Status.Draft))
+            return new ResultError("Schedule date can only be updated while in Draft status.", ErrorType.Validation);
+
+        if (newDate.Date < DateTime.Today)
+            return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
+        
         return None.Value;
     }
 
     public Result<None> UpdateActiveTime(List<ScheduleTimeInterval> timeIntervals)
     {
-        if (timeIntervals == null || timeIntervals.Count == 0)
-        {
-            return new ResultError("ActiveTime cannot be empty", ErrorType.Validation);
-        }
+        if (!Status.Equals(Status.Draft))
+            return new ResultError("Schedule time intervals can only be updated while in Draft status.", ErrorType.Validation);
 
-        _activeTime = new List<ScheduleTimeInterval>(timeIntervals);
+        if (timeIntervals == null || timeIntervals.Count == 0)
+            return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
+
+        _times = new List<ScheduleTimeInterval>(timeIntervals);
         return None.Value;
     }
 

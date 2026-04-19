@@ -80,11 +80,35 @@ public sealed class Schedule
         return Result.Success();
     }
 
-    // public Result<None> RemoveCourt(CourtId courtId)
-    // {
-    //     courts.Remove(courtId);
-    //     return None.Value;
-    // }
+    public Result<None> RemoveCourt(CourtId courtId, Court.Court court, DateTime currentTime)
+    {
+        var validation = Result.Combine(
+            ValidateNotInPast(currentTime),
+            ValidateCourtExists(courtId),
+            ValidateNoFutureBookings(court, currentTime)
+        );
+
+        if (validation is Result<None>.Failure f)
+            return f;
+
+        _courts.Remove(courtId);
+        return Result.Success();
+    }
+
+    private Result<None> ValidateNotInPast(DateTime currentTime) =>
+        Times.TimeInterval.Start.Date < currentTime.Date
+            ? Result.Failure("Past daily schedules cannot be modified.", ErrorType.Validation)
+            : Result.Success();
+
+    private Result<None> ValidateCourtExists(CourtId courtId) =>
+        _courts.Contains(courtId)
+            ? Result.Success()
+            : Result.Failure("The court was not found in the daily schedule.", ErrorType.NotFound);
+
+    private Result<None> ValidateNoFutureBookings(Court.Court court, DateTime currentTime) =>
+        court.Bookings.Any(b => !b.IsCancelled && b.TimeInterval.Start >= currentTime)
+            ? Result.Failure("Courts with bookings later on the same day cannot be removed.", ErrorType.Validation)
+            : Result.Success();
 
     public Result<None> Activate()
     {

@@ -5,6 +5,10 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
+
+/// <summary>
+/// Aggregate root representing the availability schedule for padel courts
+/// </summary>
 public sealed class Schedule
 {
     public Guid Id { get; }

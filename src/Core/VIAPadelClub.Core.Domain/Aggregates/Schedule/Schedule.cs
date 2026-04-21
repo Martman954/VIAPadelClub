@@ -34,7 +34,7 @@ public sealed class Schedule
         _times = [times];
     }
     
-    public static Result<Schedule> Create(ScheduleTimeInterval times)
+    public static Result<Schedule> Create(ScheduleTimeInterval times, List<ScheduleTimeInterval> intervals)
     {
         return new Schedule(Guid.NewGuid(), times);
     }
@@ -58,7 +58,7 @@ public sealed class Schedule
         if (timeIntervals == null || timeIntervals.Count == 0)
             return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
 
-        _activeTimeSlots = new List<ScheduleTimeInterval>(timeIntervals);
+        _times = new List<ScheduleTimeInterval>(timeIntervals);
         return Result.Success();
     }
 
@@ -67,7 +67,7 @@ public sealed class Schedule
         if (Status is not (Status.Draft or Status.Active))
             return new ResultError("Courts can only be added to draft or active schedules.", ErrorType.Validation);
         
-        if (Times.TimeInterval.Start.Date <= DateTime.Today)
+        if (_times.Min(st => st.TimeInterval.Start).Date <= DateTime.Today)
             return new ResultError("Courts can only be added to future schedules.", ErrorType.Validation);
 
         if (_courts.Contains(courtId))
@@ -93,7 +93,7 @@ public sealed class Schedule
     }
 
     private Result<None> ValidateNotInPast(DateTime currentTime) =>
-        Times.TimeInterval.Start.Date < currentTime.Date
+        _times.Min(st => st.TimeInterval.Start).Date < currentTime.Date
             ? Result.Failure("Past daily schedules cannot be modified.", ErrorType.Validation)
             : Result.Success();
 

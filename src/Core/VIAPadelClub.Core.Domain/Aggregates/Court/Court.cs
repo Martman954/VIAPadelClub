@@ -67,10 +67,10 @@ public sealed class Court
 
     private Result<None> ValidateWithinSchedule(TimeInterval t, Schedule.Schedule s) =>
         Result.Combine(
-            t.Start >= s.Times.TimeInterval.Start
+            s.Times.Any(st => t.Start >= st.TimeInterval.Start)
                 ? Result.Success()
                 : Result.Failure("Booking starts before schedule.", ErrorType.Validation),
-            t.End <= s.Times.TimeInterval.End
+            s.Times.Any(st => t.End <= st.TimeInterval.End)
                 ? Result.Success()
                 : Result.Failure("Booking ends after schedule.", ErrorType.Validation)
         );
@@ -91,7 +91,7 @@ public sealed class Court
         );
 
     private Result<None> ValidateVipAccess(Player.Player player, Schedule.Schedule schedule, TimeInterval t) =>
-        player.VipStatus != null || !schedule.ActiveTime.Where(s => s.IsVip).Any(s => Overlaps(t, s.TimeInterval))
+        player.VipStatus != null || !schedule.VipTimes.Where(s => s.IsVip).Any(s => Overlaps(t, s.TimeInterval))
             ? Result.Success()
             : Result.Failure("Non-VIP players cannot book during VIP time.", ErrorType.Validation);
 
@@ -107,9 +107,10 @@ public sealed class Court
 
         bool LeavesSmallGap(TimeSpan gap) => gap > TimeSpan.Zero && gap < oneHour;
 
+        var scheduleBoundaries = s.Times.SelectMany(st => new[] { st.TimeInterval.Start, st.TimeInterval.End });
+
         var boundaries = active.SelectMany(b => new[] { b.TimeInterval.Start, b.TimeInterval.End })
-            .Append(s.Times.TimeInterval.Start)
-            .Append(s.Times.TimeInterval.End)
+            .Concat(scheduleBoundaries)
             .Distinct().OrderBy(x => x).ToList();
 
         foreach (var point in boundaries)

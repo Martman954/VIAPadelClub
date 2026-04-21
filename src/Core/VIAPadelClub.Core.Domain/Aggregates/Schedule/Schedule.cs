@@ -125,6 +125,10 @@ public sealed class Schedule
         return Result.Success();
     }
 
+    /// <summary>
+    /// ID: 3
+    /// The manager adds available courts to a daily schedule
+    /// </summary>
     public Result<None> AddCourt(CourtId courtId)
     {
         if (Status is not (Status.Draft or Status.Active))

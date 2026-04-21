@@ -6,49 +6,49 @@ using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Court;
 
-public sealed class Court
+public sealed class Courts
 {
     public CourtId Id { get; }
 
     private readonly List<Booking> _bookings = new();
     public IReadOnlyList<Booking> Bookings => _bookings.AsReadOnly();
 
-    private Court(CourtId id)
+    private Courts(CourtId id)
     {
         Id = id;
     }
 
-    public static Result<Court> Create(string courtId)
+    public static Result<Courts> Create(string courtId)
     {
         return CourtId.Create(courtId) switch
         {
-            Result<CourtId>.Success s => new Court(s.Value),
-            Result<CourtId>.Failure f => Result.Failure<Court>(f.Errors),
+            Result<CourtId>.Success s => new Courts(s.Value),
+            Result<CourtId>.Failure f => Result.Failure<Courts>(f.Errors),
             _ => throw new InvalidOperationException()
         };
     }
 
-    public Result<BookingId> Book(ViaEmail email, TimeInterval timeInterval, CourtId courtId, Schedule.Schedule schedule, Player.Player player, DateTime currentTime)
+    public Result<BookingId> Book(ViaEmail email, TimeInterval timeInterval, CourtId courtId, Schedule.Schedules schedules, Player.Player player, DateTime currentTime)
     {
         return Result.Combine(
-            ValidateSchedule(schedule, courtId),
+            ValidateSchedule(schedules, courtId),
             ValidateTimeFormat(timeInterval),
             ValidateDuration(timeInterval),
-            ValidateWithinSchedule(timeInterval, schedule),
+            ValidateWithinSchedule(timeInterval, schedules),
             ValidateNotInPast(timeInterval, currentTime),
             ValidatePlayer(player, email, timeInterval),
-            ValidateVipAccess(player, schedule, timeInterval),
+            ValidateVipAccess(player, schedules, timeInterval),
             ValidateNoOverlap(timeInterval),
-            ValidateNoHoles(timeInterval, schedule)
-        ).WithSuccessPayload(CreateBooking(timeInterval, schedule.Id, email));
+            ValidateNoHoles(timeInterval, schedules)
+        ).WithSuccessPayload(CreateBooking(timeInterval, schedules.Id, email));
     }
 
-    private Result<None> ValidateSchedule(Schedule.Schedule schedule, CourtId courtId) =>
+    private Result<None> ValidateSchedule(Schedule.Schedules schedules, CourtId courtId) =>
         Result.Combine(
-            schedule.Status == Status.Active
+            schedules.Status == Status.Active
                 ? Result.Success()
                 : Result.Failure("Courts cannot be booked if the Daily Schedule is not active.", ErrorType.Validation),
-            schedule.Courts.Contains(courtId)
+            schedules.Courts.Contains(courtId)
                 ? Result.Success()
                 : Result.Failure("The court was not found in the daily schedule.", ErrorType.NotFound)
         );
@@ -65,7 +65,7 @@ public sealed class Court
                 ? Result.Failure("A booking must be at most three hours.", ErrorType.Validation)
                 : Result.Success();
 
-    private Result<None> ValidateWithinSchedule(TimeInterval t, Schedule.Schedule s) =>
+    private Result<None> ValidateWithinSchedule(TimeInterval t, Schedule.Schedules s) =>
         Result.Combine(
             s.Times.Any(st => t.Start >= st.TimeInterval.Start)
                 ? Result.Success()
@@ -90,8 +90,8 @@ public sealed class Court
                 : Result.Failure("A player can have a maximum of one booking per day.", ErrorType.Validation)
         );
 
-    private Result<None> ValidateVipAccess(Player.Player player, Schedule.Schedule schedule, TimeInterval t) =>
-        player.VipStatus != null || !schedule.VipTimes.Where(s => s.IsVip).Any(s => Overlaps(t, s.TimeInterval))
+    private Result<None> ValidateVipAccess(Player.Player player, Schedule.Schedules schedules, TimeInterval t) =>
+        player.VipStatus != null || !schedules.VipTimes.Where(s => s.IsVip).Any(s => Overlaps(t, s.TimeInterval))
             ? Result.Success()
             : Result.Failure("Non-VIP players cannot book during VIP time.", ErrorType.Validation);
 
@@ -100,7 +100,7 @@ public sealed class Court
             ? Result.Failure("The court is not available in the selected time span.", ErrorType.Validation)
             : Result.Success();
 
-    private Result<None> ValidateNoHoles(TimeInterval t, Schedule.Schedule s)
+    private Result<None> ValidateNoHoles(TimeInterval t, Schedule.Schedules s)
     {
         var oneHour = TimeSpan.FromHours(1);
         var active = _bookings.Where(b => !b.IsCancelled).ToList();

@@ -9,7 +9,7 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
 /// <summary>
 /// Aggregate root representing the availability schedule for padel courts
 /// </summary>
-public sealed class Schedule
+public sealed class Schedules
 {
     public Guid Id { get; }
     public Status Status { get; private set; }
@@ -26,7 +26,7 @@ public sealed class Schedule
     private List<CourtId> _courts;
     public IReadOnlyList<CourtId> Courts => _courts.AsReadOnly();
 
-    private Schedule(Guid id, ScheduleTimeInterval times)
+    private Schedules(Guid id, ScheduleTimeInterval times)
     {
         Id = id;
         Status = Status.Draft;
@@ -34,9 +34,9 @@ public sealed class Schedule
         _times = [times];
     }
     
-    public static Result<Schedule> Create(ScheduleTimeInterval times, List<ScheduleTimeInterval> intervals)
+    public static Result<Schedules> Create(ScheduleTimeInterval times, List<ScheduleTimeInterval> intervals)
     {
-        return new Schedule(Guid.NewGuid(), times);
+        return new Schedules(Guid.NewGuid(), times);
     }
     
     public Result<None> UpdateDate(DateTime newDate)
@@ -77,12 +77,12 @@ public sealed class Schedule
         return Result.Success();
     }
 
-    public Result<None> RemoveCourt(CourtId courtId, Court.Court court, DateTime currentTime)
+    public Result<None> RemoveCourt(CourtId courtId, Court.Courts courts, DateTime currentTime)
     {
         var validation = Result.Combine(
             ValidateNotInPast(currentTime),
             ValidateCourtExists(courtId),
-            ValidateNoFutureBookings(court, currentTime)
+            ValidateNoFutureBookings(courts, currentTime)
         );
 
         if (validation is Result<None>.Failure f)
@@ -102,8 +102,8 @@ public sealed class Schedule
             ? Result.Success()
             : Result.Failure("The court was not found in the daily schedule.", ErrorType.NotFound);
 
-    private Result<None> ValidateNoFutureBookings(Court.Court court, DateTime currentTime) =>
-        court.Bookings.Any(b => !b.IsCancelled && b.TimeInterval.Start >= currentTime)
+    private Result<None> ValidateNoFutureBookings(Court.Courts courts, DateTime currentTime) =>
+        courts.Bookings.Any(b => !b.IsCancelled && b.TimeInterval.Start >= currentTime)
             ? Result.Failure("Courts with bookings later on the same day cannot be removed.", ErrorType.Validation)
             : Result.Success();
 

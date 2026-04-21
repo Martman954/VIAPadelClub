@@ -7,7 +7,7 @@ namespace UnitTests.Features.ScheduleTests;
 
 public class AddCourtsToScheduleTests
 {
-     private Schedule CreateValidSchedule(DateTime? date = null)
+     private Schedules CreateValidSchedule(DateTime? date = null)
     {
         var scheduleDate = date ?? DateTime.Today.AddDays(1);
         var timeIntervalResult = TimeInterval.Create(scheduleDate.AddHours(15), scheduleDate.AddHours(22));
@@ -17,8 +17,8 @@ public class AddCourtsToScheduleTests
         var scheduleInterval = Assert.IsType<Result<ScheduleTimeInterval>.Success>(scheduleIntervalResult).Value;
     
         var intervals = new List<ScheduleTimeInterval> { scheduleInterval };
-        var result = Schedule.Create(scheduleInterval, intervals);
-        return Assert.IsType<Result<Schedule>.Success>(result).Value;
+        var result = Schedules.Create(scheduleInterval, intervals);
+        return Assert.IsType<Result<Schedules>.Success>(result).Value;
     }
     private CourtId CreateCourtId(string name)
     {

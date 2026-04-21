@@ -19,7 +19,7 @@ public class CreateScheduleCommand
     public static Result<CreateScheduleCommand> Create(string title, Status status)
     {
         if(title.Length == 0)
-            return Result.Failure<CreateScheduleCommand>(new ResultError("Empty Tile", ErrorType.Failure));
+            return new ResultError("Empty Title");
         
         return new CreateScheduleCommand(title, status);
     }

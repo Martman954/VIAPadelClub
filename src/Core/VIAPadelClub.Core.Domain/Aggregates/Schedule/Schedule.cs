@@ -55,13 +55,14 @@ public sealed class Schedule
         if (!Status.Equals(Status.Draft))
             return new ResultError("Schedule time intervals can only be updated while in Draft status.", ErrorType.Validation);
 
-        if (timeIntervals == null || timeIntervals.Count == 0)
+        if (timeIntervals.Count == 0)
             return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
 
         _times = new List<ScheduleTimeInterval>(timeIntervals);
         return None.Value;
     }
 
+    
     // public Result<None> AddCourt(CourtId courtId)
     // {
     //     courts.Add(courtId);

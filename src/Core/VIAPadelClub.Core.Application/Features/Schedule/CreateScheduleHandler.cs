@@ -9,7 +9,7 @@ internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
 {
     // TODO: 
     // Some repo
-    // Some unit of work (related to transactions)
+    // Some unit of work (related to transactions
     
     public Task<Result> HandleAsync(CreateScheduleCommand command)
     {

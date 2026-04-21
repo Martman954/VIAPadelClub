@@ -1,6 +1,7 @@
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
+using VIAPadelClub.Core.Domain.Contracts.Schedule;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
@@ -107,10 +108,25 @@ public sealed class Schedules
             ? Result.Failure("Courts with bookings later on the same day cannot be removed.", ErrorType.Validation)
             : Result.Success();
 
-    public Result<None> Activate()
+    public Result<None> Activate(IScheduleOnDateChecker checker)
     {
+        if (Status == Status.Deleted)
+            return Result.Failure("A deleted daily schedule cannot be activated.", ErrorType.Validation);
+
+        if (Status == Status.Active)
+            return Result.Failure("The schedule is already active.", ErrorType.Validation);
+
+        if (_courts.Count == 0)
+            return Result.Failure("A daily schedule without courts cannot be activated.", ErrorType.Validation);
+
+        if (_times.Min(st => st.TimeInterval.Start) < DateTime.Now)
+            return Result.Failure("A daily schedule with a past start time cannot be activated.", ErrorType.Validation);
+
+        if (checker.HasScheduleOnDate(DateOnly.FromDateTime(_times.Min(st => st.TimeInterval.Start))))
+            return Result.Failure("Another active daily schedule already exists on this date.", ErrorType.Validation);
+
         Status = Status.Active;
-        return None.Value;
+        return Result.Success();
     }
 
     public Result<None> Delete()

@@ -1,6 +1,7 @@
 using VIAPadelClub.Core.Domain.Aggregates.Schedule;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
+using VIAPadelClub.Core.Domain.Contracts.Schedule;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.ScheduleTests;
@@ -31,7 +32,7 @@ public class AddCourtsToScheduleTests
     public void AddCourt_ShouldSucceed_WhenScheduleIsActiveAndCourtIsValid()
     {
         var schedule = CreateValidSchedule();
-        schedule.Activate();
+        schedule.Activate(new NoActiveScheduleOnDateChecker());
         var courtId = CreateCourtId("S1");
 
         var result = schedule.AddCourt(courtId);
@@ -126,4 +127,8 @@ public class AddCourtsToScheduleTests
         Assert.Contains(failure.Errors, e => e.Message == "Court name must be 2 or 3 characters long.");
     }
 
+    public class NoActiveScheduleOnDateChecker : IScheduleOnDateChecker
+    {
+        public bool HasScheduleOnDate(DateOnly scheduleDate) => false;
+    }
 }

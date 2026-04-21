@@ -1,6 +1,7 @@
 using VIAPadelClub.Core.Domain.Aggregates.Court.Entities;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
 using VIAPadelClub.Core.Domain.Common.Values;
+using VIAPadelClub.Core.Domain.Contracts.Court;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
@@ -28,7 +29,7 @@ public sealed class Courts
         };
     }
 
-    public Result<BookingId> Book(ViaEmail email, TimeInterval timeInterval, CourtId courtId, Schedule.Schedules schedules, Player.Player player, DateTime currentTime)
+    public Result<BookingId> Book(ViaEmail email, TimeInterval timeInterval, CourtId courtId, Schedule.Schedules schedules, Player.Player player, DateTime currentTime, ICourtHasBookingChecker checker)
     {
         return Result.Combine(
             ValidateSchedule(schedules, courtId),
@@ -36,7 +37,7 @@ public sealed class Courts
             ValidateDuration(timeInterval),
             ValidateWithinSchedule(timeInterval, schedules),
             ValidateNotInPast(timeInterval, currentTime),
-            ValidatePlayer(player, email, timeInterval),
+            ValidatePlayer(player, email, timeInterval, checker),
             ValidateVipAccess(player, schedules, timeInterval),
             ValidateNoOverlap(timeInterval),
             ValidateNoHoles(timeInterval, schedules)
@@ -80,12 +81,12 @@ public sealed class Courts
             ? Result.Success()
             : Result.Failure("A booking cannot start in the past.", ErrorType.Validation);
 
-    private Result<None> ValidatePlayer(Player.Player player, ViaEmail email, TimeInterval t) =>
+    private Result<None> ValidatePlayer(Player.Player player, ViaEmail email, TimeInterval t, ICourtHasBookingChecker checker) =>
         Result.Combine(
             !player.isBlackListed
                 ? Result.Success()
                 : Result.Failure("Blacklisted players cannot book courts.", ErrorType.Validation),
-            !_bookings.Any(b => !b.IsCancelled && b.PlayerEmail == email && b.TimeInterval.Start.Date == t.Start.Date)
+            !checker.HasBooking(email, t.Start.Date)
                 ? Result.Success()
                 : Result.Failure("A player can have a maximum of one booking per day.", ErrorType.Validation)
         );

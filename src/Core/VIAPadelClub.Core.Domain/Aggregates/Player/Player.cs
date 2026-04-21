@@ -1,6 +1,7 @@
 using VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts;
+using VIAPadelClub.Core.Domain.Contracts.Player;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 

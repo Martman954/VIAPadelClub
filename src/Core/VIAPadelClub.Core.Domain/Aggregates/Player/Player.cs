@@ -1,6 +1,8 @@
 using VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
+using VIAPadelClub.Core.Domain.Contracts;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
+using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Player;
 
@@ -26,10 +28,15 @@ public sealed class Player
     }
 
     public static Result<Player> Register(
-        ViaEmail email, Name fullName, ImageUrl profilePictureUri)
+        ViaEmail email, Name fullName, ImageUrl profilePictureUri,
+        IEmailInUseChecker emailInUseChecker)
     {
-        return new Player(email, fullName, profilePictureUri);
+        if (emailInUseChecker.IsEmailInUse(email))
+            return Result.Failure<Player>(new ResultError("Email in use", ErrorType.Conflict));
+        
+        return new Player(email,fullName, profilePictureUri);
     }
+    
 
     public Result<Quarantine> QuarantinePlayer(TimeInterval timeInterval, ViaEmail email)
     {
@@ -57,4 +64,5 @@ public sealed class Player
             _ => throw new InvalidOperationException()
         };
     }
+    
 }

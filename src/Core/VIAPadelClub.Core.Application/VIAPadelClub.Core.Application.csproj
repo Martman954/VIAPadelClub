@@ -2,18 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <OutputType>Library</OutputType>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Features</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Tools\VIAPadelClub.Core.Tools.OperationResult\VIAPadelClub.Core.Tools.OperationResult.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Contracts\Court\" />
-      <Folder Include="Contracts\Schedule\" />
+      <ProjectReference Include="..\VIAPadelClub.Core.AppEntry\VIAPadelClub.Core.AppEntry.csproj" />
     </ItemGroup>
 
 </Project>

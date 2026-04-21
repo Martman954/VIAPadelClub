@@ -1,3 +1,4 @@
+using VIAPadelClub.Core.Domain.Aggregates.Court;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
@@ -27,19 +28,55 @@ public sealed class Schedules
     private List<CourtId> _courts;
     public IReadOnlyList<CourtId> Courts => _courts.AsReadOnly();
 
-    private Schedules(Guid id, ScheduleTimeInterval times)
-    {
+    private static readonly TimeOnly DefaultStart = new(15, 0);
+    private static readonly TimeOnly DefaultEnd = new(22, 0);
+
+    private Schedules(Guid id, ScheduleTimeInterval defaultTime)
+   {
         Id = id;
         Status = Status.Draft;
         _courts = [];
-        _times = [times];
+        _times = [defaultTime];
     }
     
     public static Result<Schedules> Create(ScheduleTimeInterval times, List<ScheduleTimeInterval> intervals)
+
+
+    /// <summary>
+    /// ID: 1
+    /// I want to create a new daily schedule
+    /// When manager selects to create a daily schedule
+    ///     Then a daily schedule is created with an ID
+    ///     And the status is set to “draft”
+    ///     And the list of available courts is empty
+    ///     And the times are set to 15:00 and 22:00
+    ///     And date is set to today
+    /// </summary>
+    public static Result<Schedules> Create()
     {
-        return new Schedules(Guid.NewGuid(), times);
+        var today = DateTime.Today;
+        var start = today.Add(DefaultStart.ToTimeSpan());
+        var end = today.Add(DefaultEnd.ToTimeSpan());
+
+        var timeIntervalResult = TimeInterval.Create(start, end);
+        if (timeIntervalResult is Result<TimeInterval>.Failure f1)
+            return Result.Failure<Schedules>(f1.Errors);
+
+        var timeInterval = ((Result<TimeInterval>.Success)timeIntervalResult).Value;
+
+        var scheduleTimeIntervalResult = ScheduleTimeInterval.Create(timeInterval, false);
+        if (scheduleTimeIntervalResult is Result<ScheduleTimeInterval>.Failure f2)
+            return Result.Failure<Schedules>(f2.Errors);
+
+        var scheduleTimeInterval = ((Result<ScheduleTimeInterval>.Success)scheduleTimeIntervalResult).Value;
+
+        return new Schedules(Guid.NewGuid(), scheduleTimeInterval);
     }
     
+    /// <summary>
+    /// ID: 2 S:1
+    /// I want to create a new daily schedule, date
+    /// </summary>
     public Result<None> UpdateDate(DateTime newDate)
     {
         if (!Status.Equals(Status.Draft))
@@ -51,17 +88,41 @@ public sealed class Schedules
         return Result.Success();
     }
 
-    public Result<None> UpdateActiveTime(List<ScheduleTimeInterval> timeIntervals)
-    {
-        if (!Status.Equals(Status.Draft))
-            return new ResultError("Schedule time intervals can only be updated while in Draft status.", ErrorType.Validation);
-
-        if (timeIntervals == null || timeIntervals.Count == 0)
-            return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
-
-        _times = new List<ScheduleTimeInterval>(timeIntervals);
-        return Result.Success();
-    }
+    /// <summary>
+    /// ID: 2 S:2
+    /// I want to create a new daily schedule, times
+    /// </summary>
+ public Result<None> UpdateTimes(TimeInterval timeInterval)
+ {
+     if (!Status.Equals(Status.Draft))
+         return new ResultError("Schedule time intervals can only be updated while in Draft status.", ErrorType.Validation);
+ 
+     var result = ScheduleTimeInterval.Create(timeInterval, false);
+     if (result is Result<ScheduleTimeInterval>.Failure f)
+         return Result.Failure<None>(f.Errors);
+ 
+     var scheduleTimeInterval = ((Result<ScheduleTimeInterval>.Success)result).Value;
+     _times = [scheduleTimeInterval];
+     return Result.Success();
+ }
+    
+    // private static Result<None> ValidateOperatingHours(TimeInterval timeInterval)
+    // {
+    //     var start = TimeOnly.FromDateTime(timeInterval.Start);
+    //     var end = TimeOnly.FromDateTime(timeInterval.End);
+    //
+    //     if (start < OperatingHourStart)
+    //         return Result.Failure(
+    //             $"Schedule start time must be at or after {OperatingHourStart}.",
+    //             ErrorType.Validation);
+    //
+    //     if (end > OperatingHourEnd)
+    //         return Result.Failure(
+    //             $"Schedule end time must be at or before {OperatingHourEnd}.",
+    //             ErrorType.Validation);
+    //
+    //     return Result.Success();
+    // }
 
     public Result<None> AddCourt(CourtId courtId)
     {
@@ -78,7 +139,7 @@ public sealed class Schedules
         return Result.Success();
     }
 
-    public Result<None> RemoveCourt(CourtId courtId, Court.Courts courts, DateTime currentTime)
+    public Result<None> RemoveCourt(CourtId courtId, Courts courts, DateTime currentTime)
     {
         var validation = Result.Combine(
             ValidateNotInPast(currentTime),

@@ -6,8 +6,8 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
 
 public class ScheduleTimeInterval
 {
-    private const int OperatingHourStart = 15;
-    private const int OperatingHourEnd = 22;
+    private static readonly TimeOnly OperatingHourStart = new TimeOnly(8, 0);
+    private static readonly TimeOnly OperatingHourEnd = new TimeOnly(22, 0);
     private static readonly TimeSpan MinimumDuration = TimeSpan.FromMinutes(60);
     
     public TimeInterval TimeInterval { get; }
@@ -21,24 +21,31 @@ public class ScheduleTimeInterval
 
     public static Result<ScheduleTimeInterval> Create(TimeInterval timeInterval, bool isVip)
         => Result.Combine(
+            ValidateDateIsNotInPast(timeInterval),
             ValidateOperatingHours(timeInterval),
             ValidateMinimumDuration(timeInterval)
         ).WithSuccessPayload(new ScheduleTimeInterval(timeInterval, isVip));
 
+    private static Result<None> ValidateDateIsNotInPast(TimeInterval timeInterval) =>
+        timeInterval.Start.Date < DateTime.Today
+            ? Result.Failure(
+                "Schedule date cannot be in the past.",
+                ErrorType.Validation)
+            : Result.Success();
+
     private static Result<None> ValidateOperatingHours(TimeInterval timeInterval)
     {
-        var startHour = timeInterval.Start.Hour;
-        var endHour = timeInterval.End.Hour;
-        var endMinute = timeInterval.End.Minute;
+        var start = TimeOnly.FromDateTime(timeInterval.Start);
+        var end = TimeOnly.FromDateTime(timeInterval.End);
 
-        if (startHour < OperatingHourStart)
+        if (start < OperatingHourStart)
             return Result.Failure(
-                $"Schedule start time must be at or after {OperatingHourStart}:00.",
+                $"Schedule start time must be at or after {OperatingHourStart}.",
                 ErrorType.Validation);
 
-        if (endHour > OperatingHourEnd || (endHour == OperatingHourEnd && endMinute > 0))
+        if (end > OperatingHourEnd)
             return Result.Failure(
-                $"Schedule end time must be at or before {OperatingHourEnd}:00.",
+                $"Schedule end time must be at or before {OperatingHourEnd}.",
                 ErrorType.Validation);
 
         return Result.Success();

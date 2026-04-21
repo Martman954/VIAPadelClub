@@ -20,7 +20,7 @@ public sealed class Schedule
     public IReadOnlyList<ScheduleTimeInterval> VipTimes
         => _times.Where(s => s.IsVip).ToList().AsReadOnly();
 
-    public IReadOnlyList<ScheduleTimeInterval> RegularSlots
+    public IReadOnlyList<ScheduleTimeInterval> RegularTimes
         => _times.Where(s => !s.IsVip).ToList().AsReadOnly();
 
     private List<CourtId> _courts;

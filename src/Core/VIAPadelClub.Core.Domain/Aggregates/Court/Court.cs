@@ -10,7 +10,7 @@ public sealed class Court
 {
     public CourtId Id { get; }
 
-    private readonly List<Booking> _bookings = [];
+    private readonly List<Booking> _bookings = new();
     public IReadOnlyList<Booking> Bookings => _bookings.AsReadOnly();
 
     private Court(CourtId id)

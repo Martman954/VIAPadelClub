@@ -20,7 +20,7 @@ public sealed class Schedule
     public IReadOnlyList<ScheduleTimeInterval> VipTimes
         => _times.Where(s => s.IsVip).ToList().AsReadOnly();
 
-    public IReadOnlyList<ScheduleTimeInterval> RegularSlots
+    public IReadOnlyList<ScheduleTimeInterval> RegularTimes
         => _times.Where(s => !s.IsVip).ToList().AsReadOnly();
 
     private List<CourtId> _courts;
@@ -38,27 +38,13 @@ public sealed class Schedule
     {
         return new Schedule(Guid.NewGuid(), times);
     }
-    
-    public Result<None> UpdateDate(DateTime newDate)
-    {
-        if (!Status.Equals(Status.Draft))
-            return new ResultError("Schedule date can only be updated while in Draft status.", ErrorType.Validation);
 
-        if (newDate.Date < DateTime.Today)
-            return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
-        
-        return None.Value;
-    }
-
-    public Result<None> UpdateActiveTime(List<ScheduleTimeInterval> timeIntervals)
+    public Result<None> UpdateTimes(ScheduleTimeInterval scheduleTimeInterval)
     {
         if (!Status.Equals(Status.Draft))
             return new ResultError("Schedule time intervals can only be updated while in Draft status.", ErrorType.Validation);
 
-        if (timeIntervals == null || timeIntervals.Count == 0)
-            return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
-
-        _times = new List<ScheduleTimeInterval>(timeIntervals);
+        _times = [scheduleTimeInterval];
         return None.Value;
     }
 

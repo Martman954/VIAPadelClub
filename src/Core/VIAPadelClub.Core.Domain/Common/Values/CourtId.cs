@@ -5,7 +5,7 @@ namespace VIAPadelClub.Core.Domain.Common.Values;
 
 public sealed record CourtId
 {
-    private string Value { get; }
+    public string Value { get; }
 
     private CourtId(string value)
     {

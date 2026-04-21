@@ -7,5 +7,5 @@ namespace VIAPadelClub.Core.Domain.Contracts;
 public interface IScheduleService
 {
     Task<Result<Schedule>> GetSchedule(Guid scheduleId);
-    Task<Result<Schedule>> GetScheduleByTimeIntervals(ScheduleTimeInterval scheduleTimeInterval);
+    Task<Result<Schedule>> GetScheduleByDate(DateOnly scheduleDate);
 }

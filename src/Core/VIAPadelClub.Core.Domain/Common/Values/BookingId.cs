@@ -2,7 +2,7 @@ namespace VIAPadelClub.Core.Domain.Common.Values;
 
 public sealed record BookingId
 {
-    private Guid Value { get; }
+    public Guid Value { get; }
 
     private BookingId(Guid value)
     {

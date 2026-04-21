@@ -1,7 +1,6 @@
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace VIAPadelClub.Core.Domain.Contracts;
+namespace VIAPadelClub.Core.Domain.Contracts.Player;
 
 public interface IEmailInUseChecker
 {

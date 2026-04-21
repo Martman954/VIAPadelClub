@@ -1,4 +1,3 @@
-using VIAPadelClub.Core.Domain.Aggregates.Court;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
@@ -11,7 +10,7 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
 /// <summary>
 /// Aggregate root representing the availability schedule for padel courts
 /// </summary>
-public sealed class Schedules
+public sealed class Schedule
 {
     public Guid Id { get; }
     public Status Status { get; private set; }
@@ -31,7 +30,7 @@ public sealed class Schedules
     private static readonly TimeOnly DefaultStart = new(15, 0);
     private static readonly TimeOnly DefaultEnd = new(22, 0);
 
-    private Schedules(Guid id, ScheduleTimeInterval defaultTime)
+    private Schedule(Guid id, ScheduleTimeInterval defaultTime)
    {
         Id = id;
         Status = Status.Draft;
@@ -39,9 +38,6 @@ public sealed class Schedules
         _times = [defaultTime];
     }
     
-    public static Result<Schedules> Create(ScheduleTimeInterval times, List<ScheduleTimeInterval> intervals)
-
-
     /// <summary>
     /// ID: 1
     /// I want to create a new daily schedule
@@ -52,7 +48,7 @@ public sealed class Schedules
     ///     And the times are set to 15:00 and 22:00
     ///     And date is set to today
     /// </summary>
-    public static Result<Schedules> Create()
+    public static Result<Schedule> Create()
     {
         var today = DateTime.Today;
         var start = today.Add(DefaultStart.ToTimeSpan());
@@ -60,17 +56,17 @@ public sealed class Schedules
 
         var timeIntervalResult = TimeInterval.Create(start, end);
         if (timeIntervalResult is Result<TimeInterval>.Failure f1)
-            return Result.Failure<Schedules>(f1.Errors);
+            return Result.Failure<Schedule>(f1.Errors);
 
         var timeInterval = ((Result<TimeInterval>.Success)timeIntervalResult).Value;
 
         var scheduleTimeIntervalResult = ScheduleTimeInterval.Create(timeInterval, false);
         if (scheduleTimeIntervalResult is Result<ScheduleTimeInterval>.Failure f2)
-            return Result.Failure<Schedules>(f2.Errors);
+            return Result.Failure<Schedule>(f2.Errors);
 
         var scheduleTimeInterval = ((Result<ScheduleTimeInterval>.Success)scheduleTimeIntervalResult).Value;
 
-        return new Schedules(Guid.NewGuid(), scheduleTimeInterval);
+        return new Schedule(Guid.NewGuid(), scheduleTimeInterval);
     }
     
     /// <summary>
@@ -139,12 +135,12 @@ public sealed class Schedules
         return Result.Success();
     }
 
-    public Result<None> RemoveCourt(CourtId courtId, Courts courts, DateTime currentTime)
+    public Result<None> RemoveCourt(CourtId courtId, Court.Court court, DateTime currentTime)
     {
         var validation = Result.Combine(
             ValidateNotInPast(currentTime),
             ValidateCourtExists(courtId),
-            ValidateNoFutureBookings(courts, currentTime)
+            ValidateNoFutureBookings(court, currentTime)
         );
 
         if (validation is Result<None>.Failure f)
@@ -164,8 +160,8 @@ public sealed class Schedules
             ? Result.Success()
             : Result.Failure("The court was not found in the daily schedule.", ErrorType.NotFound);
 
-    private Result<None> ValidateNoFutureBookings(Court.Courts courts, DateTime currentTime) =>
-        courts.Bookings.Any(b => !b.IsCancelled && b.TimeInterval.Start >= currentTime)
+    private Result<None> ValidateNoFutureBookings(Court.Court court, DateTime currentTime) =>
+        court.Bookings.Any(b => !b.IsCancelled && b.TimeInterval.Start >= currentTime)
             ? Result.Failure("Courts with bookings later on the same day cannot be removed.", ErrorType.Validation)
             : Result.Success();
 

@@ -19,7 +19,7 @@ public class ScheduleCreateTests
         List<ScheduleTimeInterval>? intervals = null;
 
         // Act
-        var result = Schedule.Create(date, intervals!);
+        var result = Schedule.Create(date);
 
         // Assert
         var failure = Assert.IsType<Result<Schedule>.Failure>(result);
@@ -42,7 +42,7 @@ public class ScheduleCreateTests
         };
 
         // Act
-        var result = Schedule.Create(tomorrow, validIntervals);
+        var result = Schedule.Create(tomorrow);
 
         // Assert
         if (result is Result<Schedule>.Success success)

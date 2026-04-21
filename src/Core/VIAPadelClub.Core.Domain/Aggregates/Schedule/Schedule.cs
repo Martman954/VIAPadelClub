@@ -13,10 +13,10 @@ public sealed class Schedule
 {
     public Guid Id { get; }
     public Status Status { get; private set; }
-    
+
     private List<ScheduleTimeInterval> _times;
     public IReadOnlyList<ScheduleTimeInterval> Times => _times.AsReadOnly();
-    
+
     public IReadOnlyList<ScheduleTimeInterval> VipTimes
         => _times.Where(s => s.IsVip).ToList().AsReadOnly();
 
@@ -68,7 +68,7 @@ public sealed class Schedule
 
         return new Schedule(Guid.NewGuid(), scheduleTimeInterval);
     }
-    
+
     /// <summary>
     /// ID: 2 S:1
     /// I want to create a new daily schedule, date
@@ -80,57 +80,62 @@ public sealed class Schedule
 
         if (newDate.Date < DateTime.Today)
             return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
-        
+
         return Result.Success();
     }
 
     /// <summary>
     /// ID: 2 S:2
-    /// I want to create a new daily schedule, times
+    /// I want to update a new daily schedule, times
+    ///
+    /// If part of a schedule is VIP only, _times will have more than one element,
+    /// so we need to update the first and last element of the list, keeping the VIP part in between unchanged.
     /// </summary>
- public Result<None> UpdateTimes(TimeInterval timeInterval)
- {
-     if (!Status.Equals(Status.Draft))
-         return new ResultError("Schedule time intervals can only be updated while in Draft status.", ErrorType.Validation);
- 
-     var result = ScheduleTimeInterval.Create(timeInterval, false);
-     if (result is Result<ScheduleTimeInterval>.Failure f)
-         return Result.Failure<None>(f.Errors);
- 
-     var scheduleTimeInterval = ((Result<ScheduleTimeInterval>.Success)result).Value;
-     _times = [scheduleTimeInterval];
-     return Result.Success();
- }
-    
-    // private static Result<None> ValidateOperatingHours(TimeInterval timeInterval)
-    // {
-    //     var start = TimeOnly.FromDateTime(timeInterval.Start);
-    //     var end = TimeOnly.FromDateTime(timeInterval.End);
-    //
-    //     if (start < OperatingHourStart)
-    //         return Result.Failure(
-    //             $"Schedule start time must be at or after {OperatingHourStart}.",
-    //             ErrorType.Validation);
-    //
-    //     if (end > OperatingHourEnd)
-    //         return Result.Failure(
-    //             $"Schedule end time must be at or before {OperatingHourEnd}.",
-    //             ErrorType.Validation);
-    //
-    //     return Result.Success();
-    // }
+    public Result<None> UpdateTimes(TimeInterval timeInterval)
+    {
+        if (!Status.Equals(Status.Draft))
+            return new ResultError("Schedule time intervals can only be updated while in Draft status.",
+                ErrorType.Validation);
+
+        // Rebuild first element with new start, keeping its original end
+        var firstOriginal = _times[0].TimeInterval;
+        var firstIntervalResult = TimeInterval.Create(timeInterval.Start, firstOriginal.End);
+        if (firstIntervalResult is Result<TimeInterval>.Failure f1)
+            return Result.Failure<None>(f1.Errors);
+        var firstInterval = ((Result<TimeInterval>.Success)firstIntervalResult).Value;
+
+        var firstResult = ScheduleTimeInterval.Create(firstInterval, _times[0].IsVip);
+        if (firstResult is Result<ScheduleTimeInterval>.Failure f2)
+            return Result.Failure<None>(f2.Errors);
+
+        // Rebuild last element with new end, keeping its original start
+        var lastOriginal = _times[^1].TimeInterval;
+        var lastIntervalResult = TimeInterval.Create(lastOriginal.Start, timeInterval.End);
+        if (lastIntervalResult is Result<TimeInterval>.Failure f3)
+            return Result.Failure<None>(f3.Errors);
+        var lastInterval = ((Result<TimeInterval>.Success)lastIntervalResult).Value;
+
+        var lastResult = ScheduleTimeInterval.Create(lastInterval, _times[^1].IsVip);
+        if (lastResult is Result<ScheduleTimeInterval>.Failure f4)
+            return Result.Failure<None>(f4.Errors);
+
+        _times[0] = ((Result<ScheduleTimeInterval>.Success)firstResult).Value;
+        _times[^1] = ((Result<ScheduleTimeInterval>.Success)lastResult).Value;
+
+        return Result.Success();
+    }
 
     public Result<None> AddCourt(CourtId courtId)
     {
         if (Status is not (Status.Draft or Status.Active))
             return new ResultError("Courts can only be added to draft or active schedules.", ErrorType.Validation);
-        
+
         if (_times.Min(st => st.TimeInterval.Start).Date <= DateTime.Today)
             return new ResultError("Courts can only be added to future schedules.", ErrorType.Validation);
 
         if (_courts.Contains(courtId))
             return new ResultError("This court is already added to the schedule.", ErrorType.Validation);
-        
+
         _courts.Add(courtId);
         return Result.Success();
     }

@@ -47,7 +47,7 @@ public sealed class Schedule
         if (newDate.Date < DateTime.Today)
             return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
         
-        return None.Value;
+        return Result.Success();
     }
 
     public Result<None> UpdateActiveTime(List<ScheduleTimeInterval> timeIntervals)
@@ -58,21 +58,54 @@ public sealed class Schedule
         if (timeIntervals == null || timeIntervals.Count == 0)
             return new ResultError("Schedule must contain at least one time interval.", ErrorType.Validation);
 
-        _times = new List<ScheduleTimeInterval>(timeIntervals);
-        return None.Value;
+        _activeTimeSlots = new List<ScheduleTimeInterval>(timeIntervals);
+        return Result.Success();
     }
 
-    // public Result<None> AddCourt(CourtId courtId)
-    // {
-    //     courts.Add(courtId);
-    //     return None.Value;
-    // }
+    public Result<None> AddCourt(CourtId courtId)
+    {
+        if (Status is not (Status.Draft or Status.Active))
+            return new ResultError("Courts can only be added to draft or active schedules.", ErrorType.Validation);
+        
+        if (Times.TimeInterval.Start.Date <= DateTime.Today)
+            return new ResultError("Courts can only be added to future schedules.", ErrorType.Validation);
 
-    // public Result<None> RemoveCourt(CourtId courtId)
-    // {
-    //     courts.Remove(courtId);
-    //     return None.Value;
-    // }
+        if (_courts.Contains(courtId))
+            return new ResultError("This court is already added to the schedule.", ErrorType.Validation);
+        
+        _courts.Add(courtId);
+        return Result.Success();
+    }
+
+    public Result<None> RemoveCourt(CourtId courtId, Court.Court court, DateTime currentTime)
+    {
+        var validation = Result.Combine(
+            ValidateNotInPast(currentTime),
+            ValidateCourtExists(courtId),
+            ValidateNoFutureBookings(court, currentTime)
+        );
+
+        if (validation is Result<None>.Failure f)
+            return f;
+
+        _courts.Remove(courtId);
+        return Result.Success();
+    }
+
+    private Result<None> ValidateNotInPast(DateTime currentTime) =>
+        Times.TimeInterval.Start.Date < currentTime.Date
+            ? Result.Failure("Past daily schedules cannot be modified.", ErrorType.Validation)
+            : Result.Success();
+
+    private Result<None> ValidateCourtExists(CourtId courtId) =>
+        _courts.Contains(courtId)
+            ? Result.Success()
+            : Result.Failure("The court was not found in the daily schedule.", ErrorType.NotFound);
+
+    private Result<None> ValidateNoFutureBookings(Court.Court court, DateTime currentTime) =>
+        court.Bookings.Any(b => !b.IsCancelled && b.TimeInterval.Start >= currentTime)
+            ? Result.Failure("Courts with bookings later on the same day cannot be removed.", ErrorType.Validation)
+            : Result.Success();
 
     public Result<None> Activate()
     {

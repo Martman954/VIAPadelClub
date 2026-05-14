@@ -1,6 +1,7 @@
 using Features.CommandDispatch;
 using Features.CommandDispatch.PlayerCommands;
 using VIAPadelClub.Core.Domain.Contracts;
+using VIAPadelClub.Core.Domain.Contracts.Player;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;

@@ -98,7 +98,7 @@ public sealed class Schedule
                 ErrorType.Validation);
 
         // Rebuild first element with new start, keeping its original end
-        var firstOriginal = _times[0].TimeInterval;
+        var firstOriginal =  _times[0].TimeInterval;
         var firstIntervalResult = TimeInterval.Create(timeInterval.Start, firstOriginal.End);
         if (firstIntervalResult is Result<TimeInterval>.Failure f1)
             return Result.Failure<None>(f1.Errors);
@@ -143,20 +143,10 @@ public sealed class Schedule
         _courts.Add(courtId);
         return Result.Success();
     }
-
-    public Result<None> RemoveCourt(CourtId courtId, Court.Court court, DateTime currentTime)
+    
+    internal void RemoveCourt(CourtId courtId)
     {
-        var validation = Result.Combine(
-            ValidateNotInPast(currentTime),
-            ValidateCourtExists(courtId),
-            ValidateNoFutureBookings(court, currentTime)
-        );
-
-        if (validation is Result<None>.Failure f)
-            return f;
-
         _courts.Remove(courtId);
-        return Result.Success();
     }
 
     private Result<None> ValidateNotInPast(DateTime currentTime) =>

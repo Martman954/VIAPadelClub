@@ -25,21 +25,35 @@ public class RemoveAvailableCourtFromSchedule
 
         var scheduleDate = schedule.Times[0].TimeInterval.Start.Date;
 
+        // Schedule is in the past
         if (currentTime.Date > scheduleDate)
             return Result.Failure<IReadOnlyList<ViaEmail>>(
-                new ResultError("Court can only be removed on or before the date of the schedule.", ErrorType.Validation));
+                new ResultError("Court from a past schedule cannot be removed.", ErrorType.Validation));
 
         var activeBookings = court.Bookings
             .Where(b => !b.IsCancelled && b.ScheduleId == schedule.Id)
             .ToList();
 
-        // Only cancel bookings that haven't started yet; past bookings are left as-is
-        var futureBookings = activeBookings
-            .Where(b => b.TimeInterval.Start > currentTime)
-            .ToList();
+        // Same day as schedule
+        if (currentTime.Date == scheduleDate)
+        {
+            var upcomingBookings = activeBookings
+                .Where(b => b.TimeInterval.Start > currentTime)
+                .ToList();
 
+            // If there are upcoming bookings today, removal is not allowed
+            if (upcomingBookings.Count != 0)
+                return Result.Failure<IReadOnlyList<ViaEmail>>(
+                    new ResultError("Cannot remove court while there are upcoming bookings on the same day.", ErrorType.Validation));
+
+            // All games have been played — remove court, no emails
+            schedule.RemoveCourt(courtId);
+            return Result.Success<IReadOnlyList<ViaEmail>>(new List<ViaEmail>());
+        }
+
+        // Before schedule date - cancel all bookings and send emails
         var affectedEmails = new List<ViaEmail>();
-        foreach (var booking in futureBookings)
+        foreach (var booking in activeBookings)
         {
             court.CancelBooking(booking.Id);
             affectedEmails.Add(booking.PlayerEmail);

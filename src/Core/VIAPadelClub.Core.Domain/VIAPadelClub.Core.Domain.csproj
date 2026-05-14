@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Tools\VIAPadelClub.Core.Tools.OperationResult\VIAPadelClub.Core.Tools.OperationResult.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Contracts\Court\" />
+    </ItemGroup>
+
 </Project>

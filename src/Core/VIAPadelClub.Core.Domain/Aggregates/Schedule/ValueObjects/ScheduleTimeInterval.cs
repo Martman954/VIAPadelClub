@@ -19,7 +19,8 @@ public class ScheduleTimeInterval
 
     public static Result<ScheduleTimeInterval> Create(TimeInterval timeInterval, bool isVip)
         => Result.Combine(ValidateDateIsNotInPast(timeInterval), 
-            ValidateMinimumDuration(timeInterval)
+            ValidateMinimumDuration(timeInterval),
+            ValidateHourFormat(timeInterval)
         ).WithSuccessPayload(new ScheduleTimeInterval(timeInterval, isVip));
 
     private static Result<None> ValidateDateIsNotInPast(TimeInterval timeInterval) =>
@@ -35,4 +36,17 @@ public class ScheduleTimeInterval
                 $"Schedule time interval must be at least {(int)MinimumDuration.TotalMinutes} minutes.",
                 ErrorType.Validation)
             : Result.Success();
+    
+    private static Result<None> ValidateHourFormat(TimeInterval timeInterval)
+    {
+        var startMinutes = timeInterval.Start.Minute;
+        var endMinutes = timeInterval.End.Minute;
+
+        if ((startMinutes != 0 && startMinutes != 30) || (endMinutes != 0 && endMinutes != 30))
+            return Result.Failure(
+                "Schedule time must be on the hour (:00) or half hour (:30).",
+                ErrorType.Validation);
+
+        return Result.Success();
+    }
 }

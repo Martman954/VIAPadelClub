@@ -29,19 +29,16 @@ public sealed class Court
         };
     }
 
-    public Result<BookingId> Book(ViaEmail email, TimeInterval timeInterval, CourtId courtId, Schedule.Schedule schedule, Player.Player player, DateTime currentTime, ICourtHasBookingChecker checker)
+    public Result<BookingId> Book(ViaEmail email, TimeInterval timeInterval, CourtId courtId, Guid scheduleId, DateTime currentTime, ICourtHasBookingChecker checker)
     {
         return Result.Combine(
-            ValidateSchedule(schedule, courtId),
             ValidateTimeFormat(timeInterval),
             ValidateDuration(timeInterval),
-            ValidateWithinSchedule(timeInterval, schedule),
             ValidateNotInPast(timeInterval, currentTime),
-            ValidatePlayer(player, email, timeInterval, checker),
-            ValidateVipAccess(player, schedule, timeInterval),
-            ValidateNoOverlap(timeInterval),
-            ValidateNoHoles(timeInterval, schedule)
-        ).WithSuccessPayload(CreateBooking(timeInterval, schedule.Id, email));
+            ValidatePlayer(player, email, timeInterval, checker),// TODO: Application
+            ValidateVipAccess(player, schedule, timeInterval), // TODO: Application
+            ValidateNoOverlap(timeInterval)
+        ).WithSuccessPayload(CreateBooking(timeInterval, scheduleId, email));
     }
 
     private Result<None> ValidateSchedule(Schedule.Schedule schedule, CourtId courtId) =>

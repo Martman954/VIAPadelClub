@@ -6,20 +6,24 @@ namespace Features.CommandDispatch.PlayerCommands;
 
 public class PlayerMakesABookingCommand
 {
-    public Booking Booking { get; }
+
     public CourtId CourtId { get; }
 
-
-    private PlayerMakesABookingCommand(Booking booking, CourtId courtId)
+    public TimeInterval TimeInterval { get; }
+    public Guid ScheduleId { get; }
+    public ViaEmail ViaEmail { get; }
+    
+    private PlayerMakesABookingCommand(CourtId courtId, Guid scheduleId, TimeInterval timeInterval, ViaEmail viaEmail)
     {
-        Booking = booking;
         CourtId = courtId;
+        TimeInterval = timeInterval;
+        ScheduleId = scheduleId;
+        ViaEmail = viaEmail;
     }
 
-    public Result<PlayerMakesABookingCommand> Create(Booking booking, CourtId courtId)
+    public Result<PlayerMakesABookingCommand> Create(CourtId courtId, Guid scheduleId, TimeInterval timeInterval, ViaEmail viaEmail)
     {
-        
-        return new PlayerMakesABookingCommand(booking, courtId);
+        return new PlayerMakesABookingCommand(courtId, scheduleId, timeInterval, viaEmail);
     }
 
 }

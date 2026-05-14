@@ -1,7 +1,6 @@
 using VIAPadelClub.Core.Domain.Aggregates.Court.Entities;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts.Court;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
@@ -29,30 +28,25 @@ public sealed class Court
         };
     }
 
-    public Result<BookingId> Book(ViaEmail email, TimeInterval timeInterval, CourtId courtId, Schedule.Schedule schedule, Player.Player player, DateTime currentTime, ICourtHasBookingChecker checker)
+    internal Result<None> ValidateBooking(TimeInterval timeInterval, Schedule.Schedule schedule, Player.Player player, DateTime currentTime)
     {
         return Result.Combine(
-            ValidateSchedule(schedule, courtId),
             ValidateTimeFormat(timeInterval),
             ValidateDuration(timeInterval),
             ValidateWithinSchedule(timeInterval, schedule),
             ValidateNotInPast(timeInterval, currentTime),
-            ValidatePlayer(player, email, timeInterval, checker),
             ValidateVipAccess(player, schedule, timeInterval),
             ValidateNoOverlap(timeInterval),
             ValidateNoHoles(timeInterval, schedule)
-        ).WithSuccessPayload(CreateBooking(timeInterval, schedule.Id, email));
+        );
     }
 
-    private Result<None> ValidateSchedule(Schedule.Schedule schedule, CourtId courtId) =>
-        Result.Combine(
-            schedule.Status == Status.Active
-                ? Result.Success()
-                : Result.Failure("Courts cannot be booked if the Daily Schedule is not active.", ErrorType.Validation),
-            schedule.Courts.Contains(courtId)
-                ? Result.Success()
-                : Result.Failure("The court was not found in the daily schedule.", ErrorType.NotFound)
-        );
+    internal Result<BookingId> AddBooking(TimeInterval timeInterval, Guid scheduleId, ViaEmail email)
+    {
+        var id = BookingId.New();
+        _bookings.Add(new Booking(id, timeInterval, scheduleId, email));
+        return id;
+    }
 
     private Result<None> ValidateTimeFormat(TimeInterval t) =>
         (t.Start.Minute % 30 == 0 && t.End.Minute % 30 == 0)
@@ -81,15 +75,6 @@ public sealed class Court
             ? Result.Success()
             : Result.Failure("A booking cannot start in the past.", ErrorType.Validation);
 
-    private Result<None> ValidatePlayer(Player.Player player, ViaEmail email, TimeInterval t, ICourtHasBookingChecker checker) =>
-        Result.Combine(
-            !player.isBlackListed
-                ? Result.Success()
-                : Result.Failure("Blacklisted players cannot book courts.", ErrorType.Validation),
-            !checker.HasBooking(email, t.Start.Date)
-                ? Result.Success()
-                : Result.Failure("A player can have a maximum of one booking per day.", ErrorType.Validation)
-        );
 
     private Result<None> ValidateVipAccess(Player.Player player, Schedule.Schedule schedule, TimeInterval t) =>
         player.VipStatus != null || !schedule.VipTimes.Where(s => s.IsVip).Any(s => Overlaps(t, s.TimeInterval))
@@ -123,12 +108,6 @@ public sealed class Court
         return Result.Success();
     }
 
-    private BookingId CreateBooking(TimeInterval t, Guid scheduleId, ViaEmail email)
-    {
-        var id = BookingId.New();
-        _bookings.Add(new Booking(id, t, scheduleId, email));
-        return id;
-    }
 
     private static bool Overlaps(TimeInterval a, TimeInterval b) =>
         a.Start < b.End && a.End > b.Start;

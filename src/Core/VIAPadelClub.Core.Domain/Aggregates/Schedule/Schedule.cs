@@ -31,14 +31,13 @@ public sealed class Schedule
     private static readonly TimeOnly DefaultEnd = new(22, 0);
 
     private Schedule(Guid id, ScheduleTimeInterval defaultTime)
-    {
+   {
         Id = id;
         Status = Status.Draft;
         _courts = [];
         _times = [defaultTime];
     }
-
-
+    
     /// <summary>
     /// ID: 1
     /// I want to create a new daily schedule

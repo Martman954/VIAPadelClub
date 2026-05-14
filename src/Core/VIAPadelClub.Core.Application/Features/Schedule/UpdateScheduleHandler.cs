@@ -25,7 +25,17 @@ internal class UpdateScheduleHandler : ICommandHandler<UpdateScheduleCommand>
     {
         Result<Schedule> existingSchedule = await _scheduleRepo.GetSchedule(command.ScheduleId);
 
+        if (existingSchedule is Result<Schedule>.Failure f)
+            return Result.Failure<None>(f.Errors);
+
         var schedule = existingSchedule.Payload;
+        
+        var updateResult = schedule.UpdateTimes(command.ScheduleTimeInterval);
+        if (updateResult is Result<None>.Failure f2)
+            return Result.Failure<None>(f2.Errors);
+        
+        await _scheduleRepo.AddSchedule(schedule);
+        await _scheduleRepo.RemoveSchedule(existingSchedule.Payload.Id);
         await _unitOfWork.SaveChangesAsync();
         return Result.Success();
     }

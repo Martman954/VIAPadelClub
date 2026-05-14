@@ -10,15 +10,15 @@ public class UpdateScheduleCommand
 {
     // Manager Updates Time and date on daily schedule
     public Guid ScheduleId { get;}
-    public ScheduleTimeInterval ScheduleTimeInterval { get; }
+    public TimeInterval ScheduleTimeInterval { get; }
     
-    private UpdateScheduleCommand(Guid scheduleId ,ScheduleTimeInterval scheduleTimeInterval)
+    private UpdateScheduleCommand(Guid scheduleId ,TimeInterval scheduleTimeInterval)
     {
         ScheduleId = scheduleId;
         ScheduleTimeInterval = scheduleTimeInterval;
     }
 
-    public static Result<UpdateScheduleCommand> Create(Guid scheduleId, ScheduleTimeInterval scheduleTimeInterval)
+    public static Result<UpdateScheduleCommand> Create(Guid scheduleId, TimeInterval scheduleTimeInterval)
     {
         return new UpdateScheduleCommand(scheduleId, scheduleTimeInterval);
     }

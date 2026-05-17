@@ -26,7 +26,6 @@ public class RemoveAvailableCourtFromSchedule
 
         var scheduleDate = schedule.Times[0].TimeInterval.Start.Date;
 
-        // Schedule is in the past
         if (currentTime.Date > scheduleDate)
             return Result.Failure<IReadOnlyList<ViaEmail>>(
                 new ResultError("Court from a past schedule cannot be removed.", ErrorType.Validation));
@@ -34,15 +33,13 @@ public class RemoveAvailableCourtFromSchedule
         var activeBookings = court.Bookings
             .Where(b => !b.IsCancelled && b.ScheduleId == schedule.Id)
             .ToList();
-
-        // Same day as schedule
+        
         if (currentTime.Date == scheduleDate)
         {
             var upcomingBookings = activeBookings
                 .Where(b => b.TimeInterval.Start > currentTime)
                 .ToList();
-
-            // If there are upcoming bookings today, removal is not allowed
+            
             if (upcomingBookings.Count != 0)
                 return Result.Failure<IReadOnlyList<ViaEmail>>(
                     new ResultError("Cannot remove court while there are upcoming bookings on the same day.", ErrorType.Validation));

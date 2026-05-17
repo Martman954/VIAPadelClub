@@ -28,7 +28,7 @@ public sealed class Schedule
     private static readonly TimeOnly DefaultEnd = new(22, 0);
 
     private Schedule(Guid id, ScheduleTimeInterval defaultTime)
-   {
+    {
         Id = id;
         Status = Status.Draft;
         _courts = [];
@@ -41,26 +41,23 @@ public sealed class Schedule
         var start = today.Add(DefaultStart.ToTimeSpan());
         var end = today.Add(DefaultEnd.ToTimeSpan());
         var timeIntervalResult = TimeInterval.Create(start, end);
-        
+
         if (timeIntervalResult is Result<TimeInterval>.Failure f1)
             return Result.Failure<Schedule>(f1.Errors);
 
-        var timeInterval = ((Result<TimeInterval>.Success)timeIntervalResult).Value;
-        var scheduleTimeIntervalResult = ScheduleTimeInterval.Create(timeInterval, false);
-        
+        var scheduleTimeIntervalResult = ScheduleTimeInterval.Create(timeIntervalResult.Payload, false);
+
         if (scheduleTimeIntervalResult is Result<ScheduleTimeInterval>.Failure f2)
             return Result.Failure<Schedule>(f2.Errors);
 
-        var scheduleTimeInterval = ((Result<ScheduleTimeInterval>.Success)scheduleTimeIntervalResult).Value;
-
-        return new Schedule(Guid.NewGuid(), scheduleTimeInterval);
+        return new Schedule(Guid.NewGuid(), scheduleTimeIntervalResult.Payload);
     }
-    
+
     public Result<None> Activate(IScheduleDateConflictChecker conflictChecker)
     {
         if (Status == Status.Deleted)
             return new ResultError("A deleted schedule cannot be activated.", ErrorType.Validation);
-        
+
         if (Status == Status.Active)
             return new ResultError("A deleted schedule cannot be activated.", ErrorType.Validation);
 
@@ -85,7 +82,7 @@ public sealed class Schedule
         Status = Status.Deleted;
         return None.Value;
     }
-    
+
     public Result<None> AddCourt(CourtId courtId)
     {
         if (Status is not (Status.Draft or Status.Active))
@@ -100,12 +97,12 @@ public sealed class Schedule
         _courts.Add(courtId);
         return Result.Success();
     }
-    
+
     internal void RemoveCourt(CourtId courtId)
     {
         _courts.Remove(courtId);
     }
-    
+
     public Result<None> UpdateDate(DateTime newDate)
     {
         if (!Status.Equals(Status.Draft))
@@ -124,13 +121,12 @@ public sealed class Schedule
                 ErrorType.Validation);
 
         // Rebuild first element with new start, keeping its original end
-        var firstOriginal =  _times[0].TimeInterval;
+        var firstOriginal = _times[0].TimeInterval;
         var firstIntervalResult = TimeInterval.Create(timeInterval.Start, firstOriginal.End);
         if (firstIntervalResult is Result<TimeInterval>.Failure f1)
             return Result.Failure<None>(f1.Errors);
-        var firstInterval = ((Result<TimeInterval>.Success)firstIntervalResult).Value;
 
-        var firstResult = ScheduleTimeInterval.Create(firstInterval, _times[0].IsVip);
+        var firstResult = ScheduleTimeInterval.Create(firstIntervalResult.Payload, _times[0].IsVip);
         if (firstResult is Result<ScheduleTimeInterval>.Failure f2)
             return Result.Failure<None>(f2.Errors);
 
@@ -139,24 +135,24 @@ public sealed class Schedule
         var lastIntervalResult = TimeInterval.Create(lastOriginal.Start, timeInterval.End);
         if (lastIntervalResult is Result<TimeInterval>.Failure f3)
             return Result.Failure<None>(f3.Errors);
-        var lastInterval = ((Result<TimeInterval>.Success)lastIntervalResult).Value;
 
-        var lastResult = ScheduleTimeInterval.Create(lastInterval, _times[^1].IsVip);
+        var lastResult = ScheduleTimeInterval.Create(lastIntervalResult.Payload, _times[^1].IsVip);
         if (lastResult is Result<ScheduleTimeInterval>.Failure f4)
             return Result.Failure<None>(f4.Errors);
 
-        _times[0] = ((Result<ScheduleTimeInterval>.Success)firstResult).Value;
-        _times[^1] = ((Result<ScheduleTimeInterval>.Success)lastResult).Value;
+        _times[0] = firstResult.Payload;
+        _times[^1] = lastResult.Payload;
 
         return Result.Success();
     }
 
-    public Result<None> MarkVipTimeSpan(TimeInterval vipInterval)
+    public Result<None> MarkVipTimeSpan(TimeInterval vipInterval, INonVipBookingOverlapChecker overlapChecker)
     {
         var validation = Result.Combine(
             ValidateIsDraft(),
             ValidateVipMinDuration(vipInterval),
-            ValidateVipWithinSchedule(vipInterval)
+            ValidateVipWithinSchedule(vipInterval),
+            ValidateNoNonVipBookingsOverlap(vipInterval, overlapChecker)
         );
 
         if (validation is Result<None>.Failure f)
@@ -169,7 +165,8 @@ public sealed class Schedule
     private Result<None> ValidateIsDraft()
     {
         if (Status != Status.Draft)
-            return Result.Failure("VIP time spans can only be set while schedule is in Draft status.", ErrorType.Validation);
+            return Result.Failure("VIP time spans can only be set while schedule is in Draft status.",
+                ErrorType.Validation);
         return Result.Success();
     }
 
@@ -190,51 +187,56 @@ public sealed class Schedule
         return Result.Success();
     }
 
+    private Result<None> ValidateNoNonVipBookingsOverlap(TimeInterval vipInterval, INonVipBookingOverlapChecker checker)
+    {
+        if (checker.HasNonVipBookingsInTimeSpan(Id, vipInterval))
+            return Result.Failure("The chosen VIP time span overlaps with existing bookings by non-VIP players.",
+                ErrorType.Validation);
+        return Result.Success();
+    }
+
     private void RebuildTimeSlotsWithVip(TimeInterval newVip)
     {
         var scheduleStart = _times.Min(t => t.TimeInterval.Start);
         var scheduleEnd = _times.Max(t => t.TimeInterval.End);
 
-        // Collect all VIP intervals (existing + new), then merge overlapping/adjacent
         var allVipIntervals = _times
             .Where(t => t.IsVip)
-            .Select(t => (Start: t.TimeInterval.Start, End: t.TimeInterval.End))
-            .Append((Start: newVip.Start, End: newVip.End))
+            .Select(t => (t.TimeInterval.Start, t.TimeInterval.End))
+            .Append((newVip.Start, newVip.End))
             .OrderBy(v => v.Start)
             .ToList();
 
         var merged = MergeIntervals(allVipIntervals);
-
-        // Rebuild _times: fill schedule with regular slots, inserting VIP where needed
         var newSlots = new List<ScheduleTimeInterval>();
         var cursor = scheduleStart;
 
         foreach (var vip in merged)
         {
-            // Regular gap before this VIP
             if (vip.Start > cursor)
             {
-                var regular = ((Result<TimeInterval>.Success)TimeInterval.Create(cursor, vip.Start)).Value;
-                newSlots.Add(((Result<ScheduleTimeInterval>.Success)ScheduleTimeInterval.Create(regular, false)).Value);
+                var regular = TimeInterval.Create(cursor, vip.Start).Payload;
+                newSlots.Add(ScheduleTimeInterval.Create(regular, false).Payload);
             }
 
-            // VIP slot
-            var vipTi = ((Result<TimeInterval>.Success)TimeInterval.Create(vip.Start, vip.End)).Value;
-            newSlots.Add(((Result<ScheduleTimeInterval>.Success)ScheduleTimeInterval.Create(vipTi, true)).Value);
+            var vipTimeInterval = TimeInterval.Create(vip.Start, vip.End).Payload;
+            newSlots.Add(ScheduleTimeInterval.Create(vipTimeInterval, true).Payload);
 
             cursor = vip.End;
         }
 
-        // Regular gap after last VIP
         if (cursor < scheduleEnd)
         {
-            var regular = ((Result<TimeInterval>.Success)TimeInterval.Create(cursor, scheduleEnd)).Value;
-            newSlots.Add(((Result<ScheduleTimeInterval>.Success)ScheduleTimeInterval.Create(regular, false)).Value);
+            var regular = TimeInterval.Create(cursor, scheduleEnd).Payload;
+            newSlots.Add(ScheduleTimeInterval.Create(regular, false).Payload);
         }
 
         _times = newSlots;
     }
 
+    /// <summary>
+    /// Creates a merged list of intervals, where overlapping intervals are combined into one
+    /// </summary>
     private static List<(DateTime Start, DateTime End)> MergeIntervals(List<(DateTime Start, DateTime End)> intervals)
     {
         if (intervals.Count == 0) return [];
@@ -246,7 +248,6 @@ public sealed class Schedule
             var last = result[^1];
             var current = intervals[i];
 
-            // Overlapping or adjacent — merge
             if (current.Start <= last.End)
             {
                 result[^1] = (last.Start, current.End > last.End ? current.End : last.End);

@@ -11,7 +11,7 @@ public sealed class Player
     public ViaEmail Email { get; }
     public Name Name { get; }
     public ImageUrl ProfilePictureUri { get; }
-    public VipStatus? VipStatus { get; }
+    public VipStatus? VipStatus { get; private set; }
     public Quarantine? Quarantine { get; private set; }
     public bool isBlackListed { get; private set; }
 
@@ -52,9 +52,11 @@ public sealed class Player
     public bool IsQuarantined(DateTime currentDate) =>
         Quarantine != null && Quarantine.IsActive(currentDate);
 
-    public Result<None> Blacklist()
+    internal Result<None> Blacklist()
     {
         isBlackListed = true;
+        VipStatus = null;
+        Quarantine = null;
         return Result.Success();
     }
 

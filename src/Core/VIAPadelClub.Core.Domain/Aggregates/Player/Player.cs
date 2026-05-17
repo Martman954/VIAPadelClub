@@ -11,9 +11,8 @@ public sealed class Player
     public ViaEmail Email { get; }
     public Name Name { get; }
     public ImageUrl ProfilePictureUri { get; }
-    public VipStatus? VipStatus { get; set; }
-
-    // public Quarantine Quarantine { get; }
+    public VipStatus? VipStatus { get; }
+    public Quarantine? Quarantine { get; private set; }
     public bool isBlackListed { get; private set; }
 
     private Player(ViaEmail email, Name name, ImageUrl profilePictureUri)
@@ -22,6 +21,7 @@ public sealed class Player
         Name = name;
         ProfilePictureUri = profilePictureUri;
         VipStatus = null;
+        Quarantine = null;
         isBlackListed = false;
     }
 
@@ -35,11 +35,22 @@ public sealed class Player
         return new Player(email,fullName, profilePictureUri);
     }
     
-
-    public Result<Quarantine> QuarantinePlayer(TimeInterval timeInterval, ViaEmail email)
+    internal Result<None> QuarantinePlayer(DateTime currentDate)
     {
-        return Quarantine.Create(timeInterval, email);
+        if (Quarantine != null && Quarantine.IsActive(currentDate))
+        {
+            Quarantine.ExtendByThreeDays();
+        }
+        else
+        {
+            Quarantine = Quarantine.Create(currentDate);
+        }
+
+        return Result.Success();
     }
+
+    public bool IsQuarantined(DateTime currentDate) =>
+        Quarantine != null && Quarantine.IsActive(currentDate);
 
     public Result<None> Blacklist()
     {

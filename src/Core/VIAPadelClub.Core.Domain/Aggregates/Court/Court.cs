@@ -33,9 +33,8 @@ public sealed class Court
         _bookings.Add(new Booking(id, timeInterval, scheduleId, email));
         return id;
     }
-
-    // TODO: review
-    public Result<None> CancelBooking(BookingId bookingId)
+    
+    public Result<None> CancelBooking(BookingId bookingId, DateTime currentTime)
     {
         var booking = _bookings.FirstOrDefault(b => b.Id == bookingId);
 
@@ -51,17 +50,16 @@ public sealed class Court
                 new ResultError("Booking is already cancelled.", ErrorType.Validation));
         }
 
-        var now = DateTime.Now;
         var start = booking.TimeInterval.Start;
 
-        if (start <= now)
+        if (start <= currentTime)
         {
             return Result.Failure<None>(
                 new ResultError("Past bookings cannot be cancelled.", ErrorType.Validation));
         }
 
-        var sameDay = now.Date == start.Date;
-        var lessThanOneHour = (start - now) < TimeSpan.FromHours(1);
+        var sameDay = currentTime.Date == start.Date;
+        var lessThanOneHour = (start - currentTime) < TimeSpan.FromHours(1);
 
         if (sameDay && lessThanOneHour)
         {

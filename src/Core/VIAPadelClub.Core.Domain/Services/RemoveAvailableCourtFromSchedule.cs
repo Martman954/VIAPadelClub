@@ -53,7 +53,7 @@ public class RemoveAvailableCourtFromSchedule
         var affectedEmails = new List<ViaEmail>();
         foreach (var booking in activeBookings)
         {
-            court.CancelBooking(booking.Id);
+            court.CancelBooking(booking.Id, currentTime);
             affectedEmails.Add(booking.PlayerEmail);
         }
 

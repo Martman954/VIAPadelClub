@@ -18,99 +18,12 @@ public sealed class Court
         Id = id;
     }
 
-    public static Result<Court> Create(string courtId)
-    {
-        return CourtId.Create(courtId) switch
-        {
-            Result<CourtId>.Success s => new Court(s.Value),
-            Result<CourtId>.Failure f => Result.Failure<Court>(f.Errors),
-            _ => throw new InvalidOperationException()
-        };
-    }
-
-    internal Result<None> ValidateBooking(TimeInterval timeInterval, Schedule.Schedule schedule, Player.Player player, DateTime currentTime)
-    {
-        return Result.Combine(
-            ValidateTimeFormat(timeInterval),
-            ValidateDuration(timeInterval),
-            ValidateWithinSchedule(timeInterval, schedule),
-            ValidateNotInPast(timeInterval, currentTime),
-            ValidateVipAccess(player, schedule, timeInterval),
-            ValidateNoOverlap(timeInterval),
-            ValidateNoHoles(timeInterval, schedule)
-        );
-    }
-
     internal Result<BookingId> AddBooking(TimeInterval timeInterval, Guid scheduleId, ViaEmail email)
     {
         var id = BookingId.New();
         _bookings.Add(new Booking(id, timeInterval, scheduleId, email));
         return id;
     }
-
-    private Result<None> ValidateTimeFormat(TimeInterval t) =>
-        (t.Start.Minute % 30 == 0 && t.End.Minute % 30 == 0)
-            ? Result.Success()
-            : Result.Failure("Booking start and end time minutes must be 00 or 30.", ErrorType.Validation);
-
-    private Result<None> ValidateDuration(TimeInterval t) =>
-        t.Duration < TimeSpan.FromHours(1)
-            ? Result.Failure("A booking must be at least one hour.", ErrorType.Validation)
-            : t.Duration > TimeSpan.FromHours(3)
-                ? Result.Failure("A booking must be at most three hours.", ErrorType.Validation)
-                : Result.Success();
-
-    private Result<None> ValidateWithinSchedule(TimeInterval t, Schedule.Schedule s) =>
-        Result.Combine(
-            s.Times.Any(st => t.Start >= st.TimeInterval.Start)
-                ? Result.Success()
-                : Result.Failure("Booking starts before schedule.", ErrorType.Validation),
-            s.Times.Any(st => t.End <= st.TimeInterval.End)
-                ? Result.Success()
-                : Result.Failure("Booking ends after schedule.", ErrorType.Validation)
-        );
-
-    private Result<None> ValidateNotInPast(TimeInterval t, DateTime now) =>
-        t.Start >= now
-            ? Result.Success()
-            : Result.Failure("A booking cannot start in the past.", ErrorType.Validation);
-
-
-    private Result<None> ValidateVipAccess(Player.Player player, Schedule.Schedule schedule, TimeInterval t) =>
-        player.VipStatus != null || !schedule.VipTimes.Where(s => s.IsVip).Any(s => Overlaps(t, s.TimeInterval))
-            ? Result.Success()
-            : Result.Failure("Non-VIP players cannot book during VIP time.", ErrorType.Validation);
-
-    private Result<None> ValidateNoOverlap(TimeInterval t) =>
-        _bookings.Where(b => !b.IsCancelled).Any(b => Overlaps(t, b.TimeInterval))
-            ? Result.Failure("The court is not available in the selected time span.", ErrorType.Validation)
-            : Result.Success();
-
-    private Result<None> ValidateNoHoles(TimeInterval t, Schedule.Schedule s)
-    {
-        var oneHour = TimeSpan.FromHours(1);
-        var active = _bookings.Where(b => !b.IsCancelled).ToList();
-
-        bool LeavesSmallGap(TimeSpan gap) => gap > TimeSpan.Zero && gap < oneHour;
-
-        var scheduleBoundaries = s.Times.SelectMany(st => new[] { st.TimeInterval.Start, st.TimeInterval.End });
-
-        var boundaries = active.SelectMany(b => new[] { b.TimeInterval.Start, b.TimeInterval.End })
-            .Concat(scheduleBoundaries)
-            .Distinct().OrderBy(x => x).ToList();
-
-        foreach (var point in boundaries)
-        {
-            if (LeavesSmallGap(t.Start - point) || LeavesSmallGap(point - t.End))
-                return Result.Failure("A booking may not leave gaps less than one hour.", ErrorType.Validation);
-        }
-
-        return Result.Success();
-    }
-
-
-    private static bool Overlaps(TimeInterval a, TimeInterval b) =>
-        a.Start < b.End && a.End > b.Start;
 
     // TODO: review
     public Result<None> CancelBooking(BookingId bookingId)

@@ -1,4 +1,3 @@
-using VIAPadelClub.Core.Domain.Aggregates.Court;
 using VIAPadelClub.Core.Domain.Aggregates.Player;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule;
 using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
@@ -19,8 +18,7 @@ public class BookCourtInSchedule(ICourtHasBookingChecker bookingChecker)
             ValidateScheduleIsActive(schedule),
             ValidateCourtInSchedule(schedule, court.Id),
             ValidatePlayerNotBlacklisted(player),
-            ValidatePlayerHasNoBookingOnDate(player.Email, timeInterval.Start.Date),
-            court.ValidateBooking(timeInterval, schedule, player, currentTime)
+            ValidatePlayerHasNoBookingOnDate(player.Email, timeInterval.Start.Date)
         );
 
         if (validation is Result<None>.Failure f)

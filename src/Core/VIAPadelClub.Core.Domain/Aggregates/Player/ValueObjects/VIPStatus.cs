@@ -1,19 +1,25 @@
-using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Tools.OperationResult.Results;
-
 namespace VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
 
 public class VipStatus
 {
-    public TimeInterval TimeInterval { get; }
+    public DateTime StartDate { get; }
+    public DateTime EndDate { get; private set; }
 
-    private VipStatus(TimeInterval timeInterval)
+    private VipStatus(DateTime startDate, DateTime endDate)
     {
-        TimeInterval = timeInterval;
+        StartDate = startDate;
+        EndDate = endDate;
     }
 
-    public static Result<VipStatus> Create(TimeInterval timeInterval)
+    public static VipStatus Create(DateTime currentDate)
     {
-        return new VipStatus(timeInterval);
+        return new VipStatus(currentDate.Date, currentDate.Date.AddMonths(1));
     }
+
+    public void ExtendByThirtyDays()
+    {
+        EndDate = EndDate.AddDays(30);
+    }
+
+    public bool IsActive(DateTime currentDate) => currentDate.Date <= EndDate.Date;
 }

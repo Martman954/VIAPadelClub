@@ -69,14 +69,24 @@ public sealed class Player
         return Result.Success();
     }
 
-    public Result<None> ElevateToVip(TimeInterval timeInterval)
+    public Result<None> ElevateToVip(DateTime currentDate)
     {
-        return VipStatus.Create(timeInterval) switch
+        if (isBlackListed)
+            return Result.Failure("Blacklisted players cannot be elevated to VIP.", ErrorType.Validation);
+
+        if (IsQuarantined(currentDate))
+            return Result.Failure("Quarantined players cannot be elevated to VIP.", ErrorType.Validation);
+
+        if (VipStatus != null && VipStatus.IsActive(currentDate))
         {
-            Result<VipStatus>.Success => Result.Success(),
-            Result<VipStatus>.Failure f => Result.Failure<None>(f.Errors),
-            _ => throw new InvalidOperationException()
-        };
+            VipStatus.ExtendByThirtyDays();
+        }
+        else
+        {
+            VipStatus = VipStatus.Create(currentDate);
+        }
+
+        return Result.Success();
     }
     
 }

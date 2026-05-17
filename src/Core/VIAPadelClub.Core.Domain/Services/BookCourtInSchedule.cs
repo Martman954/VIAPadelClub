@@ -24,7 +24,7 @@ public class BookCourtInSchedule()
             ValidateBookingTimeFormat(timeInterval),
             ValidateNotInPast(timeInterval, currentTime),
             ValidateWithinSchedule(timeInterval, schedule),
-            ValidateVipAccess(player, schedule, timeInterval),
+            ValidateVipAccess(player, schedule, timeInterval, currentTime),
             ValidateNoOverlap(court, timeInterval),
             ValidateNoSmallGaps(court, schedule, timeInterval)
         );
@@ -95,9 +95,11 @@ public class BookCourtInSchedule()
             : Result.Success();
     }
 
-    private static Result<None> ValidateVipAccess(Player player, Schedule schedule, TimeInterval timeInterval)
+    private static Result<None> ValidateVipAccess(Player player, Schedule schedule, TimeInterval timeInterval, DateTime currentTime)
     {
-        if (player.VipStatus != null)
+        var isVip = player.VipStatus != null && player.VipStatus.IsActive(currentTime);
+
+        if (isVip)
             return Result.Success();
 
         var overlapsVipSlot = schedule.VipTimes

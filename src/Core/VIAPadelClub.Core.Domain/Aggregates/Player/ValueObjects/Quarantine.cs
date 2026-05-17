@@ -13,17 +13,15 @@ public class Quarantine
 
     public static Quarantine Create(DateTime currentDate)
     {
-        var start = currentDate.Date;
-        var end = currentDate.Date.AddDays(3).AddHours(23).AddMinutes(59).AddSeconds(59);
-        return new Quarantine(start, end);
+        return new Quarantine(currentDate.Date, currentDate.Date.AddDays(3));
     }
 
     public void ExtendByThreeDays()
     {
-        EndDate = EndDate.Date.AddDays(3).AddHours(23).AddMinutes(59).AddSeconds(59);
+        EndDate = EndDate.AddDays(3);
     }
 
-    public bool IsActive(DateTime currentDate) => currentDate <= EndDate;
+    public bool IsActive(DateTime currentDate) => currentDate.Date <= EndDate.Date;
 
     public bool CoversDate(DateTime date) => date.Date >= StartDate.Date && date.Date <= EndDate.Date;
 }

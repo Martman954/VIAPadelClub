@@ -6,7 +6,6 @@ using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Player;
 
-// Class just to test functionality of Result pattern
 public sealed class Player
 {
     public ViaEmail Email { get; }
@@ -15,7 +14,7 @@ public sealed class Player
     public VipStatus? VipStatus { get; set; }
 
     // public Quarantine Quarantine { get; }
-    public bool isBlackListed { get; set; }
+    public bool isBlackListed { get; private set; }
 
     private Player(ViaEmail email, Name name, ImageUrl profilePictureUri)
     {

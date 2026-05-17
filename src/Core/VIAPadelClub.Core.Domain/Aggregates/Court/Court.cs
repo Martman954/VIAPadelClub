@@ -17,6 +17,16 @@ public sealed class Court
     {
         Id = id;
     }
+    
+    public static Result<Court> Create(string courtId)
+    {
+        return CourtId.Create(courtId) switch
+        {
+            Result<CourtId>.Success s => new Court(s.Value),
+            Result<CourtId>.Failure f => Result.Failure<Court>(f.Errors),
+            _ => throw new InvalidOperationException()
+        };
+    }
 
     internal Result<BookingId> AddBooking(TimeInterval timeInterval, Guid scheduleId, ViaEmail email)
     {

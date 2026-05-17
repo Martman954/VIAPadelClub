@@ -34,6 +34,12 @@ public sealed class Court
         return id;
     }
     
+    internal void ForceCancelBooking(BookingId bookingId)
+    {
+        var booking = _bookings.FirstOrDefault(b => b.Id == bookingId);
+        booking?.Cancel();
+    }
+
     public Result<None> CancelBooking(BookingId bookingId, DateTime currentTime)
     {
         var booking = _bookings.FirstOrDefault(b => b.Id == bookingId);

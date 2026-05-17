@@ -19,6 +19,7 @@ public class BookCourtInSchedule()
             ValidateScheduleIsActive(schedule),
             ValidateCourtInSchedule(schedule, court.Id),
             ValidatePlayerNotBlacklisted(player),
+            ValidatePlayerNotQuarantined(player, currentTime),
             ValidatePlayerHasNoBookingOnDate(player.Email, timeInterval.Start.Date, bookingChecker),
             ValidateBookingTimeFormat(timeInterval),
             ValidateNotInPast(timeInterval, currentTime),
@@ -52,6 +53,13 @@ public class BookCourtInSchedule()
     {
         if (player.isBlackListed)
             return Result.Failure("Blacklisted players cannot book courts.", ErrorType.Validation);
+        return Result.Success();
+    }
+
+    private static Result<None> ValidatePlayerNotQuarantined(Player player, DateTime currentTime)
+    {
+        if (player.IsQuarantined(currentTime))
+            return Result.Failure("Quarantined players cannot book courts.", ErrorType.Validation);
         return Result.Success();
     }
 

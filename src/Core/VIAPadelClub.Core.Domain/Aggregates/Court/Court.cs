@@ -39,37 +39,43 @@ public sealed class Court
         var booking = _bookings.FirstOrDefault(b => b.Id == bookingId);
 
         if (booking is null)
-        {
-            return Result.Failure<None>(
-                new ResultError("Booking not found.", ErrorType.NotFound));
-        }
+            return Result.Failure<None>(new ResultError("Booking not found.", ErrorType.NotFound));
 
+        var validation = Result.Combine(
+            ValidateNotAlreadyCancelled(booking),
+            ValidateNotInPast(booking, currentTime),
+            ValidateNotWithinOneHour(booking, currentTime)
+        );
+
+        if (validation is Result<None>.Failure f)
+            return Result.Failure<None>(f.Errors);
+
+        booking.Cancel();
+        return Result.Success();
+    }
+
+    private static Result<None> ValidateNotAlreadyCancelled(Booking booking)
+    {
         if (booking.IsCancelled)
-        {
-            return Result.Failure<None>(
-                new ResultError("Booking is already cancelled.", ErrorType.Validation));
-        }
+            return Result.Failure("Booking is already cancelled.", ErrorType.Validation);
+        return Result.Success();
+    }
 
+    private static Result<None> ValidateNotInPast(Booking booking, DateTime currentTime)
+    {
+        if (booking.TimeInterval.Start <= currentTime)
+            return Result.Failure("Past bookings cannot be cancelled.", ErrorType.Validation);
+        return Result.Success();
+    }
+
+    private static Result<None> ValidateNotWithinOneHour(Booking booking, DateTime currentTime)
+    {
         var start = booking.TimeInterval.Start;
-
-        if (start <= currentTime)
-        {
-            return Result.Failure<None>(
-                new ResultError("Past bookings cannot be cancelled.", ErrorType.Validation));
-        }
-
         var sameDay = currentTime.Date == start.Date;
         var lessThanOneHour = (start - currentTime) < TimeSpan.FromHours(1);
 
         if (sameDay && lessThanOneHour)
-        {
-            return Result.Failure<None>(
-                new ResultError("Booking cannot be cancelled less than one hour before start time.",
-                    ErrorType.Validation));
-        }
-
-        booking.Cancel();
-
+            return Result.Failure("Booking cannot be cancelled less than one hour before start time.", ErrorType.Validation);
         return Result.Success();
     }
 }

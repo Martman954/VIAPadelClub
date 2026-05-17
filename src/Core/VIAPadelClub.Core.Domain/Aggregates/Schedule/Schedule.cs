@@ -7,9 +7,6 @@ using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
 
-/// <summary>
-/// Aggregate root representing the availability schedule for padel courts
-/// </summary>
 public sealed class Schedule
 {
     public Guid Id { get; }
@@ -37,30 +34,20 @@ public sealed class Schedule
         _courts = [];
         _times = [defaultTime];
     }
-    
-    /// <summary>
-    /// ID: 1
-    /// I want to create a new daily schedule
-    /// When manager selects to create a daily schedule
-    ///     Then a daily schedule is created with an ID
-    ///     And the status is set to “draft”
-    ///     And the list of available courts is empty
-    ///     And the times are set to 15:00 and 22:00
-    ///     And date is set to today
-    /// </summary>
+
     public static Result<Schedule> Create()
     {
         var today = DateTime.Today;
         var start = today.Add(DefaultStart.ToTimeSpan());
         var end = today.Add(DefaultEnd.ToTimeSpan());
-
         var timeIntervalResult = TimeInterval.Create(start, end);
+        
         if (timeIntervalResult is Result<TimeInterval>.Failure f1)
             return Result.Failure<Schedule>(f1.Errors);
 
         var timeInterval = ((Result<TimeInterval>.Success)timeIntervalResult).Value;
-
         var scheduleTimeIntervalResult = ScheduleTimeInterval.Create(timeInterval, false);
+        
         if (scheduleTimeIntervalResult is Result<ScheduleTimeInterval>.Failure f2)
             return Result.Failure<Schedule>(f2.Errors);
 
@@ -68,11 +55,7 @@ public sealed class Schedule
 
         return new Schedule(Guid.NewGuid(), scheduleTimeInterval);
     }
-
-    /// <summary>
-    /// ID: 2 S:1
-    /// I want to create a new daily schedule, date
-    /// </summary>
+    
     public Result<None> UpdateDate(DateTime newDate)
     {
         if (!Status.Equals(Status.Draft))
@@ -84,13 +67,6 @@ public sealed class Schedule
         return Result.Success();
     }
 
-    /// <summary>
-    /// ID: 2 S:2
-    /// I want to update a new daily schedule, times
-    ///
-    /// If part of a schedule is VIP only, _times will have more than one element,
-    /// so we need to update the first and last element of the list, keeping the VIP part in between unchanged.
-    /// </summary>
     public Result<None> UpdateTimes(TimeInterval timeInterval)
     {
         if (!Status.Equals(Status.Draft))
@@ -125,10 +101,6 @@ public sealed class Schedule
         return Result.Success();
     }
 
-    /// <summary>
-    /// ID: 3
-    /// The manager adds available courts to a daily schedule
-    /// </summary>
     public Result<None> AddCourt(CourtId courtId)
     {
         if (Status is not (Status.Draft or Status.Active))
@@ -148,26 +120,7 @@ public sealed class Schedule
     {
         _courts.Remove(courtId);
     }
-
-    private Result<None> ValidateNotInPast(DateTime currentTime) =>
-        _times.Min(st => st.TimeInterval.Start).Date < currentTime.Date
-            ? Result.Failure("Past daily schedules cannot be modified.", ErrorType.Validation)
-            : Result.Success();
-
-    private Result<None> ValidateCourtExists(CourtId courtId) =>
-        _courts.Contains(courtId)
-            ? Result.Success()
-            : Result.Failure("The court was not found in the daily schedule.", ErrorType.NotFound);
-
-    private Result<None> ValidateNoFutureBookings(Court.Court court, DateTime currentTime) =>
-        court.Bookings.Any(b => !b.IsCancelled && b.TimeInterval.Start >= currentTime)
-            ? Result.Failure("Courts with bookings later on the same day cannot be removed.", ErrorType.Validation)
-            : Result.Success();
-
-    /// <summary>
-    /// ID: 4
-    /// The manager activates a daily schedule
-    /// </summary>
+    
     public Result<None> Activate(IScheduleDateConflictChecker conflictChecker)
     {
         if (Status == Status.Deleted)

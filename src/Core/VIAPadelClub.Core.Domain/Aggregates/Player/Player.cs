@@ -1,6 +1,5 @@
 using VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts;
 using VIAPadelClub.Core.Domain.Contracts.Player;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
@@ -15,9 +14,8 @@ public sealed class Player
     public ImageUrl ProfilePictureUri { get; }
     public VipStatus? VipStatus { get; set; }
 
-//    public Quarantine Quarantine { get; }
+    // public Quarantine Quarantine { get; }
     public bool isBlackListed { get; set; }
-    //List<BookingId> bookings
 
     private Player(ViaEmail email, Name name, ImageUrl profilePictureUri)
     {

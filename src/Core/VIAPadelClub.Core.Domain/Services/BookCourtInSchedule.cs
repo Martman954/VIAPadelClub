@@ -147,7 +147,7 @@ public class BookCourtInSchedule()
         // Collect all boundary points: schedule start/end + existing booking start/end
         var boundaries = schedule.Times
             .SelectMany(st => new[] { st.TimeInterval.Start, st.TimeInterval.End })
-            .Concat(activeBookings.SelectMany(b => new DateTime[] { b.TimeInterval.Start, b.TimeInterval.End }))
+            .Concat(activeBookings.SelectMany(b => new[] { b.TimeInterval.Start, b.TimeInterval.End }))
             .Distinct()
             .OrderBy(x => x)
             .ToList();

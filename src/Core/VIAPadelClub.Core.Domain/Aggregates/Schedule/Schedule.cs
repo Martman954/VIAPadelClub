@@ -56,6 +56,56 @@ public sealed class Schedule
         return new Schedule(Guid.NewGuid(), scheduleTimeInterval);
     }
     
+    public Result<None> Activate(IScheduleDateConflictChecker conflictChecker)
+    {
+        if (Status == Status.Deleted)
+            return new ResultError("A deleted schedule cannot be activated.", ErrorType.Validation);
+        
+        if (Status == Status.Active)
+            return new ResultError("A deleted schedule cannot be activated.", ErrorType.Validation);
+
+        if (_courts.Count == 0)
+            return new ResultError("A daily schedule must have at least one court before it can be activated.",
+                ErrorType.Validation);
+
+        if (_times.Min(st => st.TimeInterval.Start) <= DateTime.Now)
+            return new ResultError("A daily schedule can only be activated if its date and time is in the future.",
+                ErrorType.Validation);
+
+        var scheduleDate = DateOnly.FromDateTime(_times.Min(st => st.TimeInterval.Start));
+        if (conflictChecker.ActiveScheduleExistsOnDate(Id, scheduleDate))
+            return new ResultError("Another active daily schedule already exists on this date.", ErrorType.Validation);
+
+        Status = Status.Active;
+        return None.Value;
+    }
+
+    public Result<None> Delete()
+    {
+        Status = Status.Deleted;
+        return None.Value;
+    }
+    
+    public Result<None> AddCourt(CourtId courtId)
+    {
+        if (Status is not (Status.Draft or Status.Active))
+            return new ResultError("Courts can only be added to draft or active schedules.", ErrorType.Validation);
+
+        if (_times.Min(st => st.TimeInterval.Start).Date <= DateTime.Today)
+            return new ResultError("Courts can only be added to future schedules.", ErrorType.Validation);
+
+        if (_courts.Contains(courtId))
+            return new ResultError("This court is already added to the schedule.", ErrorType.Validation);
+
+        _courts.Add(courtId);
+        return Result.Success();
+    }
+    
+    internal void RemoveCourt(CourtId courtId)
+    {
+        _courts.Remove(courtId);
+    }
+    
     public Result<None> UpdateDate(DateTime newDate)
     {
         if (!Status.Equals(Status.Draft))
@@ -101,53 +151,112 @@ public sealed class Schedule
         return Result.Success();
     }
 
-    public Result<None> AddCourt(CourtId courtId)
+    public Result<None> MarkVipTimeSpan(TimeInterval vipInterval)
     {
-        if (Status is not (Status.Draft or Status.Active))
-            return new ResultError("Courts can only be added to draft or active schedules.", ErrorType.Validation);
+        var validation = Result.Combine(
+            ValidateIsDraft(),
+            ValidateVipMinDuration(vipInterval),
+            ValidateVipWithinSchedule(vipInterval)
+        );
 
-        if (_times.Min(st => st.TimeInterval.Start).Date <= DateTime.Today)
-            return new ResultError("Courts can only be added to future schedules.", ErrorType.Validation);
+        if (validation is Result<None>.Failure f)
+            return Result.Failure<None>(f.Errors);
 
-        if (_courts.Contains(courtId))
-            return new ResultError("This court is already added to the schedule.", ErrorType.Validation);
-
-        _courts.Add(courtId);
+        RebuildTimeSlotsWithVip(vipInterval);
         return Result.Success();
     }
-    
-    internal void RemoveCourt(CourtId courtId)
+
+    private Result<None> ValidateIsDraft()
     {
-        _courts.Remove(courtId);
-    }
-    
-    public Result<None> Activate(IScheduleDateConflictChecker conflictChecker)
-    {
-        if (Status == Status.Deleted)
-            return new ResultError("A deleted schedule cannot be activated.", ErrorType.Validation);
-        
-        if (Status == Status.Active)
-            return new ResultError("A deleted schedule cannot be activated.", ErrorType.Validation);
-
-        if (_courts.Count == 0)
-            return new ResultError("A daily schedule must have at least one court before it can be activated.",
-                ErrorType.Validation);
-
-        if (_times.Min(st => st.TimeInterval.Start) <= DateTime.Now)
-            return new ResultError("A daily schedule can only be activated if its date and time is in the future.",
-                ErrorType.Validation);
-
-        var scheduleDate = DateOnly.FromDateTime(_times.Min(st => st.TimeInterval.Start));
-        if (conflictChecker.ActiveScheduleExistsOnDate(Id, scheduleDate))
-            return new ResultError("Another active daily schedule already exists on this date.", ErrorType.Validation);
-
-        Status = Status.Active;
-        return None.Value;
+        if (Status != Status.Draft)
+            return Result.Failure("VIP time spans can only be set while schedule is in Draft status.", ErrorType.Validation);
+        return Result.Success();
     }
 
-    public Result<None> Delete()
+    private static Result<None> ValidateVipMinDuration(TimeInterval vipInterval)
     {
-        Status = Status.Deleted;
-        return None.Value;
+        if (vipInterval.Duration < TimeSpan.FromMinutes(30))
+            return Result.Failure("VIP time span must be at least 30 minutes.", ErrorType.Validation);
+        return Result.Success();
+    }
+
+    private Result<None> ValidateVipWithinSchedule(TimeInterval vipInterval)
+    {
+        var scheduleStart = _times.Min(t => t.TimeInterval.Start);
+        var scheduleEnd = _times.Max(t => t.TimeInterval.End);
+
+        if (vipInterval.Start < scheduleStart || vipInterval.End > scheduleEnd)
+            return Result.Failure("VIP time span must be within the schedule time boundaries.", ErrorType.Validation);
+        return Result.Success();
+    }
+
+    private void RebuildTimeSlotsWithVip(TimeInterval newVip)
+    {
+        var scheduleStart = _times.Min(t => t.TimeInterval.Start);
+        var scheduleEnd = _times.Max(t => t.TimeInterval.End);
+
+        // Collect all VIP intervals (existing + new), then merge overlapping/adjacent
+        var allVipIntervals = _times
+            .Where(t => t.IsVip)
+            .Select(t => (Start: t.TimeInterval.Start, End: t.TimeInterval.End))
+            .Append((Start: newVip.Start, End: newVip.End))
+            .OrderBy(v => v.Start)
+            .ToList();
+
+        var merged = MergeIntervals(allVipIntervals);
+
+        // Rebuild _times: fill schedule with regular slots, inserting VIP where needed
+        var newSlots = new List<ScheduleTimeInterval>();
+        var cursor = scheduleStart;
+
+        foreach (var vip in merged)
+        {
+            // Regular gap before this VIP
+            if (vip.Start > cursor)
+            {
+                var regular = ((Result<TimeInterval>.Success)TimeInterval.Create(cursor, vip.Start)).Value;
+                newSlots.Add(((Result<ScheduleTimeInterval>.Success)ScheduleTimeInterval.Create(regular, false)).Value);
+            }
+
+            // VIP slot
+            var vipTi = ((Result<TimeInterval>.Success)TimeInterval.Create(vip.Start, vip.End)).Value;
+            newSlots.Add(((Result<ScheduleTimeInterval>.Success)ScheduleTimeInterval.Create(vipTi, true)).Value);
+
+            cursor = vip.End;
+        }
+
+        // Regular gap after last VIP
+        if (cursor < scheduleEnd)
+        {
+            var regular = ((Result<TimeInterval>.Success)TimeInterval.Create(cursor, scheduleEnd)).Value;
+            newSlots.Add(((Result<ScheduleTimeInterval>.Success)ScheduleTimeInterval.Create(regular, false)).Value);
+        }
+
+        _times = newSlots;
+    }
+
+    private static List<(DateTime Start, DateTime End)> MergeIntervals(List<(DateTime Start, DateTime End)> intervals)
+    {
+        if (intervals.Count == 0) return [];
+
+        var result = new List<(DateTime Start, DateTime End)> { intervals[0] };
+
+        for (var i = 1; i < intervals.Count; i++)
+        {
+            var last = result[^1];
+            var current = intervals[i];
+
+            // Overlapping or adjacent — merge
+            if (current.Start <= last.End)
+            {
+                result[^1] = (last.Start, current.End > last.End ? current.End : last.End);
+            }
+            else
+            {
+                result.Add(current);
+            }
+        }
+
+        return result;
     }
 }

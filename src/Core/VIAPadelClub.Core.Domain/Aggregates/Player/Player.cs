@@ -62,6 +62,9 @@ public sealed class Player
 
     public Result<None> LiftBlacklist()
     {
+        if (!isBlackListed)
+            return Result.Failure("Player is not blacklisted.", ErrorType.Validation);
+
         isBlackListed = false;
         return Result.Success();
     }

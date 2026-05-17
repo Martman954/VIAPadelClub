@@ -9,7 +9,6 @@ namespace VIAPadelClub.Core.Domain.Services;
 
 public class RemoveAvailableCourtFromSchedule
 {
-    // TODO: Make sure to collect errors in array before returning an error
     public static Result<IReadOnlyList<ViaEmail>> Handle(Schedule schedule, Court court, DateTime currentTime)
     {
         var courtId = court.Id;

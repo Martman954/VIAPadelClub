@@ -22,9 +22,6 @@ public class TimeInterval
                 TimeIntervalMustBeWithinSameDay(start, end)
             ).WithSuccessPayload(new TimeInterval(start, end));
 
-    public static Result<TimeInterval> CreateFromDuration(DateTime start, TimeSpan duration)
-        => Create(start, start + duration);
-
 
     //  Can add more validation
     private static Result<None> TimeIntervalMustBeInCorrectFormat(DateTime start, DateTime end) =>

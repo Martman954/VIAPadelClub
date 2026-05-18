@@ -132,30 +132,30 @@ public sealed class Schedule
             return new ResultError("Schedule time intervals can only be updated while in Draft status.",
                 ErrorType.Validation);
 
-        // Rebuild first element with new start, keeping its original end
-        var firstOriginal = _times[0].TimeInterval;
-        var firstIntervalResult = TimeInterval.Create(timeInterval.Start, firstOriginal.End);
-        if (firstIntervalResult is Result<TimeInterval>.Failure f1)
+        var newFirstTimeSlot = RebuildSlot(_times[0], newStart: timeInterval.Start);
+        if (newFirstTimeSlot is Result<ScheduleTimeInterval>.Failure f1)
             return Result.Failure<None>(f1.Errors);
 
-        var firstResult = ScheduleTimeInterval.Create(firstIntervalResult.Payload, _times[0].IsVip);
-        if (firstResult is Result<ScheduleTimeInterval>.Failure f2)
+        var newLastTimeSlot = RebuildSlot(_times[^1], newEnd: timeInterval.End);
+        if (newLastTimeSlot is Result<ScheduleTimeInterval>.Failure f2)
             return Result.Failure<None>(f2.Errors);
 
-        // Rebuild last element with new end, keeping its original start
-        var lastOriginal = _times[^1].TimeInterval;
-        var lastIntervalResult = TimeInterval.Create(lastOriginal.Start, timeInterval.End);
-        if (lastIntervalResult is Result<TimeInterval>.Failure f3)
-            return Result.Failure<None>(f3.Errors);
-
-        var lastResult = ScheduleTimeInterval.Create(lastIntervalResult.Payload, _times[^1].IsVip);
-        if (lastResult is Result<ScheduleTimeInterval>.Failure f4)
-            return Result.Failure<None>(f4.Errors);
-
-        _times[0] = firstResult.Payload;
-        _times[^1] = lastResult.Payload;
+        _times[0] = newFirstTimeSlot.Payload;
+        _times[^1] = newLastTimeSlot.Payload;
 
         return Result.Success();
+    }
+
+    private static Result<ScheduleTimeInterval> RebuildSlot(ScheduleTimeInterval slot, DateTime? newStart = null, DateTime? newEnd = null)
+    {
+        var start = newStart ?? slot.TimeInterval.Start;
+        var end = newEnd ?? slot.TimeInterval.End;
+
+        var intervalResult = TimeInterval.Create(start, end);
+        if (intervalResult is Result<TimeInterval>.Failure f)
+            return Result.Failure<ScheduleTimeInterval>(f.Errors);
+
+        return ScheduleTimeInterval.Create(intervalResult.Payload, slot.IsVip);
     }
 
     public Result<None> MarkVipTimeSpan(TimeInterval vipInterval, INonVipBookingOverlapChecker overlapChecker)

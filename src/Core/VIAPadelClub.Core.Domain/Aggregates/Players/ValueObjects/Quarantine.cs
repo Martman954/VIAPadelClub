@@ -1,4 +1,4 @@
-namespace VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
+namespace VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 
 public class Quarantine
 {

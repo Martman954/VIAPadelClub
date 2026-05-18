@@ -1,6 +1,6 @@
-using VIAPadelClub.Core.Domain.Aggregates.Court;
-using VIAPadelClub.Core.Domain.Aggregates.Player;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule;
+using VIAPadelClub.Core.Domain.Aggregates.Courts;
+using VIAPadelClub.Core.Domain.Aggregates.Players;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 
 namespace VIAPadelClub.Core.Domain.Services;

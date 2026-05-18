@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
+namespace VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 
 public class Name
 {

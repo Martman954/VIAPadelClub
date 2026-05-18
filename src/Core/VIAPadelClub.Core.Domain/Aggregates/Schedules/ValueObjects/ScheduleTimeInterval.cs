@@ -2,7 +2,7 @@ using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
+namespace VIAPadelClub.Core.Domain.Aggregates.Schedules.ValueObjects;
 
 public class ScheduleTimeInterval
 {

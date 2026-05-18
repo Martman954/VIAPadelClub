@@ -1,9 +1,9 @@
-using VIAPadelClub.Core.Domain.Aggregates.Court;
-using VIAPadelClub.Core.Domain.Aggregates.Player;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
+using VIAPadelClub.Core.Domain.Aggregates.Courts;
+using VIAPadelClub.Core.Domain.Aggregates.Players;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts.Court;
+using VIAPadelClub.Core.Domain.Contracts.Courts;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 

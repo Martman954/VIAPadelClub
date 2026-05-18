@@ -1,9 +1,9 @@
-using VIAPadelClub.Core.Domain.Aggregates.Court.Entities;
+using VIAPadelClub.Core.Domain.Aggregates.Courts.Entities;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Court;
+namespace VIAPadelClub.Core.Domain.Aggregates.Courts;
 
 public sealed class Court
 {

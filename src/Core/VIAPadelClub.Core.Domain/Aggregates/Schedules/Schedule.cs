@@ -1,11 +1,11 @@
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts.Schedule;
+using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Schedule;
+namespace VIAPadelClub.Core.Domain.Aggregates.Schedules;
 
 public sealed class Schedule
 {

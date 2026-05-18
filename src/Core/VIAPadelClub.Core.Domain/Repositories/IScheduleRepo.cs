@@ -1,4 +1,4 @@
-using VIAPadelClub.Core.Domain.Aggregates.Schedule;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 
 namespace VIAPadelClub.Core.Domain.Repositories;
 

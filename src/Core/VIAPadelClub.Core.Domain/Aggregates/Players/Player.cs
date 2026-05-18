@@ -1,10 +1,10 @@
-using VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
+using VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts.Player;
+using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Player;
+namespace VIAPadelClub.Core.Domain.Aggregates.Players;
 
 public sealed class Player
 {

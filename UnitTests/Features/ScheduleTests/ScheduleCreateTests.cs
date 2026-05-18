@@ -1,7 +1,5 @@
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.ScheduleTests;

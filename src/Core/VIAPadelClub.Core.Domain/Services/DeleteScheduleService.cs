@@ -1,5 +1,5 @@
-using VIAPadelClub.Core.Domain.Aggregates.Court;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule;
+using VIAPadelClub.Core.Domain.Aggregates.Courts;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 

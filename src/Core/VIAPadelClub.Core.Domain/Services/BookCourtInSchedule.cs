@@ -1,9 +1,9 @@
-using VIAPadelClub.Core.Domain.Aggregates.Court;
-using VIAPadelClub.Core.Domain.Aggregates.Player;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
+using VIAPadelClub.Core.Domain.Aggregates.Courts;
+using VIAPadelClub.Core.Domain.Aggregates.Players;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts.Court;
+using VIAPadelClub.Core.Domain.Contracts.Courts;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
@@ -24,7 +24,7 @@ public class BookCourtInSchedule()
             ValidateBookingTimeFormat(timeInterval),
             ValidateNotInPast(timeInterval, currentTime),
             ValidateWithinSchedule(timeInterval, schedule),
-            ValidateVipAccess(player, schedule, timeInterval),
+            ValidateVipAccess(player, schedule, timeInterval, currentTime),
             ValidateNoOverlap(court, timeInterval),
             ValidateNoSmallGaps(court, schedule, timeInterval)
         );
@@ -95,9 +95,11 @@ public class BookCourtInSchedule()
             : Result.Success();
     }
 
-    private static Result<None> ValidateVipAccess(Player player, Schedule schedule, TimeInterval timeInterval)
+    private static Result<None> ValidateVipAccess(Player player, Schedule schedule, TimeInterval timeInterval, DateTime currentTime)
     {
-        if (player.VipStatus != null)
+        var isVip = player.VipStatus != null && player.VipStatus.IsActive(currentTime);
+
+        if (isVip)
             return Result.Success();
 
         var overlapsVipSlot = schedule.VipTimes

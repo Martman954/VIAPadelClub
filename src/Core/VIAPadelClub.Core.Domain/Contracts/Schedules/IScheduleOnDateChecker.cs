@@ -1,4 +1,4 @@
-namespace VIAPadelClub.Core.Domain.Contracts.Schedule;
+namespace VIAPadelClub.Core.Domain.Contracts.Schedules;
 
 public interface IScheduleOnDateChecker
 {

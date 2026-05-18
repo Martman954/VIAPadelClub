@@ -1,6 +1,6 @@
 using VIAPadelClub.Core.Domain.Common.Values;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Court.Entities;
+namespace VIAPadelClub.Core.Domain.Aggregates.Courts.Entities;
 
 public class Booking
 {

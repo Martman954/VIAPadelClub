@@ -1,7 +1,7 @@
 using Features.CommandDispatch;
 using Features.CommandDispatch.PlayerCommands;
 using VIAPadelClub.Core.Domain.Contracts;
-using VIAPadelClub.Core.Domain.Contracts.Player;
+using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
@@ -24,7 +24,7 @@ public class RegisterAsNewPlayerHandler : ICommandHandler<RegisterAsNewPlayerCom
     public async Task<Result> HandleAsync(RegisterAsNewPlayerCommand command)
     {
         // 1. Create the domain object via your value objects
-        var playerResult = VIAPadelClub.Core.Domain.Aggregates.Player.Player.Register(command.Email, command.Name, command.ImageUrl, _emailInUseChecker);
+        var playerResult = VIAPadelClub.Core.Domain.Aggregates.Players.Player.Register(command.Email, command.Name, command.ImageUrl, _emailInUseChecker);
 
         // 2. Add to repository (in-memory, no DB call yet)
         await _playerRepository.AddPlayer(playerResult.Payload);

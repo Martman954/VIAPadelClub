@@ -1,5 +1,4 @@
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.ValueObjects;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;

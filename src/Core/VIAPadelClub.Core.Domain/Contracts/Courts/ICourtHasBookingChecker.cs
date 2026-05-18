@@ -1,6 +1,6 @@
 using VIAPadelClub.Core.Domain.Common.Values;
 
-namespace VIAPadelClub.Core.Domain.Contracts.Court;
+namespace VIAPadelClub.Core.Domain.Contracts.Courts;
 
 public interface ICourtHasBookingChecker
 {

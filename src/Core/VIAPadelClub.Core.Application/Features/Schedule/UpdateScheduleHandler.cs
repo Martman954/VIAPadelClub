@@ -1,6 +1,6 @@
 using Features.CommandDispatch;
 using Features.CommandDispatch.ScheduleCommands;
-using VIAPadelClub.Core.Domain.Aggregates.Schedule;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;

@@ -1,5 +1,5 @@
-using VIAPadelClub.Core.Domain.Aggregates.Player;
-using VIAPadelClub.Core.Domain.Contracts.Player;
+using VIAPadelClub.Core.Domain.Aggregates.Players;
+using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 

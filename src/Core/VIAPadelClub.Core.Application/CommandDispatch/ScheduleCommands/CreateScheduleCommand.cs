@@ -1,4 +1,4 @@
-using VIAPadelClub.Core.Domain.Aggregates.Schedule.Enums;
+using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 

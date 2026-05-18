@@ -1,10 +1,10 @@
-using VIAPadelClub.Core.Domain.Aggregates.Player.ValueObjects;
+using VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts.Player;
+using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Domain.Aggregates.Player;
+namespace VIAPadelClub.Core.Domain.Aggregates.Players;
 
 public sealed class Player
 {
@@ -62,18 +62,31 @@ public sealed class Player
 
     public Result<None> LiftBlacklist()
     {
+        if (!isBlackListed)
+            return Result.Failure("Player is not blacklisted.", ErrorType.Validation);
+
         isBlackListed = false;
         return Result.Success();
     }
 
-    public Result<None> ElevateToVip(TimeInterval timeInterval)
+    public Result<None> ElevateToVip(DateTime currentDate)
     {
-        return VipStatus.Create(timeInterval) switch
+        if (isBlackListed)
+            return Result.Failure("Blacklisted players cannot be elevated to VIP.", ErrorType.Validation);
+
+        if (IsQuarantined(currentDate))
+            return Result.Failure("Quarantined players cannot be elevated to VIP.", ErrorType.Validation);
+
+        if (VipStatus != null && VipStatus.IsActive(currentDate))
         {
-            Result<VipStatus>.Success => Result.Success(),
-            Result<VipStatus>.Failure f => Result.Failure<None>(f.Errors),
-            _ => throw new InvalidOperationException()
-        };
+            VipStatus.ExtendByThirtyDays();
+        }
+        else
+        {
+            VipStatus = VipStatus.Create(currentDate);
+        }
+
+        return Result.Success();
     }
     
 }

@@ -77,10 +77,22 @@ public sealed class Schedule
         return None.Value;
     }
 
-    public Result<None> Delete()
+    internal Result<None> Delete(DateTime currentTime)
     {
+        if (Status == Status.Deleted)
+            return Result.Failure("Schedule is already deleted.", ErrorType.Validation);
+
+        var scheduleDate = _times.Min(t => t.TimeInterval.Start).Date;
+
+        if (currentTime.Date > scheduleDate)
+            return Result.Failure("Past schedules cannot be deleted.", ErrorType.Validation);
+
+        if (currentTime.Date == scheduleDate)
+            return Result.Failure("A daily schedule cannot be deleted on the same date as the schedule.", ErrorType.Validation);
+
         Status = Status.Deleted;
-        return None.Value;
+        _courts.Clear();
+        return Result.Success();
     }
 
     public Result<None> AddCourt(CourtId courtId)
@@ -151,6 +163,7 @@ public sealed class Schedule
         var validation = Result.Combine(
             ValidateIsDraft(),
             ValidateVipMinDuration(vipInterval),
+            ValidateVipTimeFormat(vipInterval),
             ValidateVipWithinSchedule(vipInterval),
             ValidateNoNonVipBookingsOverlap(vipInterval, overlapChecker)
         );
@@ -174,6 +187,13 @@ public sealed class Schedule
     {
         if (vipInterval.Duration < TimeSpan.FromMinutes(30))
             return Result.Failure("VIP time span must be at least 30 minutes.", ErrorType.Validation);
+        return Result.Success();
+    }
+
+    private static Result<None> ValidateVipTimeFormat(TimeInterval vipInterval)
+    {
+        if (vipInterval.Start.Minute is not (0 or 30) || vipInterval.End.Minute is not (0 or 30))
+            return Result.Failure("VIP time span start and end must be on the hour (:00) or half hour (:30).", ErrorType.Validation);
         return Result.Success();
     }
 

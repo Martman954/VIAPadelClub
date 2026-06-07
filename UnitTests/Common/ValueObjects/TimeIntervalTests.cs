@@ -1,7 +1,7 @@
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace UnitTests.Common.Bases;
+namespace UnitTests.Common.ValueObjects;
 
 public class TimeIntervalTests
 {

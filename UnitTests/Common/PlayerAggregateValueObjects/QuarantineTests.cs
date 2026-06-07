@@ -1,32 +1,36 @@
+using Xunit;
 using VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
-using VIAPadelClub.Core.Domain.Common.Values;
 
 namespace UnitTests.Common.PlayerAggregateValueObjects;
 
 public class QuarantineTests
 {
     [Fact]
-    public void Create_Should_ReturnSuccess_When_ValidInputsProvided()
+    public void Create_Should_ReturnActiveQuarantine_When_ValidCurrentDateProvided()
     {
         // Arrange
-        var interval = ValidInterval();
-        var email = ValidEmail();
+        var baseDate = DateTime.Today;
 
-        // Act
-        var quarantine = Quarantine.Create(interval, email)
-            .AssertSuccess();
+        // Act - Calling the method directly without a Result wrapper
+        Quarantine quarantine = Quarantine.Create(baseDate);
 
         // Assert
-        Assert.Equal(interval, quarantine.TimeInterval);
-        Assert.Equal(email, quarantine.ViaEmail);
+        Assert.NotNull(quarantine);
+        Assert.True(quarantine.IsActive(baseDate), "Quarantine should be active on the day it was created.");
     }
 
-    private static TimeInterval ValidInterval()
-        => TimeInterval
-            .Create(DateTime.UtcNow, DateTime.UtcNow.AddHours(2))
-            .AssertSuccess();
+    [Fact]
+    public void IsActive_Should_ReturnFalse_When_QuarantinePeriodHasExpired()
+    {
+        // Arrange
+        var baseDate = DateTime.Today;
+        Quarantine quarantine = Quarantine.Create(baseDate);
 
-    private static ViaEmail ValidEmail()
-        => ViaEmail.CreateEmail("test@test.com")
-            .AssertSuccess();
+        // Act
+        var futureDate = baseDate.AddDays(10);
+        var isActiveInFuture = quarantine.IsActive(futureDate);
+
+        // Assert
+        Assert.False(isActiveInFuture, "Quarantine should automatically expire after its penalty window passes.");
+    }
 }

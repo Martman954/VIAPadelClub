@@ -117,11 +117,32 @@ public sealed class Schedule
 
     public Result<None> UpdateDate(DateTime newDate)
     {
-        if (!Status.Equals(Status.Draft))
-            return new ResultError("Schedule date can only be updated while in Draft status.", ErrorType.Validation);
+        if (Status != Status.Draft)
+            return new ResultError(
+                "Schedule date can only be updated while in Draft status.",
+                ErrorType.Validation);
 
         if (newDate.Date < DateTime.Today)
-            return new ResultError("Schedule date cannot be set to a date in the past.", ErrorType.Validation);
+            return new ResultError(
+                "Schedule date cannot be set to a date in the past.",
+                ErrorType.Validation);
+
+        _times = _times
+            .Select(slot =>
+            {
+                var startTime = slot.TimeInterval.Start.TimeOfDay;
+                var endTime = slot.TimeInterval.End.TimeOfDay;
+
+                var newStart = newDate.Date.Add(startTime);
+                var newEnd = newDate.Date.Add(endTime);
+
+                var interval = TimeInterval.Create(newStart, newEnd).Payload;
+
+                return ScheduleTimeInterval
+                    .Create(interval, slot.IsVip)
+                    .Payload;
+            })
+            .ToList();
 
         return Result.Success();
     }

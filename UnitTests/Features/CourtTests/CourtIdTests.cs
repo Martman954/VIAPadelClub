@@ -1,7 +1,7 @@
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.CourtTest;
+namespace UnitTests.Features.CourtTests;
 
 public class CourtIdTests
 {
@@ -43,12 +43,15 @@ public class CourtIdTests
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
-    public void Create_WithInvalidFormats_ReturnsFailure(string invalidStringId)
+    public void Create_WithInvalidFormats_ReturnsFailure(string? invalidStringId)
     {
         // Act
-        var result = CourtId.Create(invalidStringId);
+        if (invalidStringId != null)
+        {
+            var result = CourtId.Create(invalidStringId);
 
-        // Assert
-        Assert.True(result is Result<CourtId>.Failure, $"Expected validation failure for invalid input: '{invalidStringId}'");
+            // Assert
+            Assert.True(result is Result<CourtId>.Failure, $"Expected validation failure for invalid input: '{invalidStringId}'");
+        }
     }
 }

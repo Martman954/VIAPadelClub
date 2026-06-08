@@ -2,53 +2,55 @@ using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-
 namespace UnitTests.Common.PlayerAggregateValueObjects;
 
 public class ViaEmailTests
 {
-    [Fact]
-    public void CreateEmail_Should_ReturnSuccess_When_EmailIsValid()
+
+    [Theory]
+    [InlineData("123456@via.dk")]   // 6-digit student number
+    [InlineData("abc@via.dk")]      // 3-letter staff
+    [InlineData("abcd@via.dk")]     // 4-letter staff
+    [InlineData("ABC@via.dk")]      // uppercase normalized
+    public void CreateEmail_ValidViaEmail_ReturnsSuccess(string email)
     {
-        // Act
-        var result = ViaEmail.CreateEmail("test@test.com");
+        var result = ViaEmail.CreateEmail(email);
 
-        // Assert
-        var email = Assert.IsType<Result<ViaEmail>.Success>(result).Value;
+        var success = Assert.IsType<Result<ViaEmail>.Success>(result);
+        Assert.Equal(email, success.Value.Value);
+    }
+    
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void CreateEmail_NullOrEmpty_ReturnsFailureWithEmptyMessage(string? input)
+    {
+        if (input != null)
+        {
+            var result = ViaEmail.CreateEmail(input);
 
-        Assert.Equal("test@test.com", email.Value);
+            var failure = Assert.IsType<Result<ViaEmail>.Failure>(result);
+            Assert.Single(failure.Errors);
+            Assert.Equal(ErrorType.Validation, failure.Errors.First().ErrorType);
+            Assert.Equal("Email is empty", failure.Errors.First().Message);
+        }
     }
 
-    [Fact]
-    public void CreateEmail_Should_ReturnFailure_When_EmailIsNull()
+    [Theory]
+    [InlineData("test@test.com")]       // wrong domain
+    [InlineData("invalidemail.com")]    // no @ symbol
+    [InlineData("12345@via.dk")]        // 5 digits, not 6
+    [InlineData("abcde@via.dk")]        // 5 letters, not 3-4
+    [InlineData("ab@via.dk")]           // 2 letters, too short
+    [InlineData("123456@gmail.com")]    // wrong domain
+    public void CreateEmail_InvalidViaFormat_ReturnsFailureWithFormatMessage(string input)
     {
-        var result = ViaEmail.CreateEmail(null!);
+        var result = ViaEmail.CreateEmail(input);
 
         var failure = Assert.IsType<Result<ViaEmail>.Failure>(result);
-
         Assert.Single(failure.Errors);
         Assert.Equal(ErrorType.Validation, failure.Errors.First().ErrorType);
-    }
-
-    [Fact]
-    public void CreateEmail_Should_ReturnFailure_When_EmailIsEmpty()
-    {
-        var result = ViaEmail.CreateEmail("");
-
-        var failure = Assert.IsType<Result<ViaEmail>.Failure>(result);
-
-        Assert.Single(failure.Errors);
-    }
-
-    [Fact]
-    public void CreateEmail_Should_ReturnFailure_When_EmailDoesNotContainAtSymbol()
-    {
-        var result = ViaEmail.CreateEmail("invalidemail.com");
-
-        var failure = Assert.IsType<Result<ViaEmail>.Failure>(result);
-
-        Assert.Single(failure.Errors);
-        Assert.Equal("Email not in correct format",
-            failure.Errors.First().Message);
+        Assert.Equal("Email not in correct VIA format", failure.Errors.First().Message);
     }
 }

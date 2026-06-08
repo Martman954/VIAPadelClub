@@ -3,7 +3,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Courts.Entities;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.CourtTest;
+namespace UnitTests.Features.CourtTests;
 
 public class BookingTests
 {
@@ -40,7 +40,7 @@ public class BookingTests
         
         var booking = CreateInternalBookingInstance(id, interval, Guid.NewGuid(), email);
 
-        // Act - Invoke the hidden internal Cancel method
+        // Act
         InvokeInternalCancel(booking);
 
         // Assert
@@ -52,7 +52,7 @@ public class BookingTests
         var constructor = typeof(Booking).GetConstructor(
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
             null,
-            new[] { typeof(BookingId), typeof(TimeInterval), typeof(Guid), typeof(ViaEmail) },
+            [typeof(BookingId), typeof(TimeInterval), typeof(Guid), typeof(ViaEmail)],
             null);
 
         if (constructor == null)
@@ -60,7 +60,7 @@ public class BookingTests
             throw new MissingMethodException(nameof(Booking), "Constructor not found.");
         }
 
-        return (Booking)constructor.Invoke(new object[] { id, interval, scheduleId, email });
+        return (Booking)constructor.Invoke([id, interval, scheduleId, email]);
     }
 
     private static void InvokeInternalCancel(Booking booking)

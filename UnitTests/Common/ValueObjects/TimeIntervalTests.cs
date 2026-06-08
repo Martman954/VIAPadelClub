@@ -46,9 +46,10 @@ public class TimeIntervalTests
         // Assert
         var errors = result.AssertFailure();
 
-        Assert.Single(errors);
-        Assert.Equal(ErrorType.Validation, errors.First().ErrorType);
+        var resultErrors = errors as ResultError[] ?? errors.ToArray();
+        Assert.Single(resultErrors);
+        Assert.Equal(ErrorType.Validation, resultErrors.First().ErrorType);
         Assert.Equal("Time interval not in correct format",
-            errors.First().Message);
+            resultErrors.First().Message);
     }
 }

@@ -10,7 +10,7 @@ public class Name
     public string LastName { get; }
 
     private static readonly Regex NameRegex =
-        new(@"^[a-zA-Z]{2,25}$", RegexOptions.Compiled);
+        new("^[a-zA-Z]{2,25}$", RegexOptions.Compiled);
 
     private Name(string firstName, string lastName)
     {
@@ -43,6 +43,8 @@ public class Name
 
     private static string Normalize(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            return name;
         return char.ToUpper(name[0]) + name.Substring(1).ToLower();
     }
 }

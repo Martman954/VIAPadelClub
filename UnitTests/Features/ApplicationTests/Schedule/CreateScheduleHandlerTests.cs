@@ -4,23 +4,24 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
+using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule;
 
 namespace UnitTests.Features.ApplicationTests.Schedule;
 
 file class FakeScheduleRepo : IScheduleRepo
 {
-    public List<VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule> Schedules { get; } = [];
+    public List<ScheduleAggregate> Schedules { get; } = [];
 
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule> AddSchedule(VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule schedule)
+    public Task<ScheduleAggregate> AddSchedule(ScheduleAggregate schedule)
     {
         Schedules.Add(schedule);
         return Task.FromResult(schedule);
     }
 
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule> GetSchedule(Guid scheduleId)
+    public Task<ScheduleAggregate> GetSchedule(Guid scheduleId)
         => Task.FromResult(Schedules.First(s => s.Id == scheduleId));
 
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule> RemoveSchedule(Guid scheduleId)
+    public Task<ScheduleAggregate> RemoveSchedule(Guid scheduleId)
     {
         var schedule = Schedules.First(s => s.Id == scheduleId);
         Schedules.Remove(schedule);

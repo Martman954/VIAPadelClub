@@ -42,24 +42,7 @@ file class FakeUnitOfWork : IUnitOfWork
 public class CreateScheduleHandlerTests
 {
     private static CreateScheduleCommand ValidCommand()
-        => ((Result<CreateScheduleCommand>.Success)
-            CreateScheduleCommand.Create("Morning Session", Status.Draft)).Value;
-
-    [Fact]
-    public void CreateCommand_ValidInputs_ReturnsSuccess()
-    {
-        var result = CreateScheduleCommand.Create("Morning Session", Status.Draft);
-
-        Assert.IsType<Result<CreateScheduleCommand>.Success>(result);
-    }
-
-    [Fact]
-    public void CreateCommand_EmptyTitle_ReturnsFailure()
-    {
-        var result = CreateScheduleCommand.Create("", Status.Draft);
-
-        Assert.IsType<Result<CreateScheduleCommand>.Failure>(result);
-    }
+        => new();
 
     [Fact]
     public async Task HandleAsync_ValidCommand_ReturnsSuccess()
@@ -135,9 +118,4 @@ public class CreateScheduleHandlerTests
         Assert.Equal(new TimeOnly(22, 0), TimeOnly.FromDateTime(schedule.Times[0].TimeInterval.End));
     }
     
-    [Fact]
-    public void CreateCommand_NullTitle_ThrowsOrReturnsFailure()
-    {
-        Assert.Throws<NullReferenceException>(() => CreateScheduleCommand.Create(null!, Status.Draft));
-    }
 }

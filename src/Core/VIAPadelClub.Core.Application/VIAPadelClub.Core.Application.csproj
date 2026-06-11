@@ -11,11 +11,6 @@
       <ProjectReference Include="..\Tools\VIAPadelClub.Core.Tools.OperationResult\VIAPadelClub.Core.Tools.OperationResult.csproj" />
       <ProjectReference Include="..\VIAPadelClub.Core.Domain\VIAPadelClub.Core.Domain.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="CommandDispatch\CourtCommands\" />
-      <Folder Include="Features\AppicationTests\" />
-    </ItemGroup>
     
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

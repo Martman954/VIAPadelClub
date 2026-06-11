@@ -3,7 +3,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Courts.Entities;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.CourtTests;
+namespace UnitTests.Features.CourtTests.BookCourt;
 
 public class BookingTests
 {

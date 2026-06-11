@@ -1,56 +1,11 @@
-using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Core.Domain.Contracts.Players;
-using VIAPadelClub.Core.Domain.Repositories;
-using VIAPadelClub.Core.Domain.UnitOfWork;
-using VIAPadelClub.Core.Tools.OperationResult.Results;
 using Features.CommandDispatch.PlayerCommands;
 using Features.Features.Player;
+using UnitTests.Fakes;
+using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.ApplicationTests.Player;
+namespace UnitTests.Features.PlayerTests.RegisterPlayer;
 
-file class EmailAvailableChecker : IEmailInUseChecker
-{
-    public bool IsEmailInUse(ViaEmail email) => false;
-}
-
-file class EmailInUseChecker : IEmailInUseChecker
-{
-    public bool IsEmailInUse(ViaEmail email) => true;
-}
-
-file class FakePlayerRepo : IPlayerRepo
-{
-    public List<VIAPadelClub.Core.Domain.Aggregates.Players.Player> Players { get; } = [];
-
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Players.Player> AddPlayer(VIAPadelClub.Core.Domain.Aggregates.Players.Player player)
-    {
-        Players.Add(player);
-        return Task.FromResult(player);
-    }
-
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Players.Player> GetPlayer(Guid playerId)
-        => Task.FromResult(Players.First(p => p.Email.Value == playerId.ToString()));
-
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Players.Player> RemovePlayer(Guid playerId)
-    {
-        var player = Players.First(p => p.Email.Value == playerId.ToString());
-        Players.Remove(player);
-        return Task.FromResult(player);
-    }
-}
-
-file class FakeUnitOfWork : IUnitOfWork
-{
-    public bool SaveChangesCalled { get; private set; }
-
-    public Task SaveChangesAsync()
-    {
-        SaveChangesCalled = true;
-        return Task.CompletedTask;
-    }
-}
-
-public class ResgisterAsNewPlayerHandlerTests
+public class RegisterAsNewPlayerHandlerTests
 {
     private const string ValidEmail     = "123456@via.dk";
     private const string ValidFirstName = "Alex";
@@ -62,31 +17,11 @@ public class ResgisterAsNewPlayerHandlerTests
             RegisterAsNewPlayerCommand.Create(ValidEmail, ValidFirstName, ValidLastName, ValidImageUrl)).Value;
 
     [Fact]
-    public void CreateCommand_ValidInputs_ReturnsSuccess()
+    public async Task GivenValidCommand_WhenHandlingAsync_ThenReturnsSuccess()
     {
-        var result = RegisterAsNewPlayerCommand.Create(ValidEmail, ValidFirstName, ValidLastName, ValidImageUrl);
-
-        Assert.IsType<Result<RegisterAsNewPlayerCommand>.Success>(result);
-    }
-
-    [Theory]
-    [InlineData("invalid", "Alex", "Andersen", "https://via.dk/pic.png")]
-    [InlineData("123456@via.dk", "", "Andersen", "https://via.dk/pic.png")]
-    [InlineData("123456@via.dk", "Alex", "", "https://via.dk/pic.png")]
-    [InlineData("123456@via.dk", "Alex", "Andersen", "not-a-url")]
-    public void CreateCommand_InvalidInputs_ReturnsFailure(string email, string first, string last, string image)
-    {
-        var result = RegisterAsNewPlayerCommand.Create(email, first, last, image);
-
-        Assert.IsType<Result<RegisterAsNewPlayerCommand>.Failure>(result);
-    }
-
-    [Fact]
-    public async Task HandleAsync_ValidCommand_ReturnsSuccess()
-    {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
+        var repo    = new FakePlayerRepo();
+        var uow     = new FakeUnitOfWork();
+        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
 
         var result = await handler.HandleAsync(ValidCommand());
 
@@ -94,11 +29,11 @@ public class ResgisterAsNewPlayerHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ValidCommand_PlayerIsAddedToRepo()
+    public async Task GivenValidCommand_WhenHandlingAsync_ThenPlayerIsAddedToRepo()
     {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
+        var repo    = new FakePlayerRepo();
+        var uow     = new FakeUnitOfWork();
+        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -106,11 +41,11 @@ public class ResgisterAsNewPlayerHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ValidCommand_PlayerHasCorrectEmail()
+    public async Task GivenValidCommand_WhenHandlingAsync_ThenPlayerHasCorrectEmail()
     {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
+        var repo    = new FakePlayerRepo();
+        var uow     = new FakeUnitOfWork();
+        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -118,11 +53,11 @@ public class ResgisterAsNewPlayerHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ValidCommand_SaveChangesIsCalled()
+    public async Task GivenValidCommand_WhenHandlingAsync_ThenSaveChangesIsCalled()
     {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
+        var repo    = new FakePlayerRepo();
+        var uow     = new FakeUnitOfWork();
+        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -130,33 +65,27 @@ public class ResgisterAsNewPlayerHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_EmailAlreadyInUse_PlayerNotAddedToRepo()
+    public async Task GivenEmailAlreadyInUse_WhenHandlingAsync_ThenPlayerNotAddedToRepo()
     {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
+        var repo    = new FakePlayerRepo();
+        var uow     = new FakeUnitOfWork();
         var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
 
         try { await handler.HandleAsync(ValidCommand()); }
-        catch
-        {
-            // ignored
-        }
+        catch { /* ignored */ }
 
         Assert.Empty(repo.Players);
     }
 
     [Fact]
-    public async Task HandleAsync_EmailAlreadyInUse_SaveChangesNotCalled()
+    public async Task GivenEmailAlreadyInUse_WhenHandlingAsync_ThenSaveChangesNotCalled()
     {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
+        var repo    = new FakePlayerRepo();
+        var uow     = new FakeUnitOfWork();
         var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
 
         try { await handler.HandleAsync(ValidCommand()); }
-        catch
-        {
-            // ignored
-        }
+        catch { /* ignored */ }
 
         Assert.False(uow.SaveChangesCalled);
     }

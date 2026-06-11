@@ -8,7 +8,7 @@ using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Domain.Services;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.ServiceTests;
+namespace UnitTests.Features.PlayerTests.BlackListPlayer;
 
 file class EmailAvailableChecker : IEmailInUseChecker
 {

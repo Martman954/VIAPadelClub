@@ -24,8 +24,4 @@
         <ProjectReference Include="..\src\Core\VIAPadelClub.Core.Application\VIAPadelClub.Core.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\ServiceTests\" />
-    </ItemGroup>
-
 </Project>

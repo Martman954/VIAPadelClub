@@ -55,6 +55,19 @@ public abstract record Result
             return Failure<None>(new ResultError($"Operation failed: {ex.Message}"));
         }
     }
+
+    public static async Task<Result<T>> Try<T>(Func<Task<T>> operation)
+    {
+        try
+        {
+            var value = await operation();
+            return Success(value);
+        }
+        catch (Exception ex)
+        {
+            return Failure<T>(new ResultError($"Operation failed: {ex.Message}"));
+        }
+    }
 }
 
 public abstract record Result<T> : Result

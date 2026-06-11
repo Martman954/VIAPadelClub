@@ -17,7 +17,7 @@ public class ScheduleTimeInterval
         IsVip = isVip;
     }
 
-    public static Result<ScheduleTimeInterval> Create(TimeInterval timeInterval, bool isVip)
+    public static Result<ScheduleTimeInterval> Create(TimeInterval timeInterval, bool isVip = false)
         => Result.Combine(ValidateDateIsNotInPast(timeInterval), 
             ValidateMinimumDuration(timeInterval),
             ValidateHourFormat(timeInterval)

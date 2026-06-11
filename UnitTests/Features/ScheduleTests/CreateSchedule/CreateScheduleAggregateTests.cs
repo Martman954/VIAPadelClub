@@ -2,9 +2,9 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.ScheduleTests;
+namespace UnitTests.Features.ScheduleTests.CreateSchedule;
 
-public class ScheduleCreateTests
+public class CreateScheduleAggregateTests
 {
     [Fact]
     public void Create_ReturnsSuccess()

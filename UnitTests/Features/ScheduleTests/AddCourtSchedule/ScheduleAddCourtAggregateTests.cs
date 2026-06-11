@@ -3,14 +3,14 @@ using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.ScheduleTests;
+namespace UnitTests.Features.ScheduleTests.AddCourtSchedule;
 
 file class NoConflictChecker : IScheduleDateConflictChecker
 {
     public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
 }
 
-public class ScheduleAddCourtTests
+public class ScheduleAddCourtAggregateTests
 {
     [Fact]
     public void AddCourt_ToDraftFutureSchedule_ReturnsSuccess()

@@ -3,9 +3,9 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.ScheduleTests;
+namespace UnitTests.Features.ScheduleTests.DeleteSchedule;
 
-public class ScheduleDeleteTests
+public class ScheduleDeleteAggregatesTests
 {
     private static Result<None> CallDelete(Schedule schedule, DateTime currentTime)
         => (Result<None>)typeof(Schedule)

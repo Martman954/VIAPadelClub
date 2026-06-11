@@ -4,7 +4,7 @@ using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.ScheduleTests;
+namespace UnitTests.Features.ScheduleTests.ActiveSchedule;
 
 file class NoConflictChecker : IScheduleDateConflictChecker
 {
@@ -16,7 +16,7 @@ file class ConflictChecker : IScheduleDateConflictChecker
     public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => true;
 }
 
-public class ScheduleActivateTests
+public class ScheduleActivateAggregateTests
 {
     [Fact]
     public void Activate_DeletedSchedule_ReturnsFailure()

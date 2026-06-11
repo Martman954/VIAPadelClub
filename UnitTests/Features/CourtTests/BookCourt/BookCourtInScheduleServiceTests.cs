@@ -10,7 +10,7 @@ using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Domain.Services;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.ServiceTests;
+namespace UnitTests.Features.CourtTests.BookCourt;
 
 file class EmailAvailableChecker : IEmailInUseChecker
 {

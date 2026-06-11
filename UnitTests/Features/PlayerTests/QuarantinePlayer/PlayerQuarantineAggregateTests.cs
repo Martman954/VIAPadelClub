@@ -5,14 +5,14 @@ using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace UnitTests.Features.PlayerTests;
+namespace UnitTests.Features.PlayerTests.QuarantinePlayer;
 
 file class EmailAvailableChecker : IEmailInUseChecker
 {
     public bool IsEmailInUse(ViaEmail email) => false;
 }
 
-public class PlayerQuarantineTests
+public class PlayerQuarantineAggregateTests
 {
     private static Player CreateValidTestPlayer()
     {

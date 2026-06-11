@@ -4,7 +4,6 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
-using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 internal class UpdateScheduleHandler : ICommandHandler<UpdateScheduleCommand>
 {

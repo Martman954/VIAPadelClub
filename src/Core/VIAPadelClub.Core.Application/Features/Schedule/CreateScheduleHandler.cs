@@ -20,7 +20,7 @@ internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
     
     public async Task<Result> HandleAsync(CreateScheduleCommand command)
     {
-        Result<ScheduleAggregate> newSchedule = ScheduleAggregate.Create();
+        var newSchedule = ScheduleAggregate.Create();
         
         if (newSchedule is Result<ScheduleAggregate>.Failure f)
             return Result.Failure<None>(f.Errors);

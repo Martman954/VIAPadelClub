@@ -12,7 +12,7 @@ file class EmailAvailableChecker : IEmailInUseChecker
     public bool IsEmailInUse(ViaEmail email) => false;
 }
 
-public class PlayerQuarantineTests
+public class PlayerQuarantineAggregateTests
 {
     private static Player CreateValidTestPlayer()
     {

@@ -4,7 +4,7 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.ScheduleTests;
 
-public class ScheduleCreateTests
+public class CreateScheduleAggregateTests
 {
     [Fact]
     public void Create_ReturnsSuccess()

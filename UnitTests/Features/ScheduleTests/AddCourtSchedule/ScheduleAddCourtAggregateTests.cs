@@ -10,7 +10,7 @@ file class NoConflictChecker : IScheduleDateConflictChecker
     public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
 }
 
-public class ScheduleAddCourtTests
+public class ScheduleAddCourtAggregateTests
 {
     [Fact]
     public void AddCourt_ToDraftFutureSchedule_ReturnsSuccess()

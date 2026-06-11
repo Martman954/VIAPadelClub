@@ -5,7 +5,7 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.ScheduleTests;
 
-public class ScheduleDeleteTests
+public class ScheduleDeleteAggregatesTests
 {
     private static Result<None> CallDelete(Schedule schedule, DateTime currentTime)
         => (Result<None>)typeof(Schedule)

@@ -10,7 +10,7 @@ file class NoConflictChecker : IScheduleDateConflictChecker
     public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
 }
 
-public class ScheduleUpdateTimeTests
+public class ScheduleUpdateTimeAggregateTests
 {
     private static TimeInterval TargetDayInterval(DateTime baseDate, int startHour = 10, int endHour = 20)
     {

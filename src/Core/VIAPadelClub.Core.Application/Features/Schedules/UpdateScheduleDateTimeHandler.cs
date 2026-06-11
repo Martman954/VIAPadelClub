@@ -1,6 +1,5 @@
 using VIAPadelClub.Core.Application.CommandDispatch;
 using VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
-using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
@@ -9,9 +8,6 @@ namespace VIAPadelClub.Core.Application.Features.Schedules;
 
 internal class UpdateScheduleDateTimeHandler : ICommandHandler<UpdateScheduleDateTimeCommand>
 {
-    //As a manager 
-        //I want to update the time and date on a daily schedule.    
-    
     private readonly IScheduleRepo _scheduleRepo;
     private readonly IUnitOfWork _unitOfWork;
 
@@ -20,14 +16,19 @@ internal class UpdateScheduleDateTimeHandler : ICommandHandler<UpdateScheduleDat
         _scheduleRepo = scheduleRepo;
         _unitOfWork = unitOfWork;
     }
-    
 
     public async Task<Result> HandleAsync(UpdateScheduleDateTimeCommand dateTimeCommand)
     {
-        Result<Schedule> existingSchedule = await _scheduleRepo.GetSchedule(dateTimeCommand.ScheduleId);
+        var schedule = await _scheduleRepo.GetSchedule(dateTimeCommand.ScheduleId);
 
-        var schedule = existingSchedule.Payload;
-        await _unitOfWork.SaveChangesAsync();
-        return Result.Success();
+        var result = Result.Combine(
+            schedule.UpdateDate(dateTimeCommand.ScheduleTimeInterval.TimeInterval.Start),
+            schedule.UpdateTimes(dateTimeCommand.ScheduleTimeInterval.TimeInterval)
+        );
+
+        if (result is Result<None>.Success)
+            await _unitOfWork.SaveChangesAsync();
+
+        return result;
     }
 }

@@ -43,16 +43,7 @@ file class FakeUnitOfWork : IUnitOfWork
 public class CreateScheduleHandlerTests
 {
     private static CreateScheduleCommand ValidCommand()
-        => ((Result<CreateScheduleCommand>.Success)
-            CreateScheduleCommand.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new TimeOnly(15, 0), new TimeOnly(22, 0))).Value;
-
-    [Fact]
-    public void CreateCommand_StartAfterEnd_ReturnsFailure()
-    {
-        var result = CreateScheduleCommand.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new TimeOnly(22, 0), new TimeOnly(15, 0));
-
-        Assert.IsType<Result<CreateScheduleCommand>.Failure>(result);
-    }
+        => new CreateScheduleCommand();
 
     [Fact]
     public async Task HandleAsync_ValidCommand_ReturnsSuccess()

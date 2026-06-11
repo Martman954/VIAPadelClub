@@ -16,7 +16,7 @@ file class ConflictChecker : IScheduleDateConflictChecker
     public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => true;
 }
 
-public class ScheduleActivateTests
+public class ScheduleActivateAggregateTests
 {
     [Fact]
     public void Activate_DeletedSchedule_ReturnsFailure()

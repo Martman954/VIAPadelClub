@@ -6,7 +6,7 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.CourtTests;
 
-public class CourtCancelBookingTests
+public class CourtCancelBookingAggregateTests
 {
     private static readonly DateTime FutureStart = DateTime.Today.AddDays(1).AddHours(15);
 

@@ -11,7 +11,7 @@ file class EmailAvailableChecker : IEmailInUseChecker
     public bool IsEmailInUse(ViaEmail email) => false;
 }
 
-public class PlayerRegisterTests
+public class PlayerRegisterAggregateTests
 {
     [Fact]
     public void Register_Should_ReturnSuccess_When_DataIsValid()

@@ -1,10 +1,10 @@
+using VIAPadelClub.Core.Application.CommandDispatch.PlayerCommands;
+using VIAPadelClub.Core.Application.Features.Players;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
-using Features.CommandDispatch.PlayerCommands;
-using Features.Features.Player;
 
 namespace UnitTests.Features.ApplicationTests.Player;
 

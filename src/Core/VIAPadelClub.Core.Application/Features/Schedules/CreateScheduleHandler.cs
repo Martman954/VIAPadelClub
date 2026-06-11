@@ -1,11 +1,11 @@
-using Features.CommandDispatch;
-using Features.CommandDispatch.ScheduleCommands;
+using VIAPadelClub.Core.Application.CommandDispatch;
+using VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
 using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace Features.Features.Schedule;
+namespace VIAPadelClub.Core.Application.Features.Schedules;
 
 internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
 {

@@ -2,7 +2,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace Features.CommandDispatch.PlayerCommands;
+namespace VIAPadelClub.Core.Application.CommandDispatch.PlayerCommands;
 
 public class RegisterAsNewPlayerCommand
 {
@@ -18,9 +18,9 @@ public class RegisterAsNewPlayerCommand
 
     public static Result<RegisterAsNewPlayerCommand> Create(string email, string firstname, string lastname, string imageUrl)
     {
-        Result<ViaEmail> emailResult = ViaEmail.CreateEmail(email);
-        Result<Name> nameResult = Name.CreateName(firstname, lastname);
-        Result<ImageUrl> imageResult = ImageUrl.CreateImageUrl(imageUrl);
+        var emailResult = ViaEmail.CreateEmail(email);
+        var nameResult = Name.CreateName(firstname, lastname);
+        var imageResult = ImageUrl.CreateImageUrl(imageUrl);
 
         return Result.CombineResultsInto<RegisterAsNewPlayerCommand>(emailResult, nameResult, imageResult)
             .WithPayloadIfSuccess(() => new RegisterAsNewPlayerCommand(emailResult.Payload, nameResult.Payload, imageResult.Payload));

@@ -1,5 +1,5 @@
-using Features.CommandDispatch.ScheduleCommands;
-using Features.Features.Schedule;
+using VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
+using VIAPadelClub.Core.Application.Features.Schedules;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;

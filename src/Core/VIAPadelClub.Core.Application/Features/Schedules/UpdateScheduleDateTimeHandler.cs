@@ -1,9 +1,11 @@
-using Features.CommandDispatch;
-using Features.CommandDispatch.ScheduleCommands;
+using VIAPadelClub.Core.Application.CommandDispatch;
+using VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
+
+namespace VIAPadelClub.Core.Application.Features.Schedules;
 
 internal class UpdateScheduleDateTimeHandler : ICommandHandler<UpdateScheduleDateTimeCommand>
 {

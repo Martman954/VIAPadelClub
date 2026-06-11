@@ -4,7 +4,7 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 using ScheduleTimeInterval = VIAPadelClub.Core.Domain.Aggregates.Schedules.ValueObjects.ScheduleTimeInterval;
 
 
-namespace Features.CommandDispatch.ScheduleCommands;
+namespace VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
 
 public class UpdateScheduleDateTimeCommand
 {

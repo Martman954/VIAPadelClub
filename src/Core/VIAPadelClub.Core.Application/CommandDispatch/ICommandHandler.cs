@@ -1,7 +1,7 @@
 
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace Features.CommandDispatch;
+namespace VIAPadelClub.Core.Application.CommandDispatch;
 
 public interface ICommandHandler<in TCommand>
 {

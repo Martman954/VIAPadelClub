@@ -1,4 +1,4 @@
-namespace Features.CommandDispatch.ScheduleCommands;
+namespace VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
 
 public sealed class CreateScheduleCommand
 {

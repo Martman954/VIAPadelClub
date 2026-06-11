@@ -4,6 +4,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
+using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Application.Features.Schedules;
 
@@ -20,10 +21,10 @@ internal class UpdateScheduleDateTimeHandler : ICommandHandler<UpdateScheduleDat
 
     public async Task<Result> HandleAsync(UpdateScheduleDateTimeCommand dateTimeCommand)
     {
-        Result<Schedule> scheduleResult = await _scheduleRepo.GetSchedule(dateTimeCommand.ScheduleId);
-        if (scheduleResult is Result<Schedule>.Failure f)
-            return Result.Failure<None>(f.Errors);
-        
+        var scheduleResult = await Result.Try(() => _scheduleRepo.GetSchedule(dateTimeCommand.ScheduleId));
+        if (scheduleResult is Result<Schedule>.Failure)
+            return Result.Failure("Schedule not found.", ErrorType.NotFound);
+ 
         var schedule = scheduleResult.Payload;
 
         var result = Result.Combine(

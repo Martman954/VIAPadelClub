@@ -16,13 +16,11 @@ public class RegisterAsNewPlayerHandler(
 {
     public async Task<Result> HandleAsync(RegisterAsNewPlayerCommand command)
     {
-        // 1. Create the domain object via your value objects
         var playerResult = PlayerAggregate.Register(command.Email, command.Name, command.ImageUrl, emailInUseChecker);
+        if (playerResult is Result<PlayerAggregate>.Failure f)
+            return Result.Failure<None>(f.Errors);
 
-        // 2. Add to repository (in-memory, no DB call yet)
         await playerRepository.AddPlayer(playerResult.Payload);
-
-        // 3. Commit the transaction (actual DB call happens here)
         await unitOfWork.SaveChangesAsync();
 
         return Result.Success();

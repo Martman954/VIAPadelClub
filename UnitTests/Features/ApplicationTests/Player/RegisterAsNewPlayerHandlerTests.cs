@@ -136,11 +136,7 @@ public class ResgisterAsNewPlayerHandlerTests
         var uow  = new FakeUnitOfWork();
         var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
 
-        try { await handler.HandleAsync(ValidCommand()); }
-        catch
-        {
-            // ignored
-        }
+        await handler.HandleAsync(ValidCommand());
 
         Assert.Empty(repo.Players);
     }
@@ -152,12 +148,20 @@ public class ResgisterAsNewPlayerHandlerTests
         var uow  = new FakeUnitOfWork();
         var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
 
-        try { await handler.HandleAsync(ValidCommand()); }
-        catch
-        {
-            // ignored
-        }
+        await handler.HandleAsync(ValidCommand());
 
         Assert.False(uow.SaveChangesCalled);
+    }
+
+    [Fact]
+    public async Task HandleAsync_EmailAlreadyInUse_ReturnsFailure()
+    {
+        var repo = new FakePlayerRepo();
+        var uow  = new FakeUnitOfWork();
+        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
+
+        var result = await handler.HandleAsync(ValidCommand());
+
+        Assert.IsType<Result<None>.Failure>(result);
     }
 }

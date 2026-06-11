@@ -6,9 +6,10 @@ namespace VIAPadelClub.Core.Application.CommandDispatch.PlayerCommands;
 
 public class RegisterAsNewPlayerCommand
 {
-    public ViaEmail Email { get; set; }
-    public Name Name { get; set; }
-    public ImageUrl ImageUrl { get; set; }
+    public ViaEmail Email { get; }
+    public Name Name { get; }
+    public ImageUrl ImageUrl { get; }
+    
     private RegisterAsNewPlayerCommand(ViaEmail email, Name name, ImageUrl imageUrl)
     {
         Email = email;

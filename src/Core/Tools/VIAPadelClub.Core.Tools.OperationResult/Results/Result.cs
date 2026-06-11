@@ -42,6 +42,19 @@ public abstract record Result
             ? Failure<TCommand>(errors)
             : Success(default(TCommand)!);
     }
+
+    public static async Task<Result> Try(Func<Task> operation)
+    {
+        try
+        {
+            await operation();
+            return Success();
+        }
+        catch (Exception ex)
+        {
+            return Failure<None>(new ResultError($"Operation failed: {ex.Message}"));
+        }
+    }
 }
 
 public abstract record Result<T> : Result

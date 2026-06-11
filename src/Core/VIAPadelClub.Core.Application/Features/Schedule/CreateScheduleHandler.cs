@@ -25,8 +25,10 @@ internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
         if (newSchedule is Result<ScheduleAggregate>.Failure f)
             return Result.Failure<None>(f.Errors);
         
-        await _scheduleRepo.AddSchedule(newSchedule.Payload);
-        await _unitOfWork.SaveChangesAsync();
-        return Result.Success(); 
+        return await Result.Try(async () =>
+        {
+            await _scheduleRepo.AddSchedule(newSchedule.Payload);
+            await _unitOfWork.SaveChangesAsync();
+        });
     }
 }

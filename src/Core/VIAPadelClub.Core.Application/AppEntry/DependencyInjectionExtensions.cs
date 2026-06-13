@@ -9,7 +9,7 @@ public static class DependencyInjectionExtensions
     /// </summary>
     public static IServiceCollection AddApplicationCommandDispatch(this IServiceCollection services)
     {
-        var assembly = typeof(ICommandDispatch).Assembly;
+        var assembly = typeof(ICommandDispatcher).Assembly;
 
         var handlerRegistrations = assembly
             .GetTypes()
@@ -22,7 +22,7 @@ public static class DependencyInjectionExtensions
         foreach (var registration in handlerRegistrations)
             services.AddScoped(registration.service, registration.implementation);
 
-        services.AddScoped<ICommandDispatch, Dispatcher>();
+        services.AddScoped<ICommandDispatcher, Dispatcher>();
 
         return services;
     }

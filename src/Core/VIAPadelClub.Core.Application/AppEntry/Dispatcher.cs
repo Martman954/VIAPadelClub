@@ -5,7 +5,7 @@ namespace VIAPadelClub.Core.Application.AppEntry;
 /// <summary>
 /// Resolves the matching command handler from DI and forwards the command to it.
 /// </summary>
-public sealed class Dispatcher(IServiceProvider serviceProvider) : ICommandDispatch
+public sealed class Dispatcher(IServiceProvider serviceProvider) : ICommandDispatcher
 {
     public Task<Result> DispatchAsync<TCommand>(TCommand command)
     {

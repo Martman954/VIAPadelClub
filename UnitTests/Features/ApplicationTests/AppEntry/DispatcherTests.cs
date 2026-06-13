@@ -64,14 +64,14 @@ public class DispatcherTests
     public async Task DispatchAsync_WhenHandlerRegistered_InvokesMatchingHandler()
     {
         var services = new ServiceCollection();
-        services.AddScoped<ICommandDispatch, Dispatcher>();
+        services.AddScoped<ICommandDispatcher, Dispatcher>();
         services.AddScoped<ICommandHandler<PingCommand>, PingHandler>();
         services.AddScoped<PingSpy>();
 
         await using var provider = services.BuildServiceProvider();
         using var scope = provider.CreateScope();
 
-        var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatch>();
+        var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
         var spy = scope.ServiceProvider.GetRequiredService<PingSpy>();
 
         var result = await dispatcher.DispatchAsync(new PingCommand("hello"));
@@ -85,12 +85,12 @@ public class DispatcherTests
     public async Task DispatchAsync_WhenHandlerMissing_ThrowsInvalidOperationException()
     {
         var services = new ServiceCollection();
-        services.AddScoped<ICommandDispatch, Dispatcher>();
+        services.AddScoped<ICommandDispatcher, Dispatcher>();
 
         await using var provider = services.BuildServiceProvider();
         using var scope = provider.CreateScope();
 
-        var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatch>();
+        var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(
             () => dispatcher.DispatchAsync(new PingCommand("missing")));
@@ -109,7 +109,7 @@ public class DispatcherTests
         await using var provider = services.BuildServiceProvider();
         using var scope = provider.CreateScope();
 
-        var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatch>();
+        var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
         var repo = (FakeScheduleRepo)scope.ServiceProvider.GetRequiredService<IScheduleRepo>();
         var uow = (FakeUnitOfWork)scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 

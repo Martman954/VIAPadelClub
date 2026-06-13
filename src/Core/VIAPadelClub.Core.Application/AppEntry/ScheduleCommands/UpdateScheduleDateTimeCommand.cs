@@ -1,10 +1,10 @@
-using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
+using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 using ScheduleTimeInterval = VIAPadelClub.Core.Domain.Aggregates.Schedules.ValueObjects.ScheduleTimeInterval;
 
 
-namespace VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
+namespace VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 
 public class UpdateScheduleDateTimeCommand
 {

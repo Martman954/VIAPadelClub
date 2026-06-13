@@ -1,10 +1,9 @@
-using VIAPadelClub.Core.Application.CommandDispatch;
-using VIAPadelClub.Core.Application.CommandDispatch.CourtCommands;
+using VIAPadelClub.Core.Application.AppEntry;
+using VIAPadelClub.Core.Application.AppEntry.CourtCommands;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Courts;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.Services;
-using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 using CourtAggregate = VIAPadelClub.Core.Domain.Aggregates.Courts.Court;
@@ -17,20 +16,17 @@ internal class BookCourtHandler : ICommandHandler<BookCourtCommand>
     private readonly IScheduleRepo _scheduleRepo;
     private readonly ICourtRepo _courtRepo;
     private readonly ICourtHasBookingChecker _bookingChecker;
-    private readonly IUnitOfWork _unitOfWork;
 
-    internal BookCourtHandler(
+    public BookCourtHandler(
         IPlayerRepo playerRepo,
         IScheduleRepo scheduleRepo,
         ICourtRepo courtRepo,
-        ICourtHasBookingChecker bookingChecker,
-        IUnitOfWork unitOfWork)
+        ICourtHasBookingChecker bookingChecker)
     {
         _playerRepo = playerRepo;
         _scheduleRepo = scheduleRepo;
         _courtRepo = courtRepo;
         _bookingChecker = bookingChecker;
-        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> HandleAsync(BookCourtCommand command)
@@ -61,8 +57,6 @@ internal class BookCourtHandler : ICommandHandler<BookCourtCommand>
         if (bookingResult is Result<BookingId>.Failure bf)
             return Result.Failure<None>(bf.Errors);
 
-        // Save changes to database
-        await _unitOfWork.SaveChangesAsync();
 
         return Result.Success();
     }

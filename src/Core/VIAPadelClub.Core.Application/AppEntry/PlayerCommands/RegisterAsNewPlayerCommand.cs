@@ -2,7 +2,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
-namespace VIAPadelClub.Core.Application.CommandDispatch.PlayerCommands;
+namespace VIAPadelClub.Core.Application.AppEntry.PlayerCommands;
 
 public class RegisterAsNewPlayerCommand
 {

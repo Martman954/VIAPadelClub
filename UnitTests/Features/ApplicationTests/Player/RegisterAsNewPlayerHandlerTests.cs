@@ -1,9 +1,8 @@
-using VIAPadelClub.Core.Application.CommandDispatch.PlayerCommands;
+using VIAPadelClub.Core.Application.AppEntry.PlayerCommands;
 using VIAPadelClub.Core.Application.Features.Players;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Domain.Repositories;
-using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.ApplicationTests.Player;
@@ -36,17 +35,6 @@ file class FakePlayerRepo : IPlayerRepo
         var player = Players.First(p => p.Email.Value == playerId.ToString());
         Players.Remove(player);
         return Task.FromResult(player);
-    }
-}
-
-file class FakeUnitOfWork : IUnitOfWork
-{
-    public bool SaveChangesCalled { get; private set; }
-
-    public Task SaveChangesAsync()
-    {
-        SaveChangesCalled = true;
-        return Task.CompletedTask;
     }
 }
 
@@ -85,8 +73,7 @@ public class ResgisterAsNewPlayerHandlerTests
     public async Task HandleAsync_ValidCommand_ReturnsSuccess()
     {
         var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new EmailAvailableChecker());
 
         var result = await handler.HandleAsync(ValidCommand());
 
@@ -97,8 +84,7 @@ public class ResgisterAsNewPlayerHandlerTests
     public async Task HandleAsync_ValidCommand_PlayerIsAddedToRepo()
     {
         var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new EmailAvailableChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -109,8 +95,7 @@ public class ResgisterAsNewPlayerHandlerTests
     public async Task HandleAsync_ValidCommand_PlayerHasCorrectEmail()
     {
         var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new EmailAvailableChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -118,23 +103,10 @@ public class ResgisterAsNewPlayerHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ValidCommand_SaveChangesIsCalled()
-    {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailAvailableChecker());
-
-        await handler.HandleAsync(ValidCommand());
-
-        Assert.True(uow.SaveChangesCalled);
-    }
-
-    [Fact]
     public async Task HandleAsync_EmailAlreadyInUse_PlayerNotAddedToRepo()
     {
         var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new EmailInUseChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -142,23 +114,10 @@ public class ResgisterAsNewPlayerHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_EmailAlreadyInUse_SaveChangesNotCalled()
-    {
-        var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
-
-        await handler.HandleAsync(ValidCommand());
-
-        Assert.False(uow.SaveChangesCalled);
-    }
-
-    [Fact]
     public async Task HandleAsync_EmailAlreadyInUse_ReturnsFailure()
     {
         var repo = new FakePlayerRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new EmailInUseChecker());
 
         var result = await handler.HandleAsync(ValidCommand());
 

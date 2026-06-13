@@ -1,7 +1,6 @@
-using VIAPadelClub.Core.Application.CommandDispatch;
-using VIAPadelClub.Core.Application.CommandDispatch.CourtCommands;
+using VIAPadelClub.Core.Application.AppEntry;
+using VIAPadelClub.Core.Application.AppEntry.CourtCommands;
 using VIAPadelClub.Core.Domain.Contracts.Courts;
-using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
@@ -10,14 +9,10 @@ namespace VIAPadelClub.Core.Application.Features.Courts;
 internal class CancelBookingHandler : ICommandHandler<CancelBookingCommand>
 {
     private readonly IBookingCourtFinder _bookingCourtFinder;
-    private readonly IUnitOfWork _unitOfWork;
 
-    internal CancelBookingHandler(
-        IBookingCourtFinder bookingCourtFinder,
-        IUnitOfWork unitOfWork)
+    public CancelBookingHandler(IBookingCourtFinder bookingCourtFinder)
     {
         _bookingCourtFinder = bookingCourtFinder;
-        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> HandleAsync(CancelBookingCommand command)
@@ -39,7 +34,6 @@ internal class CancelBookingHandler : ICommandHandler<CancelBookingCommand>
         if (cancelResult is Result<None>.Failure f)
             return Result.Failure<None>(f.Errors);
 
-        await _unitOfWork.SaveChangesAsync();
 
         return Result.Success();
     }

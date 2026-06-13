@@ -1,7 +1,7 @@
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
+namespace VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 
 public sealed class ActivateScheduleCommand
 {

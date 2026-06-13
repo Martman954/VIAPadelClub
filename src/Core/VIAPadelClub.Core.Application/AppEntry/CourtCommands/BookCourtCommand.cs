@@ -2,7 +2,7 @@ using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Application.CommandDispatch.CourtCommands;
+namespace VIAPadelClub.Core.Application.AppEntry.CourtCommands;
 
 public sealed class BookCourtCommand
 {

@@ -2,20 +2,20 @@ using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
-namespace VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
+namespace VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 
-public sealed class AddCourtToScheduleCommand
+public sealed class RemoveCourtFromScheduleCommand
 {
     public Guid ScheduleId { get; }
     public CourtId CourtId { get; }
 
-    private AddCourtToScheduleCommand(Guid scheduleId, CourtId courtId)
+    private RemoveCourtFromScheduleCommand(Guid scheduleId, CourtId courtId)
     {
         ScheduleId = scheduleId;
         CourtId = courtId;
     }
 
-    public static Result<AddCourtToScheduleCommand> Create(string scheduleId, string courtId)
+    public static Result<RemoveCourtFromScheduleCommand> Create(string scheduleId, string courtId)
     {
         var scheduleGuidResult = Guid.TryParse(scheduleId, out var scheduleGuid)
             ? Result.Success(scheduleGuid)
@@ -24,8 +24,8 @@ public sealed class AddCourtToScheduleCommand
         var courtIdResult = CourtId.Create(courtId);
 
         return Result
-            .CombineResultsInto<AddCourtToScheduleCommand>(scheduleGuidResult, courtIdResult)
-            .WithPayloadIfSuccess(() => new AddCourtToScheduleCommand(scheduleGuidResult.Payload, courtIdResult.Payload));
+            .CombineResultsInto<RemoveCourtFromScheduleCommand>(scheduleGuidResult, courtIdResult)
+            .WithPayloadIfSuccess(() => new RemoveCourtFromScheduleCommand(scheduleGuidResult.Payload, courtIdResult.Payload));
     }
 }
 

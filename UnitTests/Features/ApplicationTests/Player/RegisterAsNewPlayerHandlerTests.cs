@@ -1,4 +1,4 @@
-using VIAPadelClub.Core.Application.CommandDispatch.PlayerCommands;
+using VIAPadelClub.Core.Application.AppEntry.PlayerCommands;
 using VIAPadelClub.Core.Application.Features.Players;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Players;

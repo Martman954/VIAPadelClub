@@ -1,5 +1,5 @@
-using VIAPadelClub.Core.Application.CommandDispatch;
-using VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
+using VIAPadelClub.Core.Application.AppEntry;
+using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 using VIAPadelClub.Core.Application.ExternalServices;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;

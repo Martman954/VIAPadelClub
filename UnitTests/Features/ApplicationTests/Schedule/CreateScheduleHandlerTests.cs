@@ -1,4 +1,4 @@
-using VIAPadelClub.Core.Application.CommandDispatch.ScheduleCommands;
+using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 using VIAPadelClub.Core.Application.Features.Schedules;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Repositories;

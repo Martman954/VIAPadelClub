@@ -2,7 +2,6 @@ using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 using VIAPadelClub.Core.Application.Features.Schedules;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Repositories;
-using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule;
 
@@ -29,17 +28,6 @@ file class FakeScheduleRepo : IScheduleRepo
     }
 }
 
-file class FakeUnitOfWork : IUnitOfWork
-{
-    public bool SaveChangesCalled { get; private set; }
-
-    public Task SaveChangesAsync()
-    {
-        SaveChangesCalled = true;
-        return Task.CompletedTask;
-    }
-}
-
 public class CreateScheduleHandlerTests
 {
     private static CreateScheduleCommand ValidCommand()
@@ -49,8 +37,7 @@ public class CreateScheduleHandlerTests
     public async Task HandleAsync_ValidCommand_ReturnsSuccess()
     {
         var repo = new FakeScheduleRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         var result = await handler.HandleAsync(ValidCommand());
 
@@ -61,8 +48,7 @@ public class CreateScheduleHandlerTests
     public async Task HandleAsync_ValidCommand_ScheduleIsAddedToRepo()
     {
         var repo = new FakeScheduleRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 
@@ -73,8 +59,7 @@ public class CreateScheduleHandlerTests
     public async Task HandleAsync_ValidCommand_ScheduleIsInDraftStatus()
     {
         var repo = new FakeScheduleRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 
@@ -82,23 +67,10 @@ public class CreateScheduleHandlerTests
     }
 
     [Fact]
-    public async Task HandleAsync_ValidCommand_SaveChangesIsCalled()
-    {
-        var repo = new FakeScheduleRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
-
-        await handler.HandleAsync(ValidCommand());
-
-        Assert.True(uow.SaveChangesCalled);
-    }
-
-    [Fact]
     public async Task HandleAsync_ValidCommand_ScheduleHasNoCoruts()
     {
         var repo = new FakeScheduleRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 
@@ -109,8 +81,7 @@ public class CreateScheduleHandlerTests
     public async Task HandleAsync_ValidCommand_ScheduleHasDefaultTimes()
     {
         var repo = new FakeScheduleRepo();
-        var uow  = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 

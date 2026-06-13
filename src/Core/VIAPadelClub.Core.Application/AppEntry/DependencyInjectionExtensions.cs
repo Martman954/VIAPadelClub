@@ -22,7 +22,14 @@ public static class DependencyInjectionExtensions
         foreach (var registration in handlerRegistrations)
             services.AddScoped(registration.service, registration.implementation);
 
-        services.AddScoped<ICommandDispatcher, Dispatcher>();
+        // Register base dispatcher and apply decorators manually in order.
+        services.AddScoped<Dispatcher>();
+        services.AddScoped<CommandExecutionTimer>(sp =>
+            new CommandExecutionTimer(sp.GetRequiredService<Dispatcher>()));
+        services.AddScoped<ICommandDispatcher>(sp =>
+            new AutoTransactionSubmitDispatcher(
+                sp.GetRequiredService<CommandExecutionTimer>(),
+                sp.GetRequiredService<VIAPadelClub.Core.Domain.UnitOfWork.IUnitOfWork>()));
 
         return services;
     }

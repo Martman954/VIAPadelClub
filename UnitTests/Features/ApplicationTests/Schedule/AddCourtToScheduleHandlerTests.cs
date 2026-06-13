@@ -2,7 +2,6 @@ using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 using VIAPadelClub.Core.Application.Features.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
-using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule;
@@ -30,17 +29,6 @@ file class AddCourtFakeScheduleRepo : IScheduleRepo
     }
 }
 
-file class AddCourtFakeUnitOfWork : IUnitOfWork
-{
-    public bool SaveChangesCalled { get; private set; }
-
-    public Task SaveChangesAsync()
-    {
-        SaveChangesCalled = true;
-        return Task.CompletedTask;
-    }
-}
-
 public class AddCourtToScheduleHandlerTests
 {
     [Fact]
@@ -64,8 +52,7 @@ public class AddCourtToScheduleHandlerTests
     public async Task HandleAsync_ScheduleNotFound_ReturnsNotFoundFailure()
     {
         var repo = new AddCourtFakeScheduleRepo();
-        var uow = new AddCourtFakeUnitOfWork();
-        var handler = new AddCourtToScheduleHandler(repo, uow);
+        var handler = new AddCourtToScheduleHandler(repo);
         var command = ((Result<AddCourtToScheduleCommand>.Success)
             AddCourtToScheduleCommand.Create(Guid.NewGuid().ToString(), "S1")).Value;
 
@@ -73,15 +60,13 @@ public class AddCourtToScheduleHandlerTests
 
         var failure = Assert.IsType<Result<None>.Failure>(result);
         Assert.Contains(failure.Errors, e => e.ErrorType == ErrorType.NotFound);
-        Assert.False(uow.SaveChangesCalled);
     }
 
     [Fact]
-    public async Task HandleAsync_ValidCommand_AddsCourtAndSaves()
+    public async Task HandleAsync_ValidCommand_AddsCourt()
     {
         var repo = new AddCourtFakeScheduleRepo();
-        var uow = new AddCourtFakeUnitOfWork();
-        var handler = new AddCourtToScheduleHandler(repo, uow);
+        var handler = new AddCourtToScheduleHandler(repo);
 
         var schedule = ScheduleAggregate.Create().Payload;
         schedule.UpdateDate(DateTime.Today.AddDays(1));
@@ -94,7 +79,6 @@ public class AddCourtToScheduleHandlerTests
 
         Assert.IsType<Result<None>.Success>(result);
         Assert.Contains(repo.Schedules[0].Courts, c => c == CourtId.Create("S1").Payload);
-        Assert.True(uow.SaveChangesCalled);
     }
 }
 

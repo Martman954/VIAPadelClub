@@ -14,8 +14,7 @@ public class CreateScheduleHandlerTests
     public async Task GivenValidCommand_WhenHandlingAsync_ThenReturnsSuccess()
     {
         var repo    = new FakeScheduleRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         var result = await handler.HandleAsync(ValidCommand());
 
@@ -26,8 +25,7 @@ public class CreateScheduleHandlerTests
     public async Task GivenValidCommand_WhenHandlingAsync_ThenScheduleIsAddedToRepo()
     {
         var repo    = new FakeScheduleRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 
@@ -38,8 +36,7 @@ public class CreateScheduleHandlerTests
     public async Task GivenValidCommand_WhenHandlingAsync_ThenScheduleIsInDraftStatus()
     {
         var repo    = new FakeScheduleRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 
@@ -47,23 +44,10 @@ public class CreateScheduleHandlerTests
     }
 
     [Fact]
-    public async Task GivenValidCommand_WhenHandlingAsync_ThenSaveChangesIsCalled()
-    {
-        var repo    = new FakeScheduleRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
-
-        await handler.HandleAsync(ValidCommand());
-
-        Assert.True(uow.SaveChangesCalled);
-    }
-
-    [Fact]
     public async Task GivenValidCommand_WhenHandlingAsync_ThenScheduleHasNoCourts()
     {
         var repo    = new FakeScheduleRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 
@@ -74,8 +58,7 @@ public class CreateScheduleHandlerTests
     public async Task GivenValidCommand_WhenHandlingAsync_ThenScheduleHasDefaultTimes()
     {
         var repo    = new FakeScheduleRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new CreateScheduleHandler(repo, uow);
+        var handler = new CreateScheduleHandler(repo);
 
         await handler.HandleAsync(ValidCommand());
 

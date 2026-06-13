@@ -3,7 +3,6 @@ using VIAPadelClub.Core.Application.Features.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
-using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule;
@@ -31,17 +30,6 @@ file class ActivateFakeScheduleRepo : IScheduleRepo
     }
 }
 
-file class ActivateFakeUnitOfWork : IUnitOfWork
-{
-    public bool SaveChangesCalled { get; private set; }
-
-    public Task SaveChangesAsync()
-    {
-        SaveChangesCalled = true;
-        return Task.CompletedTask;
-    }
-}
-
 file class ActivateNoConflictChecker : IScheduleDateConflictChecker
 {
     public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
@@ -66,9 +54,8 @@ public class ActivateScheduleHandlerTests
     public async Task HandleAsync_ScheduleNotFound_ReturnsNotFoundFailure()
     {
         var repo = new ActivateFakeScheduleRepo();
-        var uow = new ActivateFakeUnitOfWork();
         var checker = new ActivateNoConflictChecker();
-        var handler = new ActivateScheduleHandler(repo, uow, checker);
+        var handler = new ActivateScheduleHandler(repo, checker);
         var command = ((Result<ActivateScheduleCommand>.Success)
             ActivateScheduleCommand.Create(Guid.NewGuid().ToString())).Value;
 
@@ -76,16 +63,14 @@ public class ActivateScheduleHandlerTests
 
         var failure = Assert.IsType<Result<None>.Failure>(result);
         Assert.Contains(failure.Errors, e => e.ErrorType == ErrorType.NotFound);
-        Assert.False(uow.SaveChangesCalled);
     }
 
     [Fact]
     public async Task HandleAsync_DateConflict_ReturnsFailureAndDoesNotSave()
     {
         var repo = new ActivateFakeScheduleRepo();
-        var uow = new ActivateFakeUnitOfWork();
         var checker = new ActivateConflictChecker();
-        var handler = new ActivateScheduleHandler(repo, uow, checker);
+        var handler = new ActivateScheduleHandler(repo, checker);
 
         var schedule = ScheduleAggregate.Create().Payload;
         schedule.UpdateDate(DateTime.Today.AddDays(1));
@@ -98,16 +83,14 @@ public class ActivateScheduleHandlerTests
         var result = await handler.HandleAsync(command);
 
         Assert.IsType<Result<None>.Failure>(result);
-        Assert.False(uow.SaveChangesCalled);
     }
 
     [Fact]
-    public async Task HandleAsync_ValidSchedule_ActivatesAndSaves()
+    public async Task HandleAsync_ValidSchedule_Activates()
     {
         var repo = new ActivateFakeScheduleRepo();
-        var uow = new ActivateFakeUnitOfWork();
         var checker = new ActivateNoConflictChecker();
-        var handler = new ActivateScheduleHandler(repo, uow, checker);
+        var handler = new ActivateScheduleHandler(repo, checker);
 
         var schedule = ScheduleAggregate.Create().Payload;
         schedule.UpdateDate(DateTime.Today.AddDays(1));
@@ -120,7 +103,6 @@ public class ActivateScheduleHandlerTests
         var result = await handler.HandleAsync(command);
 
         Assert.IsType<Result<None>.Success>(result);
-        Assert.True(uow.SaveChangesCalled);
     }
 }
 

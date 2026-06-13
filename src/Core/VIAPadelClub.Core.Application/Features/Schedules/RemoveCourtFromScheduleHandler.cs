@@ -4,7 +4,6 @@ using VIAPadelClub.Core.Application.ExternalServices;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.Services;
-using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 using CourtAggregate = VIAPadelClub.Core.Domain.Aggregates.Courts.Court;
@@ -17,18 +16,15 @@ internal class RemoveCourtFromScheduleHandler : ICommandHandler<RemoveCourtFromS
     private readonly IScheduleRepo _scheduleRepo;
     private readonly ICourtRepo _courtRepo;
     private readonly ICourtRemovalNotifier _courtRemovalNotifier;
-    private readonly IUnitOfWork _unitOfWork;
 
-    internal RemoveCourtFromScheduleHandler(
+    public RemoveCourtFromScheduleHandler(
         IScheduleRepo scheduleRepo,
         ICourtRepo courtRepo,
-        ICourtRemovalNotifier courtRemovalNotifier,
-        IUnitOfWork unitOfWork)
+        ICourtRemovalNotifier courtRemovalNotifier)
     {
         _scheduleRepo = scheduleRepo;
         _courtRepo = courtRepo;
         _courtRemovalNotifier = courtRemovalNotifier;
-        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result> HandleAsync(RemoveCourtFromScheduleCommand command)
@@ -48,7 +44,6 @@ internal class RemoveCourtFromScheduleHandler : ICommandHandler<RemoveCourtFromS
         if (removeResult is Result<IReadOnlyList<ViaEmail>>.Failure f)
             return Result.Failure<None>(f.Errors);
 
-        await _unitOfWork.SaveChangesAsync();
 
         if (removeResult.Payload.Count == 0)
             return Result.Success();

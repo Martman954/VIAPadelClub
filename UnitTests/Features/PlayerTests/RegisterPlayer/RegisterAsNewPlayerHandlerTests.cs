@@ -20,8 +20,7 @@ public class RegisterAsNewPlayerHandlerTests
     public async Task GivenValidCommand_WhenHandlingAsync_ThenReturnsSuccess()
     {
         var repo    = new FakePlayerRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new FakeEmailChecker());
 
         var result = await handler.HandleAsync(ValidCommand());
 
@@ -32,8 +31,7 @@ public class RegisterAsNewPlayerHandlerTests
     public async Task GivenValidCommand_WhenHandlingAsync_ThenPlayerIsAddedToRepo()
     {
         var repo    = new FakePlayerRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new FakeEmailChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -44,8 +42,7 @@ public class RegisterAsNewPlayerHandlerTests
     public async Task GivenValidCommand_WhenHandlingAsync_ThenPlayerHasCorrectEmail()
     {
         var repo    = new FakePlayerRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new FakeEmailChecker());
 
         await handler.HandleAsync(ValidCommand());
 
@@ -53,23 +50,10 @@ public class RegisterAsNewPlayerHandlerTests
     }
 
     [Fact]
-    public async Task GivenValidCommand_WhenHandlingAsync_ThenSaveChangesIsCalled()
-    {
-        var repo    = new FakePlayerRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new FakeEmailChecker());
-
-        await handler.HandleAsync(ValidCommand());
-
-        Assert.True(uow.SaveChangesCalled);
-    }
-
-    [Fact]
     public async Task GivenEmailAlreadyInUse_WhenHandlingAsync_ThenPlayerNotAddedToRepo()
     {
         var repo    = new FakePlayerRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
+        var handler = new RegisterAsNewPlayerHandler(repo, new EmailInUseChecker());
 
         try { await handler.HandleAsync(ValidCommand()); }
         catch { /* ignored */ }
@@ -80,13 +64,12 @@ public class RegisterAsNewPlayerHandlerTests
     [Fact]
     public async Task GivenEmailAlreadyInUse_WhenHandlingAsync_ThenSaveChangesNotCalled()
     {
-        var repo    = new FakePlayerRepo();
-        var uow     = new FakeUnitOfWork();
-        var handler = new RegisterAsNewPlayerHandler(repo, uow, new EmailInUseChecker());
+        var repo = new FakePlayerRepo();
+        var handler = new RegisterAsNewPlayerHandler(repo, new EmailInUseChecker());
 
         try { await handler.HandleAsync(ValidCommand()); }
         catch { /* ignored */ }
 
-        Assert.False(uow.SaveChangesCalled);
+        Assert.Empty(repo.Players);
     }
 }

@@ -58,8 +58,40 @@ file sealed class FakeUnitOfWork : IUnitOfWork
     }
 }
 
+file sealed class StubDispatcher(Result nextResult) : ICommandDispatcher
+{
+    public Task<Result> DispatchAsync<TCommand>(TCommand command)
+        => Task.FromResult(nextResult);
+}
+
 public class DispatcherTests
 {
+    [Fact]
+    public async Task AutoTransactionSubmitDispatcher_WhenSuccess_CallsSaveChanges()
+    {
+        var uow = new FakeUnitOfWork();
+        var next = new StubDispatcher(Result.Success());
+        var sut = new AutoTransactionSubmitDispatcher(next, uow);
+
+        var result = await sut.DispatchAsync(new PingCommand("ok"));
+
+        Assert.IsType<Result<None>.Success>(result);
+        Assert.True(uow.SaveChangesCalled);
+    }
+
+    [Fact]
+    public async Task AutoTransactionSubmitDispatcher_WhenFailure_DoesNotCallSaveChanges()
+    {
+        var uow = new FakeUnitOfWork();
+        var next = new StubDispatcher(Result.Failure("boom", VIAPadelClub.Core.Tools.OperationResult.Results.Errors.ErrorType.Failure));
+        var sut = new AutoTransactionSubmitDispatcher(next, uow);
+
+        var result = await sut.DispatchAsync(new PingCommand("fail"));
+
+        Assert.IsType<Result<None>.Failure>(result);
+        Assert.False(uow.SaveChangesCalled);
+    }
+
     [Fact]
     public async Task DispatchAsync_WhenHandlerRegistered_InvokesMatchingHandler()
     {

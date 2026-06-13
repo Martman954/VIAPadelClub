@@ -1,6 +1,5 @@
 using VIAPadelClub.Core.Application.AppEntry;
 using VIAPadelClub.Core.Application.AppEntry.CourtCommands;
-using VIAPadelClub.Core.Application.CommandDispatch;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Courts;
 using VIAPadelClub.Core.Domain.Repositories;

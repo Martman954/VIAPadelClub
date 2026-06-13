@@ -1,54 +1,23 @@
-using Features.CommandDispatch.ScheduleCommands;
-using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
-using VIAPadelClub.Core.Tools.OperationResult.Results;
+using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 
 namespace UnitTests.Features.ScheduleTests.CreateSchedule;
 
 public class CreateScheduleCommandTests
 {
-    private const string ValidTitle = "Morning Session";
-    private const Status ValidStatus = Status.Draft;
-
     [Fact]
-    public void GivenValidInputs_WhenCreatingCommand_ThenReturnsSuccess()
+    public void Constructor_WhenCalled_CreatesCommandInstance()
     {
-        var result = CreateScheduleCommand.Create(ValidTitle, ValidStatus);
+        var command = new CreateScheduleCommand();
 
-        Assert.IsType<Result<CreateScheduleCommand>.Success>(result);
+        Assert.NotNull(command);
     }
 
     [Fact]
-    public void GivenValidInputs_WhenCreatingCommand_ThenCommandHasCorrectTitle()
+    public void Constructor_WhenCalled_CreatesDistinctInstances()
     {
-        var result = CreateScheduleCommand.Create(ValidTitle, ValidStatus);
+        var first = new CreateScheduleCommand();
+        var second = new CreateScheduleCommand();
 
-        var success = Assert.IsType<Result<CreateScheduleCommand>.Success>(result);
-        Assert.Equal(ValidTitle, success.Value.Title);
-    }
-
-    [Fact]
-    public void GivenValidInputs_WhenCreatingCommand_ThenCommandHasCorrectStatus()
-    {
-        var result = CreateScheduleCommand.Create(ValidTitle, ValidStatus);
-
-        var success = Assert.IsType<Result<CreateScheduleCommand>.Success>(result);
-        Assert.Equal(ValidStatus, success.Value.Status);
-    }
-
-    [Fact]
-    public void GivenEmptyTitle_WhenCreatingCommand_ThenReturnsFailure()
-    {
-        var result = CreateScheduleCommand.Create("", ValidStatus);
-
-        Assert.IsType<Result<CreateScheduleCommand>.Failure>(result);
-    }
-
-    [Fact]
-    public void GivenEmptyTitle_WhenCreatingCommand_ThenErrorMentionsTitle()
-    {
-        var result = CreateScheduleCommand.Create("", ValidStatus);
-
-        var failure = Assert.IsType<Result<CreateScheduleCommand>.Failure>(result);
-        Assert.Contains(failure.Errors, e => e.Message.Contains("title", StringComparison.OrdinalIgnoreCase));
+        Assert.NotSame(first, second);
     }
 }

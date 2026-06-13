@@ -1,4 +1,4 @@
-using Features.CommandDispatch.PlayerCommands;
+using VIAPadelClub.Core.Application.AppEntry.PlayerCommands;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.PlayerTests.RegisterPlayer;

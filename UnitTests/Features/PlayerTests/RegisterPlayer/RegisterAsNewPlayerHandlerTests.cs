@@ -1,5 +1,5 @@
-using Features.CommandDispatch.PlayerCommands;
-using Features.Features.Player;
+using VIAPadelClub.Core.Application.AppEntry.PlayerCommands;
+using VIAPadelClub.Core.Application.Features.Players;
 using UnitTests.Fakes;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 

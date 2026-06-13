@@ -1,7 +1,6 @@
-using Features.CommandDispatch.ScheduleCommands;
-using Features.Features.Schedule;
+using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
+using VIAPadelClub.Core.Application.Features.Schedules;
 using UnitTests.Fakes;
-using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.ScheduleTests.CreateSchedule;
@@ -9,8 +8,7 @@ namespace UnitTests.Features.ScheduleTests.CreateSchedule;
 public class CreateScheduleHandlerTests
 {
     private static CreateScheduleCommand ValidCommand()
-        => ((Result<CreateScheduleCommand>.Success)
-            CreateScheduleCommand.Create("Morning Session", Status.Draft)).Value;
+        => new CreateScheduleCommand();
 
     [Fact]
     public async Task GivenValidCommand_WhenHandlingAsync_ThenReturnsSuccess()
@@ -45,7 +43,7 @@ public class CreateScheduleHandlerTests
 
         await handler.HandleAsync(ValidCommand());
 
-        Assert.Equal(Status.Draft, repo.Schedules[0].Status);
+        Assert.Equal(VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums.Status.Draft, repo.Schedules[0].Status);
     }
 
     [Fact]
@@ -86,9 +84,4 @@ public class CreateScheduleHandlerTests
         Assert.Equal(new TimeOnly(22, 0), TimeOnly.FromDateTime(schedule.Times[0].TimeInterval.End));
     }
 
-    [Fact]
-    public void GivenNullTitle_WhenCreatingCommand_ThenThrowsOrReturnsFailure()
-    {
-        Assert.Throws<NullReferenceException>(() => CreateScheduleCommand.Create(null!, Status.Draft));
-    }
 }

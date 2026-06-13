@@ -1,47 +1,51 @@
-using Features.CommandDispatch.ScheduleCommands;
-using VIAPadelClub.Core.Domain.Aggregates.Schedules.ValueObjects;
-using VIAPadelClub.Core.Domain.Common.Values;
+using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace UnitTests.Features.ScheduleTests.UpdateSchedule;
 
-public class UpdateScheduleCommandTests
+public class ScheduleUpdateCommandTests
 {
     private static readonly Guid ValidScheduleId = Guid.NewGuid();
-
-    private static ScheduleTimeInterval CreateValidInterval()
-    {
-        var start = DateTime.Today.AddDays(1).AddHours(15);
-        var end = start.AddHours(1);
-        var interval = TimeInterval.Create(start, end).Payload;
-        return ((Result<ScheduleTimeInterval>.Success)ScheduleTimeInterval.Create(interval, false)).Value;
-    }
+    private static readonly DateOnly ValidDate = DateOnly.FromDateTime(DateTime.Today.AddDays(2));
+    private static readonly TimeOnly ValidStart = new(15, 0);
+    private static readonly TimeOnly ValidEnd = new(16, 0);
 
     [Fact]
     public void GivenValidInputs_WhenCreatingCommand_ThenReturnsSuccess()
     {
-        var result = UpdateScheduleCommand.Create(ValidScheduleId, CreateValidInterval());
+        var result = UpdateScheduleDateTimeCommand.Create(
+            ValidScheduleId.ToString(),
+            ValidDate,
+            ValidStart,
+            ValidEnd);
 
-        Assert.IsType<Result<UpdateScheduleCommand>.Success>(result);
+        Assert.IsType<Result<UpdateScheduleDateTimeCommand>.Success>(result);
     }
 
     [Fact]
     public void GivenValidInputs_WhenCreatingCommand_ThenCommandHasCorrectScheduleId()
     {
-        var result = UpdateScheduleCommand.Create(ValidScheduleId, CreateValidInterval());
+        var result = UpdateScheduleDateTimeCommand.Create(
+            ValidScheduleId.ToString(),
+            ValidDate,
+            ValidStart,
+            ValidEnd);
 
-        var success = Assert.IsType<Result<UpdateScheduleCommand>.Success>(result);
+        var success = Assert.IsType<Result<UpdateScheduleDateTimeCommand>.Success>(result);
         Assert.Equal(ValidScheduleId, success.Value.ScheduleId);
     }
 
     [Fact]
     public void GivenValidInputs_WhenCreatingCommand_ThenCommandHasCorrectTimeInterval()
     {
-        var interval = CreateValidInterval();
+        var result = UpdateScheduleDateTimeCommand.Create(
+            ValidScheduleId.ToString(),
+            ValidDate,
+            ValidStart,
+            ValidEnd);
 
-        var result = UpdateScheduleCommand.Create(ValidScheduleId, interval);
-
-        var success = Assert.IsType<Result<UpdateScheduleCommand>.Success>(result);
-        Assert.Equal(interval, success.Value.ScheduleTimeInterval);
+        var success = Assert.IsType<Result<UpdateScheduleDateTimeCommand>.Success>(result);
+        Assert.Equal(new DateTime(ValidDate, ValidStart), success.Value.ScheduleTimeInterval.TimeInterval.Start);
+        Assert.Equal(new DateTime(ValidDate, ValidEnd), success.Value.ScheduleTimeInterval.TimeInterval.End);
     }
 }

@@ -1,6 +1,5 @@
 using VIAPadelClub.Core.Application.AppEntry;
 using VIAPadelClub.Core.Application.AppEntry.PlayerCommands;
-using VIAPadelClub.Core.Application.CommandDispatch;
 using PlayerAggregate = VIAPadelClub.Core.Domain.Aggregates.Players.Player;
 using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Domain.Repositories;

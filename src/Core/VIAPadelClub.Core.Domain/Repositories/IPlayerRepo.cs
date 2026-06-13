@@ -1,4 +1,4 @@
-using VIAPadelClub.Core.Domain.Aggregates.Player;
+using VIAPadelClub.Core.Domain.Aggregates.Players;
 
 namespace VIAPadelClub.Core.Domain.Repositories;
 

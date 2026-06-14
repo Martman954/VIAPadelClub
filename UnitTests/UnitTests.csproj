@@ -24,6 +24,7 @@
     <ItemGroup>
         <ProjectReference Include="..\src\Core\VIAPadelClub.Core.Domain\VIAPadelClub.Core.Domain.csproj" />
         <ProjectReference Include="..\src\Core\VIAPadelClub.Core.Application\VIAPadelClub.Core.Application.csproj" />
+        <ProjectReference Include="..\src\Presentation\ViaPadelClub.Presentation.WebAPI\ViaPadelClub.Presentation.WebAPI.csproj" />
         <ProjectReference Include="..\src\VIAPadelClub.Infrastructure.SqliteDomainPersistence\VIAPadelClub.Infrastructure.SqliteDomainPersistence.csproj" />
     </ItemGroup>
 

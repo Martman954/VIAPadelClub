@@ -1,21 +1,30 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using VIAPadelClub.Core.Application.AppEntry;
 using VIAPadelClub.Core.Application.AppEntry.CourtCommands;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
+using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 using ViaPadelClub.Presentation.WebAPI.Common;
 
 namespace ViaPadelClub.Presentation.WebAPI.BookingEndpoints;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
+public record BookCourtRequest(
+    string PlayerId,
+    string CourtId,
+    string ScheduleId,
+    DateTime StartTime,
+    DateTime EndTime);
 
 public class BookCourtEndpoint(ICommandHandler<BookCourtCommand> handler)
-    : ApiEndpoint.WithRequest<BookCourtEndpoint.BookCourtRequest>.AndResult<IResult>
+    : ApiEndpoint
+        .WithRequest<BookCourtRequest>
+        .AndResults<Ok, BadRequest<IEnumerable<ResultError>>>
 {
     [HttpPost("courts/book")]
-    public override async Task<IResult> HandleAsync(BookCourtRequest request)
+    public override async Task<Results<Ok, BadRequest<IEnumerable<ResultError>>>> HandleAsync(
+        BookCourtRequest request)
     {
-        // 1. Build the command — validation lives here
+        // 1. Build & validate the command
         var commandResult = BookCourtCommand.Create(
             request.PlayerId,
             request.CourtId,
@@ -23,25 +32,16 @@ public class BookCourtEndpoint(ICommandHandler<BookCourtCommand> handler)
             request.StartTime,
             request.EndTime);
 
-        if (commandResult is Result<BookCourtCommand>.Failure cf)
-            return Results.BadRequest(cf.Errors);
+        if (commandResult is Result<BookCourtCommand>.Failure validationFailure)
+            return TypedResults.BadRequest(validationFailure.Errors);
 
         // 2. Dispatch to the application handler
         var result = await handler.HandleAsync(commandResult.Payload);
 
-        // 3. Translate the Result into an HTTP response
-        if (result is Result<None>.Failure rf)
-            return Results.BadRequest(rf.Errors);
+        // 3. Translate the domain Result into an HTTP response
+        if (result is Result<None>.Failure handlerFailure)
+            return TypedResults.BadRequest(handlerFailure.Errors);
 
-        return Results.Ok();
+        return TypedResults.Ok();
     }
-
-
-    public record BookCourtRequest(
-        string PlayerId,
-        string CourtId,
-        string ScheduleId,
-        DateTime StartTime,
-        DateTime EndTime
-    );
 }

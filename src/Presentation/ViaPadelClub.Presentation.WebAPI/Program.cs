@@ -1,29 +1,27 @@
+using VIAPadelClub.Core.Application.AppEntry;
+using VIAPadelClub.Core.Application.AppEntry.CourtCommands;
 using VIAPadelClub.Core.Tools.ObjectMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
+// --- Object mapper (must be BEFORE Build) ---
+builder.Services.AddSingleton<IObjectMapper, ObjectMapper>();
+builder.Services.AddScoped<ICommandHandler<BookCourtCommand>, BookCourtHandler>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwaggerUI();
     app.UseSwagger();
+    app.UseSwaggerUI();
 }
-builder.Services.AddSingleton<IObjectMapper, ObjectMapper>();
-//builder.Services.AddSingleton<IMapping, GuestToGuestDtoMapping>();
 
-app.MapGet("/hello", () => "Hello World!");   // <-- test endpoint
+app.MapGet("/hello", () => "Hello World!");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

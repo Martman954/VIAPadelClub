@@ -1,3 +1,5 @@
+using VIAPadelClub.Core.Tools.ObjectMapper;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,6 +20,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseSwagger();
 }
+builder.Services.AddSingleton<IObjectMapper, ObjectMapper>();
+//builder.Services.AddSingleton<IMapping, GuestToGuestDtoMapping>();
 
 app.MapGet("/hello", () => "Hello World!");   // <-- test endpoint
 

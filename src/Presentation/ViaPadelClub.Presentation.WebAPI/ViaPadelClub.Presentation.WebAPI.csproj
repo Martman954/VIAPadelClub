@@ -12,8 +12,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="BookingEvents\" />
       <Folder Include="Guests\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Core\Tools\VIAPadelClub.Core.Tools.ObjectMapper\VIAPadelClub.Core.Tools.ObjectMapper.csproj" />
+      <ProjectReference Include="..\..\Core\VIAPadelClub.Core.Application\VIAPadelClub.Core.Application.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,6 @@
+@ViaPadelClub.Presentation.WebAPI_HostAddress = http://localhost:5181
+
+##GET {{ViaPadelClub.Presentation.WebAPI_HostAddress}}/weatherforecast/
+##Accept: application/json
+
+###

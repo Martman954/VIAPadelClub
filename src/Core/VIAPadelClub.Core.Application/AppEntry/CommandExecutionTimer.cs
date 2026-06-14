@@ -3,9 +3,6 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace VIAPadelClub.Core.Application.AppEntry;
 
-/// <summary>
-/// Decorator that measures command execution time.
-/// </summary>
 public sealed class CommandExecutionTimer(ICommandDispatcher next) : ICommandDispatcher
 {
     public async Task<Result> DispatchAsync<TCommand>(TCommand command)

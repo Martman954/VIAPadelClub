@@ -1,5 +1,6 @@
 using VIAPadelClub.Core.Application.AppEntry;
 using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
+using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
@@ -10,16 +11,16 @@ namespace VIAPadelClub.Core.Application.Features.Schedules;
 
 internal class AddCourtToScheduleHandler : ICommandHandler<AddCourtToScheduleCommand>
 {
-    private readonly IScheduleRepo _scheduleRepo;
+    private readonly IScheduleRepository _scheduleRepo;
 
-    public AddCourtToScheduleHandler(IScheduleRepo scheduleRepo)
+    public AddCourtToScheduleHandler(IScheduleRepository scheduleRepo)
     {
         _scheduleRepo = scheduleRepo;
     }
 
     public async Task<Result> HandleAsync(AddCourtToScheduleCommand command)
     {
-        var scheduleResult = await Result.Try(() => _scheduleRepo.GetSchedule(command.ScheduleId));
+        var scheduleResult = await Result.Try(() => _scheduleRepo.GetAsync(ScheduleId.From(command.ScheduleId)));
         if (scheduleResult is Result<ScheduleAggregate>.Failure)
             return Result.Failure("Schedule not found.", ErrorType.NotFound);
         

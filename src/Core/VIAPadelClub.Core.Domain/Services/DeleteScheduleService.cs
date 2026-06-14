@@ -19,7 +19,7 @@ public class DeleteScheduleService
         foreach (var court in courts)
         {
             var bookingsToCancel = court.Bookings
-                .Where(b => !b.IsCancelled && b.ScheduleId == schedule.Id && b.TimeInterval.Start > currentTime)
+                .Where(b => !b.IsCancelled && b.ScheduleId == schedule.Id.GuidValue && b.TimeInterval.Start > currentTime)
                 .ToList();
 
             foreach (var booking in bookingsToCancel)

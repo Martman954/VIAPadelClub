@@ -8,12 +8,12 @@ namespace UnitTests.Features.ScheduleTests.ActiveSchedule;
 
 file class NoConflictChecker : IScheduleDateConflictChecker
 {
-    public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
+    public bool ActiveScheduleExistsOnDate(ScheduleId excludeScheduleId, DateOnly date) => false;
 }
 
 file class ConflictChecker : IScheduleDateConflictChecker
 {
-    public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => true;
+    public bool ActiveScheduleExistsOnDate(ScheduleId excludeScheduleId, DateOnly date) => true;
 }
 
 public class ScheduleActivateAggregateTests

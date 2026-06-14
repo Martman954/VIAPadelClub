@@ -1,5 +1,6 @@
 using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules.ValueObjects;
+using VIAPadelClub.Core.Domain.Common;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
@@ -7,9 +8,9 @@ using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Schedules;
 
-public sealed class Schedule
+public sealed class Schedule : AggregateRoot<ScheduleId>
 {
-    public Guid Id { get; }
+    // ...existing code...
     public Status Status { get; private set; }
 
     private List<ScheduleTimeInterval> _times;
@@ -27,7 +28,7 @@ public sealed class Schedule
     private static readonly TimeOnly DefaultStart = new(15, 0);
     private static readonly TimeOnly DefaultEnd = new(22, 0);
 
-    private Schedule(Guid id, ScheduleTimeInterval defaultTime)
+    private Schedule(ScheduleId id, ScheduleTimeInterval defaultTime)
     {
         Id = id;
         Status = Status.Draft;
@@ -50,7 +51,7 @@ public sealed class Schedule
         if (scheduleTimeIntervalResult is Result<ScheduleTimeInterval>.Failure f2)
             return Result.Failure<Schedule>(f2.Errors);
 
-        return new Schedule(Guid.NewGuid(), scheduleTimeIntervalResult.Payload);
+        return new Schedule(ScheduleId.New(), scheduleTimeIntervalResult.Payload);
     }
 
     public Result<None> Activate(IScheduleDateConflictChecker conflictChecker)

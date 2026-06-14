@@ -58,7 +58,7 @@ public class RemoveAvailableCourtFromSchedule
             return Result.Success();
 
         var hasUpcoming = court.Bookings
-            .Any(b => !b.IsCancelled && b.ScheduleId == schedule.Id && b.TimeInterval.Start > currentTime);
+            .Any(b => !b.IsCancelled && b.ScheduleId == schedule.Id.GuidValue && b.TimeInterval.Start > currentTime);
 
         if (hasUpcoming)
             return Result.Failure("Cannot remove court while there are upcoming bookings on the same day.", ErrorType.Validation);
@@ -69,7 +69,7 @@ public class RemoveAvailableCourtFromSchedule
     private static IReadOnlyList<ViaEmail> CancelActiveBookings(Court court, Schedule schedule, DateTime currentTime)
     {
         var activeBookings = court.Bookings
-            .Where(b => !b.IsCancelled && b.ScheduleId == schedule.Id)
+            .Where(b => !b.IsCancelled && b.ScheduleId == schedule.Id.GuidValue)
             .ToList();
 
         var emails = new List<ViaEmail>();

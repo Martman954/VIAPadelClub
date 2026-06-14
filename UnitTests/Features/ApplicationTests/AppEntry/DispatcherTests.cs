@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using VIAPadelClub.Core.Application.AppEntry;
 using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
+using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
@@ -26,24 +27,25 @@ file sealed class PingHandler(PingSpy spy) : ICommandHandler<PingCommand>
     }
 }
 
-file sealed class FakeScheduleRepo : IScheduleRepo
+file sealed class FakeScheduleRepo : IScheduleRepository
 {
     public List<ScheduleAggregate> Schedules { get; } = [];
 
-    public Task<ScheduleAggregate> AddSchedule(ScheduleAggregate schedule)
+    public Task AddAsync(ScheduleAggregate schedule)
     {
         Schedules.Add(schedule);
-        return Task.FromResult(schedule);
+        return Task.CompletedTask;
     }
 
-    public Task<ScheduleAggregate> GetSchedule(Guid scheduleId)
-        => Task.FromResult(Schedules.First(s => s.Id == scheduleId));
+    public Task<ScheduleAggregate?> GetAsync(ScheduleId scheduleId)
+        => Task.FromResult(Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId)));
 
-    public Task<ScheduleAggregate> RemoveSchedule(Guid scheduleId)
+    public Task RemoveAsync(ScheduleId scheduleId)
     {
-        var schedule = Schedules.First(s => s.Id == scheduleId);
-        Schedules.Remove(schedule);
-        return Task.FromResult(schedule);
+        var schedule = Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId));
+        if (schedule != null)
+            Schedules.Remove(schedule);
+        return Task.CompletedTask;
     }
 }
 
@@ -135,14 +137,14 @@ public class DispatcherTests
     {
         var services = new ServiceCollection();
         services.AddApplicationCommandDispatch();
-        services.AddScoped<IScheduleRepo, FakeScheduleRepo>();
+        services.AddScoped<IScheduleRepository, FakeScheduleRepo>();
         services.AddScoped<IUnitOfWork, FakeUnitOfWork>();
 
         await using var provider = services.BuildServiceProvider();
         using var scope = provider.CreateScope();
 
         var dispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
-        var repo = (FakeScheduleRepo)scope.ServiceProvider.GetRequiredService<IScheduleRepo>();
+        var repo = (FakeScheduleRepo)scope.ServiceProvider.GetRequiredService<IScheduleRepository>();
         var uow = (FakeUnitOfWork)scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
         var result = await dispatcher.DispatchAsync(new CreateScheduleCommand());

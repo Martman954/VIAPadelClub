@@ -1,4 +1,5 @@
 using VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
+using VIAPadelClub.Core.Domain.Common;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
@@ -6,9 +7,9 @@ using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Players;
 
-public sealed class Player
+public sealed class Player : AggregateRoot<ViaEmail>
 {
-    public ViaEmail Email { get; }
+    public ViaEmail Email => Id;
     public Name Name { get; }
     public ImageUrl ProfilePictureUri { get; }
     public VipStatus? VipStatus { get; private set; }
@@ -17,7 +18,7 @@ public sealed class Player
 
     private Player(ViaEmail email, Name name, ImageUrl profilePictureUri)
     {
-        Email = email;
+        Id = email;
         Name = name;
         ProfilePictureUri = profilePictureUri;
         VipStatus = null;

@@ -7,7 +7,7 @@ namespace UnitTests.Features.ScheduleTests.UpdateSchedule;
 
 file class NoConflictChecker : IScheduleDateConflictChecker
 {
-    public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
+    public bool ActiveScheduleExistsOnDate(ScheduleId excludeScheduleId, DateOnly date) => false;
 }
 
 public class ScheduleUpdateTimeAggregateTests

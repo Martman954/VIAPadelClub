@@ -8,7 +8,7 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 namespace VIAPadelClub.Core.Application.Features.Players;
 
 public class RegisterAsNewPlayerHandler(
-    IPlayerRepo playerRepository,
+    IPlayerRepository playerRepository,
     IEmailInUseChecker emailInUseChecker)
     : ICommandHandler<RegisterAsNewPlayerCommand>
 {
@@ -18,7 +18,7 @@ public class RegisterAsNewPlayerHandler(
         if (playerResult is Result<PlayerAggregate>.Failure f)
             return Result.Failure<None>(f.Errors);
 
-        await playerRepository.AddPlayer(playerResult.Payload);
+        await playerRepository.AddAsync(playerResult.Payload);
 
         return Result.Success();
     }

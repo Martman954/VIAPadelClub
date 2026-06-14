@@ -32,7 +32,7 @@ public class BookCourtInSchedule()
         if (validation is Result<None>.Failure f)
             return Result.Failure<BookingId>(f.Errors);
 
-        return court.AddBooking(timeInterval, schedule.Id, player.Email);
+        return court.AddBooking(timeInterval, schedule.Id.GuidValue, player.Email);
     }
 
     private static Result<None> ValidateScheduleIsActive(Schedule schedule)

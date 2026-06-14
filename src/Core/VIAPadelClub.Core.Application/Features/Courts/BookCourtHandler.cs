@@ -10,39 +10,27 @@ using CourtAggregate = VIAPadelClub.Core.Domain.Aggregates.Courts.Court;
 
 namespace VIAPadelClub.Core.Application.Features.Courts;
 
-internal class BookCourtHandler : ICommandHandler<BookCourtCommand>
+internal class BookCourtHandler(
+    IPlayerRepository playerRepo,
+    IScheduleRepository scheduleRepo,
+    ICourtRepository courtRepo,
+    ICourtHasBookingChecker bookingChecker)
+    : ICommandHandler<BookCourtCommand>
 {
-    private readonly IPlayerRepo _playerRepo;
-    private readonly IScheduleRepo _scheduleRepo;
-    private readonly ICourtRepo _courtRepo;
-    private readonly ICourtHasBookingChecker _bookingChecker;
-
-    public BookCourtHandler(
-        IPlayerRepo playerRepo,
-        IScheduleRepo scheduleRepo,
-        ICourtRepo courtRepo,
-        ICourtHasBookingChecker bookingChecker)
-    {
-        _playerRepo = playerRepo;
-        _scheduleRepo = scheduleRepo;
-        _courtRepo = courtRepo;
-        _bookingChecker = bookingChecker;
-    }
-
     public async Task<Result> HandleAsync(BookCourtCommand command)
     {
         // Retrieve Player
-        var playerResult = await Result.Try(() => _playerRepo.GetPlayer(command.PlayerId));
+        var playerResult = await Result.Try(() => playerRepo.GetAsync(command.PlayerId));
         if (playerResult is Result<VIAPadelClub.Core.Domain.Aggregates.Players.Player>.Failure)
             return Result.Failure("Player not found.", ErrorType.NotFound);
 
         // Retrieve Schedule
-        var scheduleResult = await Result.Try(() => _scheduleRepo.GetSchedule(command.ScheduleId));
+        var scheduleResult = await Result.Try(() => scheduleRepo.GetAsync(ScheduleId.From(command.ScheduleId)));
         if (scheduleResult is Result<VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule>.Failure)
             return Result.Failure("Schedule not found.", ErrorType.NotFound);
 
         // Retrieve Court aggregate with all its bookings loaded from the database
-        var courtResult = await Result.Try(() => _courtRepo.GetCourt(command.CourtId));
+        var courtResult = await Result.Try(() => courtRepo.GetAsync(command.CourtId));
         if (courtResult is Result<CourtAggregate>.Failure)
             return Result.Failure("Court not found.", ErrorType.NotFound);
 
@@ -50,9 +38,12 @@ internal class BookCourtHandler : ICommandHandler<BookCourtCommand>
         var schedule = scheduleResult.Payload;
         var court = courtResult.Payload;
 
+        if (player == null || schedule == null || court == null)
+            return Result.Failure("Player, Schedule, or Court not found.", ErrorType.NotFound);
+
         // Create BookingRequest and call domain service
         var bookingRequest = new BookingRequest(player, court, schedule, command.TimeInterval);
-        var bookingResult = BookCourtInSchedule.Handle(bookingRequest, DateTime.Now, _bookingChecker);
+        var bookingResult = BookCourtInSchedule.Handle(bookingRequest, DateTime.Now, bookingChecker);
 
         if (bookingResult is Result<BookingId>.Failure bf)
             return Result.Failure<None>(bf.Errors);

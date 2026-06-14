@@ -19,7 +19,7 @@ file class EmailAvailableChecker : IEmailInUseChecker
 
 file class NoConflictChecker : IScheduleDateConflictChecker
 {
-    public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
+    public bool ActiveScheduleExistsOnDate(ScheduleId excludeScheduleId, DateOnly date) => false;
 }
 
 file class NoExistingBookingChecker : ICourtHasBookingChecker
@@ -280,7 +280,7 @@ public class BookCourtInScheduleServiceTests
         
         typeof(Court)
             .GetMethod("AddBooking", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .Invoke(court, [ValidInterval(), schedule.Id, player.Email]);
+            .Invoke(court, [ValidInterval(), schedule.Id.GuidValue, player.Email]);
 
         var player2Email = ((Result<ViaEmail>.Success)ViaEmail.CreateEmail("654321@via.dk")).Value;
         var player2Name  = ((Result<Name>.Success)Name.CreateName("Bob", "Builder")).Value;
@@ -298,5 +298,5 @@ public class BookCourtInScheduleServiceTests
 
 file class NoOverlapCheckerStub : INonVipBookingOverlapChecker
 {
-    public bool HasNonVipBookingsInTimeSpan(Guid scheduleId, TimeInterval timeInterval) => false;
+    public bool HasNonVipBookingsInTimeSpan(ScheduleId scheduleId, TimeInterval timeInterval) => false;
 }

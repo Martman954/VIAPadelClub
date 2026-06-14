@@ -3,13 +3,15 @@ using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Common.Values;
 
-public sealed record CourtId
+public sealed class CourtId : Id<CourtId>
 {
-    public string Value { get; }
+    public string StringValue { get; }
+
+    public override object Value => StringValue;
 
     private CourtId(string value)
     {
-        Value = value;
+        StringValue = value;
     }
 
     public static Result<CourtId> Create(string courtId)
@@ -44,5 +46,5 @@ public sealed record CourtId
         return Result.Success(new CourtId(normalized));
     }
 
-    public override string ToString() => Value;
+    public override string ToString() => StringValue;
 }

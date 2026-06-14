@@ -29,7 +29,7 @@ public static class DependencyInjectionExtensions
         services.AddScoped<ICommandDispatcher>(sp =>
             new AutoTransactionSubmitDispatcher(
                 sp.GetRequiredService<CommandExecutionTimer>(),
-                sp.GetRequiredService<VIAPadelClub.Core.Domain.UnitOfWork.IUnitOfWork>()));
+                sp.GetRequiredService<Domain.UnitOfWork.IUnitOfWork>()));
 
         return services;
     }

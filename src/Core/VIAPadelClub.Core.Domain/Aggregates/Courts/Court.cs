@@ -1,13 +1,13 @@
 using VIAPadelClub.Core.Domain.Aggregates.Courts.Entities;
+using VIAPadelClub.Core.Domain.Common;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Core.Tools.OperationResult.Results.Errors;
 
 namespace VIAPadelClub.Core.Domain.Aggregates.Courts;
 
-public sealed class Court
+public sealed class Court : AggregateRoot<CourtId>
 {
-    public CourtId Id { get; }
 
     private readonly List<Booking> _bookings = [];
     public IReadOnlyList<Booking> Bookings => _bookings.AsReadOnly();

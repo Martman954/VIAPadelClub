@@ -9,35 +9,36 @@ using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule
 
 namespace UnitTests.Features.ApplicationTests.Schedule;
 
-file class ActivateFakeScheduleRepo : IScheduleRepo
+file class ActivateFakeScheduleRepo : IScheduleRepository
 {
     private List<ScheduleAggregate> Schedules { get; } = [];
 
-    public Task<ScheduleAggregate> AddSchedule(ScheduleAggregate schedule)
+    public Task AddAsync(ScheduleAggregate schedule)
     {
         Schedules.Add(schedule);
-        return Task.FromResult(schedule);
+        return Task.CompletedTask;
     }
 
-    public Task<ScheduleAggregate> GetSchedule(Guid scheduleId)
-        => Task.FromResult(Schedules.First(s => s.Id == scheduleId));
+    public Task<ScheduleAggregate?> GetAsync(ScheduleId scheduleId)
+        => Task.FromResult(Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId)));
 
-    public Task<ScheduleAggregate> RemoveSchedule(Guid scheduleId)
+    public Task RemoveAsync(ScheduleId scheduleId)
     {
-        var schedule = Schedules.First(s => s.Id == scheduleId);
-        Schedules.Remove(schedule);
-        return Task.FromResult(schedule);
+        var schedule = Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId));
+        if (schedule != null)
+            Schedules.Remove(schedule);
+        return Task.CompletedTask;
     }
 }
 
 file class ActivateNoConflictChecker : IScheduleDateConflictChecker
 {
-    public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
+    public bool ActiveScheduleExistsOnDate(ScheduleId excludeScheduleId, DateOnly date) => false;
 }
 
 file class ActivateConflictChecker : IScheduleDateConflictChecker
 {
-    public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => true;
+    public bool ActiveScheduleExistsOnDate(ScheduleId excludeScheduleId, DateOnly date) => true;
 }
 
 public class ActivateScheduleHandlerTests
@@ -75,7 +76,7 @@ public class ActivateScheduleHandlerTests
         var schedule = ScheduleAggregate.Create().Payload;
         schedule.UpdateDate(DateTime.Today.AddDays(1));
         schedule.AddCourt(CourtId.Create("S1").Payload);
-        await repo.AddSchedule(schedule);
+        await repo.AddAsync(schedule);
 
         var command = ((Result<ActivateScheduleCommand>.Success)
             ActivateScheduleCommand.Create(schedule.Id.ToString())).Value;
@@ -95,7 +96,7 @@ public class ActivateScheduleHandlerTests
         var schedule = ScheduleAggregate.Create().Payload;
         schedule.UpdateDate(DateTime.Today.AddDays(1));
         schedule.AddCourt(CourtId.Create("S1").Payload);
-        await repo.AddSchedule(schedule);
+        await repo.AddAsync(schedule);
 
         var command = ((Result<ActivateScheduleCommand>.Success)
             ActivateScheduleCommand.Create(schedule.Id.ToString())).Value;

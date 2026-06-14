@@ -6,12 +6,12 @@ namespace VIAPadelClub.Core.Application.AppEntry.CourtCommands;
 
 public sealed class BookCourtCommand
 {
-    public Guid PlayerId { get; }
+    public ViaEmail PlayerId { get; }
     public CourtId CourtId { get; }
     public Guid ScheduleId { get; }
     public TimeInterval TimeInterval { get; }
 
-    private BookCourtCommand(Guid playerId, CourtId courtId, Guid scheduleId, TimeInterval timeInterval)
+    private BookCourtCommand(ViaEmail playerId, CourtId courtId, Guid scheduleId, TimeInterval timeInterval)
     {
         PlayerId = playerId;
         CourtId = courtId;
@@ -21,9 +21,7 @@ public sealed class BookCourtCommand
 
     public static Result<BookCourtCommand> Create(string playerId, string courtId, string scheduleId, DateTime startTime, DateTime endTime)
     {
-        var playerGuidResult = Guid.TryParse(playerId, out var playerGuid)
-            ? Result.Success(playerGuid)
-            : Result.Failure<Guid>(new ResultError("Invalid player id format.", ErrorType.Validation));
+        var playerIdResult = ViaEmail.CreateEmail(playerId);
 
         var courtIdResult = CourtId.Create(courtId);
 
@@ -34,9 +32,9 @@ public sealed class BookCourtCommand
         var timeIntervalResult = TimeInterval.Create(startTime, endTime);
 
         return Result
-            .CombineResultsInto<BookCourtCommand>(playerGuidResult, courtIdResult, scheduleGuidResult, timeIntervalResult)
+            .CombineResultsInto<BookCourtCommand>(playerIdResult, courtIdResult, scheduleGuidResult, timeIntervalResult)
             .WithPayloadIfSuccess(() => new BookCourtCommand(
-                playerGuidResult.Payload,
+                playerIdResult.Payload,
                 courtIdResult.Payload,
                 scheduleGuidResult.Payload,
                 timeIntervalResult.Payload));

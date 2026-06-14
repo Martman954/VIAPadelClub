@@ -8,24 +8,25 @@ using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule
 
 namespace UnitTests.Features.ApplicationTests.Schedule;
 
-file class AddCourtFakeScheduleRepo : IScheduleRepo
+file class AddCourtFakeScheduleRepo : IScheduleRepository
 {
     public List<ScheduleAggregate> Schedules { get; } = [];
 
-    public Task<ScheduleAggregate> AddSchedule(ScheduleAggregate schedule)
+    public async Task AddAsync(ScheduleAggregate schedule)
     {
         Schedules.Add(schedule);
-        return Task.FromResult(schedule);
+        await Task.CompletedTask;
     }
 
-    public Task<ScheduleAggregate> GetSchedule(Guid scheduleId)
-        => Task.FromResult(Schedules.First(s => s.Id == scheduleId));
+    public Task<ScheduleAggregate?> GetAsync(ScheduleId scheduleId)
+        => Task.FromResult(Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId)));
 
-    public Task<ScheduleAggregate> RemoveSchedule(Guid scheduleId)
+    public Task RemoveAsync(ScheduleId scheduleId)
     {
-        var schedule = Schedules.First(s => s.Id == scheduleId);
-        Schedules.Remove(schedule);
-        return Task.FromResult(schedule);
+        var schedule = Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId));
+        if (schedule != null)
+            Schedules.Remove(schedule);
+        return Task.CompletedTask;
     }
 }
 
@@ -70,15 +71,15 @@ public class AddCourtToScheduleHandlerTests
 
         var schedule = ScheduleAggregate.Create().Payload;
         schedule.UpdateDate(DateTime.Today.AddDays(1));
-        await repo.AddSchedule(schedule);
+        await repo.AddAsync(schedule);
 
         var command = ((Result<AddCourtToScheduleCommand>.Success)
-            AddCourtToScheduleCommand.Create(schedule.Id.ToString(), "S1")).Value;
+            AddCourtToScheduleCommand.Create(schedule.Id.GuidValue.ToString(), "S1")).Value;
 
         var result = await handler.HandleAsync(command);
 
         Assert.IsType<Result<None>.Success>(result);
-        Assert.Contains(repo.Schedules[0].Courts, c => c == CourtId.Create("S1").Payload);
+        Assert.Contains(repo.Schedules[0].Courts, c => c.Equals(CourtId.Create("S1").Payload));
     }
 }
 

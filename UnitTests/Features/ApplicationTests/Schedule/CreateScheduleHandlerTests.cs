@@ -1,30 +1,32 @@
 using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
 using VIAPadelClub.Core.Application.Features.Schedules;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules.Enums;
+using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule;
 
 namespace UnitTests.Features.ApplicationTests.Schedule;
 
-file class FakeScheduleRepo : IScheduleRepo
+file class FakeScheduleRepo : IScheduleRepository
 {
     public List<ScheduleAggregate> Schedules { get; } = [];
 
-    public Task<ScheduleAggregate> AddSchedule(ScheduleAggregate schedule)
+    public Task AddAsync(ScheduleAggregate schedule)
     {
         Schedules.Add(schedule);
-        return Task.FromResult(schedule);
+        return Task.CompletedTask;
     }
 
-    public Task<ScheduleAggregate> GetSchedule(Guid scheduleId)
-        => Task.FromResult(Schedules.First(s => s.Id == scheduleId));
+    public Task<ScheduleAggregate?> GetAsync(ScheduleId scheduleId)
+        => Task.FromResult(Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId)));
 
-    public Task<ScheduleAggregate> RemoveSchedule(Guid scheduleId)
+    public Task RemoveAsync(ScheduleId scheduleId)
     {
-        var schedule = Schedules.First(s => s.Id == scheduleId);
-        Schedules.Remove(schedule);
-        return Task.FromResult(schedule);
+        var schedule = Schedules.FirstOrDefault(s => s.Id.Equals(scheduleId));
+        if (schedule != null)
+            Schedules.Remove(schedule);
+        return Task.CompletedTask;
     }
 }
 

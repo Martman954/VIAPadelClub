@@ -15,4 +15,9 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
     </ItemGroup>
 
+      <ItemGroup>
+        <ProjectReference Include="..\Core\VIAPadelClub.Core.QueryContracts\VIAPadelClub.Core.QueryContracts.csproj" />
+        <ProjectReference Include="..\VIAPadelClub.Infrastructure.EfcDomainPersistence\VIAPadelClub.Infrastructure.EfcDomainPersistence.csproj" />
+      </ItemGroup>
+
 </Project>

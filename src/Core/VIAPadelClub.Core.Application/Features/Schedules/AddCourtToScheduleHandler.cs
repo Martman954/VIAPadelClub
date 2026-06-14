@@ -9,18 +9,11 @@ using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule
 
 namespace VIAPadelClub.Core.Application.Features.Schedules;
 
-internal class AddCourtToScheduleHandler : ICommandHandler<AddCourtToScheduleCommand>
+internal class AddCourtToScheduleHandler(IScheduleRepository scheduleRepo) : ICommandHandler<AddCourtToScheduleCommand>
 {
-    private readonly IScheduleRepository _scheduleRepo;
-
-    public AddCourtToScheduleHandler(IScheduleRepository scheduleRepo)
-    {
-        _scheduleRepo = scheduleRepo;
-    }
-
     public async Task<Result> HandleAsync(AddCourtToScheduleCommand command)
     {
-        var scheduleResult = await Result.Try(() => _scheduleRepo.GetAsync(ScheduleId.From(command.ScheduleId)));
+        var scheduleResult = await Result.Try(() => scheduleRepo.GetAsync(ScheduleId.From(command.ScheduleId)));
         if (scheduleResult is Result<ScheduleAggregate>.Failure)
             return Result.Failure("Schedule not found.", ErrorType.NotFound);
         

@@ -11,29 +11,19 @@ using ScheduleAggregate = VIAPadelClub.Core.Domain.Aggregates.Schedules.Schedule
 
 namespace VIAPadelClub.Core.Application.Features.Schedules;
 
-internal class RemoveCourtFromScheduleHandler : ICommandHandler<RemoveCourtFromScheduleCommand>
+internal class RemoveCourtFromScheduleHandler(
+    IScheduleRepository scheduleRepo,
+    ICourtRepository courtRepo,
+    ICourtRemovalNotifier courtRemovalNotifier)
+    : ICommandHandler<RemoveCourtFromScheduleCommand>
 {
-    private readonly IScheduleRepository _scheduleRepo;
-    private readonly ICourtRepository _courtRepo;
-    private readonly ICourtRemovalNotifier _courtRemovalNotifier;
-
-    public RemoveCourtFromScheduleHandler(
-        IScheduleRepository scheduleRepo,
-        ICourtRepository courtRepo,
-        ICourtRemovalNotifier courtRemovalNotifier)
-    {
-        _scheduleRepo = scheduleRepo;
-        _courtRepo = courtRepo;
-        _courtRemovalNotifier = courtRemovalNotifier;
-    }
-
     public async Task<Result> HandleAsync(RemoveCourtFromScheduleCommand command)
     {
-        var scheduleResult = await Result.Try(() => _scheduleRepo.GetAsync(ScheduleId.From(command.ScheduleId)));
+        var scheduleResult = await Result.Try(() => scheduleRepo.GetAsync(ScheduleId.From(command.ScheduleId)));
         if (scheduleResult is Result<ScheduleAggregate>.Failure)
             return Result.Failure("Schedule not found.", ErrorType.NotFound);
 
-        var courtResult = await Result.Try(() => _courtRepo.GetAsync(command.CourtId));
+        var courtResult = await Result.Try(() => courtRepo.GetAsync(command.CourtId));
         if (courtResult is Result<CourtAggregate>.Failure)
             return Result.Failure("Court not found.", ErrorType.NotFound);
 
@@ -52,7 +42,7 @@ internal class RemoveCourtFromScheduleHandler : ICommandHandler<RemoveCourtFromS
             return Result.Success();
 
         var notifyResult = await Result.Try(() =>
-            _courtRemovalNotifier.NotifyCourtRemovedAsync(removeResult.Payload, schedule.Id.GuidValue, court.Id));
+            courtRemovalNotifier.NotifyCourtRemovedAsync(removeResult.Payload, schedule.Id.GuidValue, court.Id));
 
         if (notifyResult is Result<None>.Failure)
             return Result.Failure("Court was removed, but notifying affected players failed.", ErrorType.Failure);

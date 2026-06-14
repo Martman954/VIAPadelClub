@@ -12,25 +12,10 @@ public interface IGenericRepository<TAggr, TId>
     where TAggr : AggregateRoot<TId>
     where TId : Id<TId>
 {
-    /// <summary>
-    /// Retrieves an aggregate by its identifier with all dependent entities loaded
-    /// </summary>
-    /// <param name="id">The identifier of the aggregate to retrieve</param>
-    /// <returns>A task representing the async operation, returning the aggregate or null if not found</returns>
     Task<TAggr?> GetAsync(TId id);
-
-    /// <summary>
-    /// Adds a new aggregate to the repository
-    /// </summary>
-    /// <param name="aggregate">The aggregate to add</param>
-    /// <returns>A task representing the async operation</returns>
+    
     Task AddAsync(TAggr aggregate);
-
-    /// <summary>
-    /// Removes an aggregate from the repository
-    /// </summary>
-    /// <param name="id">The identifier of the aggregate to remove</param>
-    /// <returns>A task representing the async operation</returns>
+    
     Task RemoveAsync(TId id);
 }
 

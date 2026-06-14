@@ -10,7 +10,6 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Schedules;
 
 public sealed class Schedule : AggregateRoot<ScheduleId>
 {
-    // ...existing code...
     public Status Status { get; private set; }
 
     private List<ScheduleTimeInterval> _times;

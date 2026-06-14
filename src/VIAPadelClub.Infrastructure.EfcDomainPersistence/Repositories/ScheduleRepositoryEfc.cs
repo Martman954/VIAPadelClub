@@ -3,7 +3,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 
-namespace VIAPadelClub.Infrastructure.SqliteDomainPersistence.Repositories;
+namespace VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
 
 public class ScheduleRepositoryEfc(DomainModelContext context)
     : RepositoryBase.RepositoryEfcBase<Schedule, ScheduleId>(context), IScheduleRepository

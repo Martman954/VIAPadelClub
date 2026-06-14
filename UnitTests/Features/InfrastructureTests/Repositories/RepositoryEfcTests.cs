@@ -6,8 +6,8 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
-using VIAPadelClub.Infrastructure.SqliteDomainPersistence;
-using VIAPadelClub.Infrastructure.SqliteDomainPersistence.Repositories;
+using VIAPadelClub.Infrastructure.EfcDomainPersistence;
+using VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
 
 namespace UnitTests.Features.InfrastructureTests.Repositories;
 

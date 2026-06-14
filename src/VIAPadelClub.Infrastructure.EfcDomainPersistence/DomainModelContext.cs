@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace VIAPadelClub.Infrastructure.SqliteDomainPersistence;
+namespace VIAPadelClub.Infrastructure.EfcDomainPersistence;
 
 public class DomainModelContext(DbContextOptions options) : DbContext(options)
 {

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using VIAPadelClub.Core.Domain.Common;
 using VIAPadelClub.Core.Domain.Repositories;
 
-namespace VIAPadelClub.Infrastructure.SqliteDomainPersistence.RepositoryBase;
+namespace VIAPadelClub.Infrastructure.EfcDomainPersistence.RepositoryBase;
 
 /// <summary>
 /// Abstract base class for Entity Framework Core repository implementations.

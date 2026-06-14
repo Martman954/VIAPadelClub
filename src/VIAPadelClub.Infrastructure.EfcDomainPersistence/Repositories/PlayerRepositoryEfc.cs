@@ -3,7 +3,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Players;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 
-namespace VIAPadelClub.Infrastructure.SqliteDomainPersistence.Repositories;
+namespace VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
 
 public class PlayerRepositoryEfc(DomainModelContext context)
     : RepositoryBase.RepositoryEfcBase<Player, ViaEmail>(context), IPlayerRepository

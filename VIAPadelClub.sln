@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VIAPadelClub.Core.Applicati
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{E2A05071-DAD7-448D-BD13-3DD952253F11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VIAPadelClub.Infrastructure.SqliteDomainPersistence", "src\VIAPadelClub.Infrastructure.SqliteDomainPersistence\VIAPadelClub.Infrastructure.SqliteDomainPersistence.csproj", "{D9A0DE81-39AF-4959-BEDC-1E71CADCE269}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VIAPadelClub.Infrastructure.EfcDomainPersistence", "src\VIAPadelClub.Infrastructure.EfcDomainPersistence\VIAPadelClub.Infrastructure.EfcDomainPersistence.csproj", "{D9A0DE81-39AF-4959-BEDC-1E71CADCE269}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

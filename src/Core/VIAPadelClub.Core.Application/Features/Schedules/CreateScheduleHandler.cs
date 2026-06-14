@@ -6,15 +6,8 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 
 namespace VIAPadelClub.Core.Application.Features.Schedules;
 
-internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
+internal class CreateScheduleHandler(IScheduleRepository scheduleRepo) : ICommandHandler<CreateScheduleCommand>
 {
-    private readonly IScheduleRepository _scheduleRepo;
-
-    public CreateScheduleHandler(IScheduleRepository scheduleRepo)
-    {
-        _scheduleRepo = scheduleRepo;
-    }
-    
     public async Task<Result> HandleAsync(CreateScheduleCommand command)
     {
         var newSchedule = ScheduleAggregate.Create();
@@ -24,7 +17,7 @@ internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
         
         return await Result.Try(async () =>
         {
-            await _scheduleRepo.AddAsync(newSchedule.Payload);
+            await scheduleRepo.AddAsync(newSchedule.Payload);
         });
     }
 }

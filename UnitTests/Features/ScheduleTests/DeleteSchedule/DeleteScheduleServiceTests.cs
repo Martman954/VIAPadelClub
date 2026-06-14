@@ -110,7 +110,7 @@ public class DeleteScheduleServiceTests
     {
         var schedule = CreateFutureSchedule();
         var playerEmail = CreateEmail("123456@via.dk");
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail);
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail);
 
         DeleteScheduleService.Handle(schedule, [court], CurrentTime);
 
@@ -122,7 +122,7 @@ public class DeleteScheduleServiceTests
     {
         var schedule = CreateFutureSchedule();
         var playerEmail = CreateEmail("123456@via.dk");
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail);
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail);
 
         var result = DeleteScheduleService.Handle(schedule, [court], CurrentTime);
 
@@ -137,8 +137,8 @@ public class DeleteScheduleServiceTests
         var email1 = CreateEmail("123456@via.dk");
         var email2 = CreateEmail("654321@via.dk");
 
-        var court1 = CreateCourtWithBooking(schedule.Id, email1);
-        var court2 = CreateCourtWithBooking(schedule.Id, email2);
+        var court1 = CreateCourtWithBooking(schedule.Id.GuidValue, email1);
+        var court2 = CreateCourtWithBooking(schedule.Id.GuidValue, email2);
 
         var result = DeleteScheduleService.Handle(schedule, [court1, court2], CurrentTime);
 
@@ -153,7 +153,7 @@ public class DeleteScheduleServiceTests
     {
         var schedule = CreateFutureSchedule();
         var playerEmail = CreateEmail("123456@via.dk");
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail, cancelled: true);
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail, cancelled: true);
 
         var result = DeleteScheduleService.Handle(schedule, [court], CurrentTime);
 

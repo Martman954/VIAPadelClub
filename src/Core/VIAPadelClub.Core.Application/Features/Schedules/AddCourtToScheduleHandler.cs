@@ -25,6 +25,8 @@ internal class AddCourtToScheduleHandler : ICommandHandler<AddCourtToScheduleCom
             return Result.Failure("Schedule not found.", ErrorType.NotFound);
         
         var schedule = scheduleResult.Payload;
+        if (schedule == null)
+            return Result.Failure("Schedule not found.", ErrorType.NotFound);
         var result = schedule.AddCourt(command.CourtId);
 
 

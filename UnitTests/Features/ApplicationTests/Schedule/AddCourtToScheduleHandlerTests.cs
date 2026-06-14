@@ -79,7 +79,7 @@ public class AddCourtToScheduleHandlerTests
         var result = await handler.HandleAsync(command);
 
         Assert.IsType<Result<None>.Success>(result);
-        Assert.Contains(repo.Schedules[0].Courts, c => c == CourtId.Create("S1").Payload);
+        Assert.Contains(repo.Schedules[0].Courts, c => c.Equals(CourtId.Create("S1").Payload));
     }
 }
 

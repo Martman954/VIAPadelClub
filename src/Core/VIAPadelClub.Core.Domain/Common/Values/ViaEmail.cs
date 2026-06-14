@@ -19,11 +19,11 @@ public sealed class ViaEmail : Id<ViaEmail>
 
     public static Result<ViaEmail> CreateEmail(string email)
     {
-        var normalized = email.Trim().ToLowerInvariant();
+        var normalized = email?.ToLowerInvariant() ?? string.Empty;
         return Result.Combine(
                 EmailMustBeCorrectFormat(normalized)
             )
-            .WithSuccessPayload(new ViaEmail(normalized));
+            .WithSuccessPayload(new ViaEmail(email!));
     }
 
     private static Result<None> EmailMustBeCorrectFormat(string email)

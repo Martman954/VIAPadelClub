@@ -10,7 +10,7 @@ using VIAPadelClub.Core.Tools.OperationResult.Results;
 namespace UnitTests.Features.ScheduleTests.RemoveSchedule;
 file class NoConflictChecker : IScheduleDateConflictChecker
 {
-    public bool ActiveScheduleExistsOnDate(Guid excludeScheduleId, DateOnly date) => false;
+    public bool ActiveScheduleExistsOnDate(ScheduleId excludeScheduleId, DateOnly date) => false;
 }
 
 public class RemoveAvailableCourtFromScheduleServiceTests
@@ -99,7 +99,7 @@ public class RemoveAvailableCourtFromScheduleServiceTests
         var schedule = Schedule.Create().Payload;
         schedule.AddCourt(CourtId.Create("S1").Payload);
         var playerEmail = CreateEmail();
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail,
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail,
             bookingStart: DateTime.Today.AddHours(20));
 
         var result = RemoveAvailableCourtFromSchedule.Handle(schedule, court, DateTime.Today.AddHours(10));
@@ -158,7 +158,7 @@ public class RemoveAvailableCourtFromScheduleServiceTests
     {
         var schedule = CreateActiveScheduleWithCourt();
         var playerEmail = CreateEmail();
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail);
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail);
 
         RemoveAvailableCourtFromSchedule.Handle(schedule, court, CurrentTime);
 
@@ -170,7 +170,7 @@ public class RemoveAvailableCourtFromScheduleServiceTests
     {
         var schedule = CreateActiveScheduleWithCourt();
         var playerEmail = CreateEmail();
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail);
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail);
 
         var result = RemoveAvailableCourtFromSchedule.Handle(schedule, court, CurrentTime);
 
@@ -183,7 +183,7 @@ public class RemoveAvailableCourtFromScheduleServiceTests
     {
         var schedule = CreateActiveScheduleWithCourt();
         var playerEmail = CreateEmail();
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail);
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail);
 
         RemoveAvailableCourtFromSchedule.Handle(schedule, court, CurrentTime);
 
@@ -195,7 +195,7 @@ public class RemoveAvailableCourtFromScheduleServiceTests
     {
         var schedule = CreateActiveScheduleWithCourt();
         var playerEmail = CreateEmail();
-        var court = CreateCourtWithBooking(schedule.Id, playerEmail, cancelled: true);
+        var court = CreateCourtWithBooking(schedule.Id.GuidValue, playerEmail, cancelled: true);
 
         var result = RemoveAvailableCourtFromSchedule.Handle(schedule, court, CurrentTime);
 
@@ -216,10 +216,10 @@ public class RemoveAvailableCourtFromScheduleServiceTests
 
         typeof(Court)
             .GetMethod("AddBooking", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .Invoke(court, [interval1, schedule.Id, email1]);
+            .Invoke(court, [interval1, schedule.Id.GuidValue, email1]);
         typeof(Court)
             .GetMethod("AddBooking", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .Invoke(court, [interval2, schedule.Id, email2]);
+            .Invoke(court, [interval2, schedule.Id.GuidValue, email2]);
 
         var result = RemoveAvailableCourtFromSchedule.Handle(schedule, court, CurrentTime);
 

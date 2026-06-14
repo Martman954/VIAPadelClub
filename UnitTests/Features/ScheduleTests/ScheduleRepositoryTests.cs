@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
-using VIAPadelClub.Infrastructure.SqliteDomainPersistence;
-using VIAPadelClub.Infrastructure.SqliteDomainPersistence.Repositories;
-// Adjust namespace if your context is elsewhere
+using VIAPadelClub.Infrastructure.EfcDomainPersistence;
+using VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
 
 namespace UnitTests.Features.ScheduleTests;
 

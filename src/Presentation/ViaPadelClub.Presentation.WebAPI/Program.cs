@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// --- Object mapper (must be BEFORE Build) ---
+// --- Object mapper ---
 builder.Services.AddSingleton<IObjectMapper, ObjectMapper>();
 builder.Services.AddApplicationCommandDispatch();
 

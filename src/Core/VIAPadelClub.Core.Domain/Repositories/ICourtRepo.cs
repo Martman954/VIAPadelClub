@@ -9,10 +9,5 @@ public interface ICourtRepo
     /// Retrieves a fully-loaded Court aggregate with all its bookings.
     /// </summary>
     public Task<Court> GetCourt(CourtId courtId);
-    
-    /// <summary>
-    /// Saves changes to a Court aggregate (including new/cancelled bookings).
-    /// </summary>
-    public Task<Court> SaveCourt(Court court);
 }
 

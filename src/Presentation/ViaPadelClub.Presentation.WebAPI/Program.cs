@@ -11,7 +11,8 @@ builder.Services.AddSwaggerGen();
 
 // --- Object mapper (must be BEFORE Build) ---
 builder.Services.AddSingleton<IObjectMapper, ObjectMapper>();
-builder.Services.AddScoped<ICommandHandler<BookCourtCommand>, BookCourtHandler>();
+builder.Services.AddApplicationCommandDispatch();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -9,63 +9,63 @@ namespace UnitTests.Endpoints;
 
 public class BookCourtEndpointTests
 {
-    // A stub handler we fully control — returns whatever Result we hand it.
-    private sealed class StubHandler(Result result) : ICommandHandler<BookCourtCommand>
+    // Dispatcher stub we fully control — returns whatever Result we hand it.
+    private sealed class StubDispatcher(Result result) : ICommandDispatcher
     {
         public bool WasCalled { get; private set; }
 
-        public Task<Result> HandleAsync(BookCourtCommand command)
+        public Task<Result> DispatchAsync<TCommand>(TCommand command)
         {
             WasCalled = true;
             return Task.FromResult(result);
         }
     }
 
-    // Plug in values that actually pass your ViaEmail / CourtId / TimeInterval validators.
+    // Plug in values that pass ViaEmail / CourtId / TimeInterval validators.
     private static BookCourtRequest ValidRequest() => new(
         PlayerId:   "abcd@via.dk",
-        CourtId:    "Court-1",
+        CourtId:    "S1",
         ScheduleId: Guid.NewGuid().ToString(),
-        StartTime:  new DateTime(2025, 1, 1, 10, 0, 0),
-        EndTime:    new DateTime(2025, 1, 1, 11, 0, 0));
+        StartTime:  new DateTime(2026, 12, 1, 10, 0, 0),
+        EndTime:    new DateTime(2026, 12, 1, 11, 0, 0));
 
     [Fact]
-    public async Task InvalidInput_ReturnsBadRequest_AndDoesNotCallHandler()
+    public async Task InvalidInput_ReturnsBadRequest_AndDoesNotCallDispatcher()
     {
-        var handler = new StubHandler(Result.Success());
-        var endpoint = new BookCourtEndpoint(handler);
+        var dispatcher = new StubDispatcher(Result.Success());
+        var endpoint = new BookCourtEndpoint();
 
         // Empty player id fails ViaEmail validation, so Create() fails.
         var request = ValidRequest() with { PlayerId = "" };
 
-        var result = await endpoint.HandleAsync(request);
+        var result = await endpoint.HandleAsync(request, dispatcher);
 
         Assert.IsType<BadRequest<IEnumerable<ResultError>>>(result.Result);
-        Assert.False(handler.WasCalled); // short-circuited before dispatch
+        Assert.False(dispatcher.WasCalled); // short-circuited before dispatch
     }
 
     [Fact]
-    public async Task ValidInput_HandlerFails_ReturnsBadRequest()
+    public async Task ValidInput_DispatcherFails_ReturnsBadRequest()
     {
-        var handler = new StubHandler(
+        var dispatcher = new StubDispatcher(
             Result.Failure("Court not available.", ErrorType.Validation));
-        var endpoint = new BookCourtEndpoint(handler);
+        var endpoint = new BookCourtEndpoint();
 
-        var result = await endpoint.HandleAsync(ValidRequest());
+        var result = await endpoint.HandleAsync(ValidRequest(), dispatcher);
 
         Assert.IsType<BadRequest<IEnumerable<ResultError>>>(result.Result);
-        Assert.True(handler.WasCalled);
+        Assert.True(dispatcher.WasCalled);
     }
 
     [Fact]
-    public async Task ValidInput_HandlerSucceeds_ReturnsOk()
+    public async Task ValidInput_DispatcherSucceeds_ReturnsOk()
     {
-        var handler = new StubHandler(Result.Success());
-        var endpoint = new BookCourtEndpoint(handler);
+        var dispatcher = new StubDispatcher(Result.Success());
+        var endpoint = new BookCourtEndpoint();
 
-        var result = await endpoint.HandleAsync(ValidRequest());
+        var result = await endpoint.HandleAsync(ValidRequest(), dispatcher);
 
         Assert.IsType<Ok>(result.Result);
-        Assert.True(handler.WasCalled);
+        Assert.True(dispatcher.WasCalled);
     }
 }

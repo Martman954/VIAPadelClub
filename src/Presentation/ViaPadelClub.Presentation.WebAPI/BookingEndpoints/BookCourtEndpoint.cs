@@ -15,14 +15,15 @@ public record BookCourtRequest(
     DateTime StartTime,
     DateTime EndTime);
 
-public class BookCourtEndpoint(ICommandHandler<BookCourtCommand> handler)
+public class BookCourtEndpoint
     : ApiEndpoint
         .WithRequest<BookCourtRequest>
         .AndResults<Ok, BadRequest<IEnumerable<ResultError>>>
 {
     [HttpPost("courts/book")]
     public override async Task<Results<Ok, BadRequest<IEnumerable<ResultError>>>> HandleAsync(
-        BookCourtRequest request)
+        BookCourtRequest request,
+        [FromServices] ICommandDispatcher dispatcher)
     {
         // 1. Build & validate the command
         var commandResult = BookCourtCommand.Create(
@@ -35,10 +36,10 @@ public class BookCourtEndpoint(ICommandHandler<BookCourtCommand> handler)
         if (commandResult is Result<BookCourtCommand>.Failure validationFailure)
             return TypedResults.BadRequest(validationFailure.Errors);
 
-        // 2. Dispatch to the application handler
-        var result = await handler.HandleAsync(commandResult.Payload);
+        // 2. Dispatch to the application layer
+        var result = await dispatcher.DispatchAsync(commandResult.Payload);
 
-        // 3. Translate the domain Result into an HTTP response
+        // 3. Translate the application Result into an HTTP response
         if (result is Result<None>.Failure handlerFailure)
             return TypedResults.BadRequest(handlerFailure.Errors);
 

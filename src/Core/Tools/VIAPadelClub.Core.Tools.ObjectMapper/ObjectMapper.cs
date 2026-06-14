@@ -16,26 +16,63 @@ public class ObjectMapper : IObjectMapper
         if (mapping is not null)
             return mapping.Convert(source);
 
-        // 2) Otherwise fall back to default name-based mapping
+        // 2) Otherwise fall back to default mapping
         return DefaultMap<TSource, TDestination>(source);
     }
 
     private static TDestination DefaultMap<TSource, TDestination>(TSource source)
     {
-        var destination = Activator.CreateInstance<TDestination>();
+        var destinationType = typeof(TDestination);
         var sourceProps = typeof(TSource).GetProperties();
 
-        foreach (var destProp in typeof(TDestination).GetProperties())
+        // Prefer parameterless construction + property assignment when possible.
+        var parameterlessCtor = destinationType.GetConstructor(Type.EmptyTypes);
+        if (parameterlessCtor is not null)
         {
-            if (!destProp.CanWrite) continue;
+            var destination = Activator.CreateInstance<TDestination>();
 
-            var sourceProp = sourceProps.FirstOrDefault(p =>
-                p.Name == destProp.Name && p.PropertyType == destProp.PropertyType);
+            foreach (var destProp in destinationType.GetProperties())
+            {
+                if (!destProp.CanWrite) continue;
 
-            if (sourceProp is not null)
-                destProp.SetValue(destination, sourceProp.GetValue(source));
+                var sourceProp = sourceProps.FirstOrDefault(p =>
+                    p.Name.Equals(destProp.Name, StringComparison.OrdinalIgnoreCase)
+                    && destProp.PropertyType.IsAssignableFrom(p.PropertyType));
+
+                if (sourceProp is not null)
+                    destProp.SetValue(destination, sourceProp.GetValue(source));
+            }
+
+            return destination;
         }
 
-        return destination;
+        // Fallback for records/immutable types: bind constructor args by property name.
+        var constructor = destinationType
+            .GetConstructors()
+            .OrderByDescending(c => c.GetParameters().Length)
+            .FirstOrDefault();
+
+        if (constructor is null)
+            throw new InvalidOperationException($"No usable constructor found for destination type '{destinationType.Name}'.");
+
+        var args = constructor.GetParameters()
+            .Select(param =>
+            {
+                var sourceProp = sourceProps.FirstOrDefault(p =>
+                    p.Name.Equals(param.Name, StringComparison.OrdinalIgnoreCase)
+                    && param.ParameterType.IsAssignableFrom(p.PropertyType));
+
+                if (sourceProp is not null)
+                    return sourceProp.GetValue(source);
+
+                if (param.HasDefaultValue)
+                    return param.DefaultValue;
+
+                throw new InvalidOperationException(
+                    $"Cannot map constructor parameter '{param.Name}' for destination type '{destinationType.Name}'.");
+            })
+            .ToArray();
+
+        return (TDestination)constructor.Invoke(args);
     }
 }

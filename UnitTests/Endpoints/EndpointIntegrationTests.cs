@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using VIAPadelClub.Core.Application.ExternalServices;
 using VIAPadelClub.Core.Domain.Aggregates.Courts;
@@ -13,6 +14,7 @@ using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Domain.UnitOfWork;
+using VIAPadelClub.Infrastructure.EfcDomainPersistence;
 
 namespace UnitTests.Endpoints;
 
@@ -100,6 +102,9 @@ public sealed class EndpointIntegrationFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureServices(services =>
         {
+            services.AddDbContext<DomainModelContext>(options =>
+                options.UseInMemoryDatabase($"endpoint-int-tests-{Guid.NewGuid()}"));
+
             services.AddScoped<IScheduleRepository, FakeScheduleRepository>();
             services.AddScoped<IPlayerRepository, FakePlayerRepository>();
             services.AddScoped<ICourtRepository, FakeCourtRepository>();

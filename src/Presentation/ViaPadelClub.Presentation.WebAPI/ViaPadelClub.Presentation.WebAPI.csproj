@@ -14,6 +14,8 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Tools\VIAPadelClub.Core.Tools.ObjectMapper\VIAPadelClub.Core.Tools.ObjectMapper.csproj" />
       <ProjectReference Include="..\..\Core\VIAPadelClub.Core.Application\VIAPadelClub.Core.Application.csproj" />
+      <ProjectReference Include="..\..\Core\VIAPadelClub.Core.QueryContracts\VIAPadelClub.Core.QueryContracts.csproj" />
+      <ProjectReference Include="..\..\VIAPadelClub.Infrastructure.EfcQueries\VIAPadelClub.Infrastructure.EfcQueries.csproj" />
     </ItemGroup>
 
 </Project>

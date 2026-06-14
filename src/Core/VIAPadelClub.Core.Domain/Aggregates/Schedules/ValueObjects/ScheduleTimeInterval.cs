@@ -8,14 +8,17 @@ public class ScheduleTimeInterval
 {
     private static readonly TimeSpan MinimumDuration = TimeSpan.FromMinutes(60);
     
-    public TimeInterval TimeInterval { get; }
-    public bool IsVip { get; }
+    public TimeInterval TimeInterval { get; private set; } = null!;
+    public bool IsVip { get; private set; }
 
     private ScheduleTimeInterval(TimeInterval timeInterval, bool isVip)
     {
         TimeInterval = timeInterval;
         IsVip = isVip;
     }
+
+    /// <summary>For EF Core use only.</summary>
+    private ScheduleTimeInterval() { }
 
     public static Result<ScheduleTimeInterval> Create(TimeInterval timeInterval, bool isVip = false)
         => Result.Combine(ValidateDateIsNotInPast(timeInterval), 

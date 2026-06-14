@@ -16,6 +16,9 @@ public sealed class Court : AggregateRoot<CourtId>
     {
         Id = id;
     }
+
+    /// <summary>For EF Core use only.</summary>
+    private Court() { }
     
     public static Result<Court> Create(string courtId)
     {

@@ -35,6 +35,13 @@ public sealed class Schedule : AggregateRoot<ScheduleId>
         _times = [defaultTime];
     }
 
+    /// <summary>For EF Core use only.</summary>
+    private Schedule()
+    {
+        _times  = [];
+        _courts = [];
+    }
+
     public static Result<Schedule> Create()
     {
         var today = DateTime.Today;

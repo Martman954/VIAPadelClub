@@ -2,8 +2,8 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 
 public class Quarantine
 {
-    private DateTime StartDate { get; }
-    private DateTime EndDate { get; set; }
+    public DateTime StartDate { get; private set; }
+    public DateTime EndDate   { get; private set; }
 
     private Quarantine(DateTime startDate, DateTime endDate)
     {

@@ -9,10 +9,13 @@ public sealed class CourtId : Id<CourtId>
 
     public override object Value => StringValue;
 
-    private CourtId(string value)
+    private CourtId(string stringValue)
     {
-        StringValue = value;
+        StringValue = stringValue;
     }
+
+    /// <summary>For EF Core rehydration only — bypasses validation.</summary>
+    public static CourtId From(string value) => new(value);
 
     public static Result<CourtId> Create(string courtId)
     {

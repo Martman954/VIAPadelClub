@@ -11,7 +11,7 @@ public class PlayerRepositoryEfc(DomainModelContext context)
     public override async Task<Player?> GetAsync(ViaEmail playerId)
     {
         return await Context.Set<Player>()
-            .FirstOrDefaultAsync(p => p.Email.Value == playerId.Value);
+            .FirstOrDefaultAsync(p => p.Id == playerId);
     }
 }
 

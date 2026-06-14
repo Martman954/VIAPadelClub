@@ -12,10 +12,13 @@ public sealed class ViaEmail : Id<ViaEmail>
     private static readonly Regex EmailRegex =
         new(@"^([a-zA-Z]{3,4}|\d{6})@via\.dk$", RegexOptions.Compiled);
 
-    private ViaEmail(string email)
+    private ViaEmail(string stringValue)
     {
-        StringValue = email;
+        StringValue = stringValue;
     }
+
+    /// <summary>For EF Core rehydration only — bypasses validation.</summary>
+    public static ViaEmail From(string value) => new(value);
 
     public static Result<ViaEmail> CreateEmail(string email)
     {

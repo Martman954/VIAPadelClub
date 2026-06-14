@@ -25,6 +25,7 @@ public class ScheduleRepositoryTests
         
         var schedule = Schedule.Create().Payload;
         
+        // We use the raw context to seed the database before testing the repository
         context.Add(schedule);
         await context.SaveChangesAsync();
 

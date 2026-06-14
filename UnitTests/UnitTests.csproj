@@ -24,7 +24,9 @@
     <ItemGroup>
         <ProjectReference Include="..\src\Core\VIAPadelClub.Core.Domain\VIAPadelClub.Core.Domain.csproj" />
         <ProjectReference Include="..\src\Core\VIAPadelClub.Core.Application\VIAPadelClub.Core.Application.csproj" />
-        <ProjectReference Include="..\src\VIAPadelClub.Infrastructure.SqliteDomainPersistence\VIAPadelClub.Infrastructure.SqliteDomainPersistence.csproj" />
+        <ProjectReference Include="..\src\Core\VIAPadelClub.Core.QueryContracts\VIAPadelClub.Core.QueryContracts.csproj" />
+        <ProjectReference Include="..\src\VIAPadelClub.Infrastructure.EfcDomainPersistence\VIAPadelClub.Infrastructure.EfcDomainPersistence.csproj" />
+        <ProjectReference Include="..\src\VIAPadelClub.Infrastructure.EfcQueries\VIAPadelClub.Infrastructure.EfcQueries.csproj" />
     </ItemGroup>
 
 </Project>

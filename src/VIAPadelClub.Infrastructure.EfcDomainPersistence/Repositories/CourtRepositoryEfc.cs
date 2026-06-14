@@ -3,7 +3,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Courts;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 
-namespace VIAPadelClub.Infrastructure.SqliteDomainPersistence.Repositories;
+namespace VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
 
 public class CourtRepositoryEfc(DomainModelContext context)
     : RepositoryBase.RepositoryEfcBase<Court, CourtId>(context), ICourtRepository

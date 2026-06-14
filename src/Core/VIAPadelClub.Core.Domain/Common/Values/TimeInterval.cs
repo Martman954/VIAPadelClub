@@ -5,8 +5,8 @@ namespace VIAPadelClub.Core.Domain.Common.Values;
 
 public class TimeInterval
 {
-    public DateTime Start { get; }
-    public DateTime End { get; }
+    public DateTime Start { get; private set; }
+    public DateTime End   { get; private set; }
     public TimeSpan Duration => End.Subtract(Start);
 
     private TimeInterval(DateTime start, DateTime end)
@@ -14,6 +14,9 @@ public class TimeInterval
         Start = start;
         End = end;
     }
+
+    /// <summary>For EF Core use only.</summary>
+    private TimeInterval() { }
 
     public static Result<TimeInterval> Create(DateTime start, DateTime end)
         =>

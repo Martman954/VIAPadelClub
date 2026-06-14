@@ -2,8 +2,8 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Players.ValueObjects;
 
 public class VipStatus
 {
-    public DateTime StartDate { get; }
-    public DateTime EndDate { get; private set; }
+    public DateTime StartDate { get; private set; }
+    public DateTime EndDate   { get; private set; }
 
     private VipStatus(DateTime startDate, DateTime endDate)
     {

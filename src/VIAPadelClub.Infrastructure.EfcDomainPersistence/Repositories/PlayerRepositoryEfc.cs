@@ -3,7 +3,7 @@ using VIAPadelClub.Core.Domain.Aggregates.Players;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Repositories;
 
-namespace VIAPadelClub.Infrastructure.SqliteDomainPersistence.Repositories;
+namespace VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
 
 public class PlayerRepositoryEfc(DomainModelContext context)
     : RepositoryBase.RepositoryEfcBase<Player, ViaEmail>(context), IPlayerRepository
@@ -11,7 +11,7 @@ public class PlayerRepositoryEfc(DomainModelContext context)
     public override async Task<Player?> GetAsync(ViaEmail playerId)
     {
         return await Context.Set<Player>()
-            .FirstOrDefaultAsync(p => p.Email.Value == playerId.Value);
+            .FirstOrDefaultAsync(p => p.Id == playerId);
     }
 }
 

@@ -10,8 +10,8 @@ namespace VIAPadelClub.Core.Domain.Aggregates.Players;
 public sealed class Player : AggregateRoot<ViaEmail>
 {
     public ViaEmail Email => Id;
-    public Name Name { get; }
-    public ImageUrl ProfilePictureUri { get; }
+    public Name Name { get; private set; } = null!;
+    public ImageUrl ProfilePictureUri { get; private set; } = null!;
     public VipStatus? VipStatus { get; private set; }
     public Quarantine? Quarantine { get; private set; }
     public bool isBlackListed { get; private set; }
@@ -25,6 +25,9 @@ public sealed class Player : AggregateRoot<ViaEmail>
         Quarantine = null;
         isBlackListed = false;
     }
+
+    /// <summary>For EF Core use only.</summary>
+    private Player() { }
 
     public static Result<Player> Register(
         ViaEmail email, Name fullName, ImageUrl profilePictureUri,

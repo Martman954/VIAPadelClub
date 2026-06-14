@@ -6,8 +6,8 @@ using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Players;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
-using VIAPadelClub.Infrastructure.SqliteDomainPersistence;
-using VIAPadelClub.Infrastructure.SqliteDomainPersistence.Repositories;
+using VIAPadelClub.Infrastructure.EfcDomainPersistence;
+using VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
 
 namespace UnitTests.Features.InfrastructureTests.Repositories;
 
@@ -36,37 +36,52 @@ public class RepositoryEfcTests
     }
 
     [Fact]
-    public async Task ScheduleRepository_AddAsync_WithoutEntityModel_ThrowsInvalidOperationException()
+    public async Task ScheduleRepository_AddAndGet_ReturnsPersistedSchedule()
     {
         await using var context = CreateContext();
         var repo = new ScheduleRepositoryEfc(context);
         var schedule = ((Result<Schedule>.Success)Schedule.Create()).Value;
 
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => repo.AddAsync(schedule));
-        Assert.Contains("not included in the model", ex.Message, StringComparison.OrdinalIgnoreCase);
+        await repo.AddAsync(schedule);
+        await context.SaveChangesAsync();
+
+        var retrieved = await repo.GetAsync(schedule.Id);
+
+        Assert.NotNull(retrieved);
+        Assert.Equal(schedule.Id, retrieved.Id);
     }
 
     [Fact]
-    public async Task CourtRepository_AddAsync_WithoutEntityModel_ThrowsInvalidOperationException()
+    public async Task CourtRepository_AddAndGet_ReturnsPersistedCourt()
     {
         await using var context = CreateContext();
         var repo = new CourtRepositoryEfc(context);
         var court = ((Result<Court>.Success)Court.Create("S1")).Value;
 
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => repo.AddAsync(court));
-        Assert.Contains("not included in the model", ex.Message, StringComparison.OrdinalIgnoreCase);
+        await repo.AddAsync(court);
+        await context.SaveChangesAsync();
+
+        var retrieved = await repo.GetAsync(court.Id);
+
+        Assert.NotNull(retrieved);
+        Assert.Equal(court.Id, retrieved.Id);
     }
 
     [Fact]
-    public async Task PlayerRepository_AddAsync_WithoutEntityModel_ThrowsInvalidOperationException()
+    public async Task PlayerRepository_AddAndGet_ReturnsPersistedPlayer()
     {
         await using var context = CreateContext();
         var repo = new PlayerRepositoryEfc(context);
         var player = CreateValidPlayer();
 
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => repo.AddAsync(player));
-        Assert.Contains("not included in the model", ex.Message, StringComparison.OrdinalIgnoreCase);
+        await repo.AddAsync(player);
+        await context.SaveChangesAsync();
+
+        var retrieved = await repo.GetAsync(player.Email);
+
+        Assert.NotNull(retrieved);
+        Assert.Equal(player.Email, retrieved.Email);
+        Assert.Equal("Alex", retrieved.Name.FirstName);
+        Assert.Equal("Andersen", retrieved.Name.LastName);
     }
 }
-
-

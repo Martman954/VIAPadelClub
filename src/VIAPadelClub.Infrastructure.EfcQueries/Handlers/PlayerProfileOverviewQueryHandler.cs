@@ -4,10 +4,11 @@ using VIAPadelClub.Core.Domain.Aggregates.Players;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.QueryContracts;
+using VIAPadelClub.Core.QueryContracts.Queries;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
 using VIAPadelClub.Infrastructure.EfcDomainPersistence;
 
-namespace VIAPadelClub.Infrastructure.EfcQueries;
+namespace VIAPadelClub.Infrastructure.EfcQueries.Handlers;
 
 public sealed class PlayerProfileOverviewQueryHandler(DomainModelContext context)
     : IQueryHandler<PlayerProfileOverview.Query, PlayerProfileOverview.Answer>

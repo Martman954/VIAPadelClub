@@ -1,6 +1,7 @@
 using VIAPadelClub.Core.QueryContracts;
+using VIAPadelClub.Core.QueryContracts.Queries;
 
-namespace VIAPadelClub.Infrastructure.EfcQueries;
+namespace VIAPadelClub.Infrastructure.EfcQueries.Handlers;
 
 public sealed class PlayerQueueOverviewQueryHandler
     : IQueryHandler<PlayerQueueOverview.Query, PlayerQueueOverview.Answer>

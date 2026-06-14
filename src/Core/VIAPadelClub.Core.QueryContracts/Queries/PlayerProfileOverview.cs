@@ -1,8 +1,8 @@
-namespace VIAPadelClub.Core.QueryContracts;
+namespace VIAPadelClub.Core.QueryContracts.Queries;
 
 public static class PlayerProfileOverview
 {
-    public sealed record Query(string PlayerIdOrEmail);
+    public sealed record Query(string PlayerIdOrEmail) : IQuery<Answer>;
 
     public sealed record Answer(
         string PlayerId,

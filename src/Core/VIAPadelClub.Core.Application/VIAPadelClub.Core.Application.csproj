@@ -10,6 +10,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Tools\VIAPadelClub.Core.Tools.OperationResult\VIAPadelClub.Core.Tools.OperationResult.csproj" />
       <ProjectReference Include="..\VIAPadelClub.Core.Domain\VIAPadelClub.Core.Domain.csproj" />
+      <ProjectReference Include="..\VIAPadelClub.Core.QueryContracts\VIAPadelClub.Core.QueryContracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>

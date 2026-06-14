@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules;
 using VIAPadelClub.Core.QueryContracts;
+using VIAPadelClub.Core.QueryContracts.Queries;
 using VIAPadelClub.Infrastructure.EfcDomainPersistence;
 
-namespace VIAPadelClub.Infrastructure.EfcQueries;
+namespace VIAPadelClub.Infrastructure.EfcQueries.Handlers;
 
 public sealed class ManagerScheduleOverviewQueryHandler(DomainModelContext context)
     : IQueryHandler<ManagerScheduleOverview.Query, ManagerScheduleOverview.Answer>

@@ -1,8 +1,8 @@
-namespace VIAPadelClub.Core.QueryContracts;
+namespace VIAPadelClub.Core.QueryContracts.Queries;
 
 public static class ScheduleBookingOverview
 {
-    public sealed record Query(DateOnly Date);
+    public sealed record Query(DateOnly Date) : IQuery<Answer>;
 
     public sealed record Answer(
         DateOnly Date,

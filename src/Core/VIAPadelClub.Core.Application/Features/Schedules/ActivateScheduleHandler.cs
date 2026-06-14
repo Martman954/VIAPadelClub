@@ -1,5 +1,6 @@
 using VIAPadelClub.Core.Application.AppEntry;
 using VIAPadelClub.Core.Application.AppEntry.ScheduleCommands;
+using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Core.Domain.Contracts.Schedules;
 using VIAPadelClub.Core.Domain.Repositories;
 using VIAPadelClub.Core.Tools.OperationResult.Results;
@@ -10,11 +11,11 @@ namespace VIAPadelClub.Core.Application.Features.Schedules;
 
 internal class ActivateScheduleHandler : ICommandHandler<ActivateScheduleCommand>
 {
-    private readonly IScheduleRepo _scheduleRepo;
+    private readonly IScheduleRepository _scheduleRepo;
     private readonly IScheduleDateConflictChecker _dateConflictChecker;
 
     public ActivateScheduleHandler(
-        IScheduleRepo scheduleRepo,
+        IScheduleRepository scheduleRepo,
         IScheduleDateConflictChecker dateConflictChecker)
     {
         _scheduleRepo = scheduleRepo;
@@ -24,11 +25,13 @@ internal class ActivateScheduleHandler : ICommandHandler<ActivateScheduleCommand
     // TODO: make stuff internal here
     public async Task<Result> HandleAsync(ActivateScheduleCommand command)
     {
-        var scheduleResult = await Result.Try(() => _scheduleRepo.GetSchedule(command.ScheduleId));
+        var scheduleResult = await Result.Try(() => _scheduleRepo.GetAsync(ScheduleId.From(command.ScheduleId)));
         if (scheduleResult is Result<ScheduleAggregate>.Failure)
             return Result.Failure("Schedule not found.", ErrorType.NotFound);
 
         var schedule = scheduleResult.Payload;
+        if (schedule == null)
+            return Result.Failure("Schedule not found.", ErrorType.NotFound);
         var result = schedule.Activate(_dateConflictChecker);
 
 

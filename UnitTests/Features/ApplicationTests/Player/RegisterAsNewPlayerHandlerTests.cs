@@ -17,24 +17,25 @@ file class EmailInUseChecker : IEmailInUseChecker
     public bool IsEmailInUse(ViaEmail email) => true;
 }
 
-file class FakePlayerRepo : IPlayerRepo
+file class FakePlayerRepo : IPlayerRepository
 {
     public List<VIAPadelClub.Core.Domain.Aggregates.Players.Player> Players { get; } = [];
 
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Players.Player> AddPlayer(VIAPadelClub.Core.Domain.Aggregates.Players.Player player)
+    public Task AddAsync(VIAPadelClub.Core.Domain.Aggregates.Players.Player player)
     {
         Players.Add(player);
-        return Task.FromResult(player);
+        return Task.CompletedTask;
     }
 
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Players.Player> GetPlayer(Guid playerId)
-        => Task.FromResult(Players.First(p => p.Email.Value == playerId.ToString()));
+    public Task<VIAPadelClub.Core.Domain.Aggregates.Players.Player?> GetAsync(ViaEmail playerId)
+        => Task.FromResult(Players.FirstOrDefault(p => p.Email.Value == playerId.Value));
 
-    public Task<VIAPadelClub.Core.Domain.Aggregates.Players.Player> RemovePlayer(Guid playerId)
+    public Task RemoveAsync(ViaEmail playerId)
     {
-        var player = Players.First(p => p.Email.Value == playerId.ToString());
-        Players.Remove(player);
-        return Task.FromResult(player);
+        var player = Players.FirstOrDefault(p => p.Email.Value == playerId.Value);
+        if (player != null)
+            Players.Remove(player);
+        return Task.CompletedTask;
     }
 }
 

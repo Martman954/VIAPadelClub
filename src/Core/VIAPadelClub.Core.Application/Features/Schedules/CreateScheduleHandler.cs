@@ -8,9 +8,9 @@ namespace VIAPadelClub.Core.Application.Features.Schedules;
 
 internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
 {
-    private readonly IScheduleRepo _scheduleRepo;
+    private readonly IScheduleRepository _scheduleRepo;
 
-    public CreateScheduleHandler(IScheduleRepo scheduleRepo)
+    public CreateScheduleHandler(IScheduleRepository scheduleRepo)
     {
         _scheduleRepo = scheduleRepo;
     }
@@ -24,7 +24,7 @@ internal class CreateScheduleHandler : ICommandHandler<CreateScheduleCommand>
         
         return await Result.Try(async () =>
         {
-            await _scheduleRepo.AddSchedule(newSchedule.Payload);
+            await _scheduleRepo.AddAsync(newSchedule.Payload);
         });
     }
 }

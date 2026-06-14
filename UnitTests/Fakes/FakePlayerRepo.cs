@@ -4,23 +4,24 @@ using VIAPadelClub.Core.Domain.Repositories;
 
 namespace UnitTests.Fakes;
 
-internal class FakePlayerRepo : IPlayerRepo
+internal class FakePlayerRepo : IPlayerRepository
 {
     public List<Player> Players { get; } = [];
 
-    public Task<Player> AddPlayer(Player player)
+    public Task AddAsync(Player player)
     {
         Players.Add(player);
-        return Task.FromResult(player);
+        return Task.CompletedTask;
     }
 
-    public Task<Player> GetPlayer(Guid playerId)
-        => Task.FromResult(Players.First(p => p.Email.Value == playerId.ToString()));
+    public Task<Player?> GetAsync(ViaEmail playerId)
+        => Task.FromResult(Players.FirstOrDefault(p => p.Email.Value == playerId.Value));
 
-    public Task<Player> RemovePlayer(Guid playerId)
+    public Task RemoveAsync(ViaEmail playerId)
     {
-        var player = Players.First(p => p.Email.Value == playerId.ToString());
-        Players.Remove(player);
-        return Task.FromResult(player);
+        var player = Players.FirstOrDefault(p => p.Email.Value == playerId.Value);
+        if (player != null)
+            Players.Remove(player);
+        return Task.CompletedTask;
     }
 }

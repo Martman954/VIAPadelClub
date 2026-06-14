@@ -1,18 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using VIAPadelClub.Core.Domain.Aggregates.Schedules;
-using VIAPadelClub.Core.Domain.Common.Values;
 using VIAPadelClub.Infrastructure.EfcDomainPersistence;
 using VIAPadelClub.Infrastructure.EfcDomainPersistence.Repositories;
-
 namespace UnitTests.Features.ScheduleTests;
 
 
 public class ScheduleRepositoryTests
 {
-    /// <summary>
-    /// Helper method to create a fresh, empty In-Memory database for each test.
-    /// We use Guid.NewGuid() so tests don't share data and accidentally break each other.
-    /// </summary>
     private DomainModelContext GetInMemoryContext()
     {
         var options = new DbContextOptionsBuilder<DomainModelContext>()

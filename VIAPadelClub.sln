@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VIAPadelClub.Infrastructure.EfcDomainPersistence", "src\VIAPadelClub.Infrastructure.EfcDomainPersistence\VIAPadelClub.Infrastructure.EfcDomainPersistence.csproj", "{D9A0DE81-39AF-4959-BEDC-1E71CADCE269}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VIAPadelClub.Infrastructure.EfcQueries", "src\VIAPadelClub.Infrastructure.EfcQueries\VIAPadelClub.Infrastructure.EfcQueries.csproj", "{FEC96F98-F397-44EB-AA85-A24641CA7F3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VIAPadelClub.Core.QueryContracts", "src\Core\VIAPadelClub.Core.QueryContracts\VIAPadelClub.Core.QueryContracts.csproj", "{7B1E68C3-8AC4-4F09-B713-602B3480FF80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,8 @@ Global
 		{0AD3A87F-1BD9-4D2A-B7FA-8ED98E75185A} = {D0E82F78-F461-4801-84C4-F9A5FB06A04D}
 		{E2A05071-DAD7-448D-BD13-3DD952253F11} = {C693D6D9-13AB-49CC-9375-73E77DACACE4}
 		{D9A0DE81-39AF-4959-BEDC-1E71CADCE269} = {E2A05071-DAD7-448D-BD13-3DD952253F11}
+		{FEC96F98-F397-44EB-AA85-A24641CA7F3E} = {E2A05071-DAD7-448D-BD13-3DD952253F11}
+		{7B1E68C3-8AC4-4F09-B713-602B3480FF80} = {D0E82F78-F461-4801-84C4-F9A5FB06A04D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B12136D5-412B-426F-A3D3-E54B1ED516DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,5 +64,13 @@ Global
 		{D9A0DE81-39AF-4959-BEDC-1E71CADCE269}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9A0DE81-39AF-4959-BEDC-1E71CADCE269}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9A0DE81-39AF-4959-BEDC-1E71CADCE269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC96F98-F397-44EB-AA85-A24641CA7F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC96F98-F397-44EB-AA85-A24641CA7F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC96F98-F397-44EB-AA85-A24641CA7F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC96F98-F397-44EB-AA85-A24641CA7F3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B1E68C3-8AC4-4F09-B713-602B3480FF80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B1E68C3-8AC4-4F09-B713-602B3480FF80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B1E68C3-8AC4-4F09-B713-602B3480FF80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B1E68C3-8AC4-4F09-B713-602B3480FF80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
